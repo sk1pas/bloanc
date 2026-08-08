@@ -1,0 +1,238 @@
+pl:
+  date:
+    formats:
+      default: "%Y-%m-%d"
+  time:
+    formats:
+      default: "%Y-%m-%d %H:%M"
+
+  nav:
+    admin: "Panel admina"
+  actions:
+    back: "Wroc"
+    show: "Pokaz"
+    edit: "Edytuj"
+    delete: "Usun"
+  common:
+    "yes": "Tak"
+    "no": "Nie"
+
+  home:
+    page_title: "Porownanie kredytow hipotecznych"
+    hero:
+      title: "Porownaj oferty kredytow hipotecznych"
+      subtitle: "Oblicz rate miesieczna i calkowity koszt z prowizja, ubezpieczeniami i zasadami nadplat."
+    form:
+      loan_amount: "Kwota kredytu (PLN)"
+      years: "Okres kredytu (lata)"
+      months: "Okres kredytu (miesiace)"
+      sort: "Sortuj wyniki po"
+      calculate: "Oblicz"
+    sort:
+      bank_margin_percent: "Marza banku"
+      monthly_payment: "Rata miesieczna"
+      total_paid: "Suma splaty"
+      total_cost: "Laczny koszt"
+      life_insurance_total: "Ubezpieczenie zycia"
+      property_insurance_total: "Ubezpieczenie nieruchomosci"
+    wibor:
+      latest: "Ostatni zapis WIBOR"
+      missing: "Brak zapisanych wartosci WIBOR. Wejdz do Admin -> WIBOR i kliknij Odswiez."
+    results:
+      title: "Oferty bankow"
+      bank: "Bank"
+      loan_offer: "Oferta"
+      rate: "Oprocentowanie"
+      monthly: "Rata"
+      default_monthly: "Rata bazowa"
+      first_month_total: "Rata w pierwszym miesiacu"
+      loan_period: "Okres splaty"
+      total_paid: "Suma splaty"
+      total_cost: "Laczny koszt"
+      bank_interest: "Odsetki banku"
+      life_insurance: "Ubezpieczenie zycia"
+      property_insurance: "Ubezpieczenie nieruchomosci"
+      notes: "Notatki obliczen"
+      promo_period: "Okres promocyjny"
+      margin: "Marza"
+      first_month: "Pierwszy miesiac"
+      show_notes: "Pokaz notatki"
+      sort_by: "Sortuj tabele po"
+      sort_direction: "Kierunek"
+      sort_asc: "Rosnaco"
+      sort_desc: "Malejaco"
+      period_hint: "%{months} miesiecy"
+      period_years_only: "%{years} lat"
+      period_years_months: "%{years} lat %{months} miesiecy"
+      breakdown:
+        loan_amount: "Kwota kredytu"
+        bank_interest: "Odsetki banku"
+        life_insurance: "Ubezpieczenie zycia"
+        property_insurance: "Ubezpieczenie nieruchomosci"
+        loan_fee: "Prowizja banku"
+        overpayment_penalty: "Kara za nadplate"
+      breakdown_details:
+        life_insurance_one_time: "Jednorazowy pakiet oplacony w pierwszym miesiacu: %{amount} PLN"
+        life_insurance_percent: "%{percent}%% miesiecznie od salda przez %{months} miesiecy (pierwszy miesiac ok. %{first_month} PLN)"
+        life_insurance_none: "Brak oplaty za ubezpieczenie zycia"
+        property_insurance_monthly: "%{monthly} PLN miesiecznie przez %{months} miesiecy"
+        property_insurance_none: "Brak oplaty za ubezpieczenie nieruchomosci"
+
+    overpayment:
+      title: "Symulacja nadplat"
+      subtitle: "Wybierz strategie i sprawdz jak zmieni sie okres splaty oraz laczny koszt."
+      mode:
+        none_title: "Bez nadplat"
+        none_desc: "Standardowa rata liczona dla pelnego okresu kredytu."
+        fixed_monthly_title: "Stala rata miesieczna"
+        fixed_monthly_desc: "Ustaw docelowa laczna rate miesieczna (rata banku + ubezpieczenia + nadplata)."
+        fixed_period_title: "Staly okres splaty"
+        fixed_period_desc: "Ustaw docelowy okres splaty i oblicz rate potrzebna do zamkniecia kredytu."
+      fields:
+        fixed_monthly_payment: "Docelowa laczna rata miesieczna (PLN)"
+        target_years: "Docelowy okres splaty (lata)"
+      notes:
+        none: "Nadplata uzytkownika nie jest stosowana."
+        fixed_monthly_invalid: "Rata stala musi byc wyzsza od raty standardowej (min %{min_payment} PLN)."
+        fixed_monthly_applied: "Tryb stalej raty aktywny: %{monthly_payment} PLN miesiecznie."
+        fixed_period_invalid: "Docelowy okres musi byc krotszy niz bazowy okres kredytu (max %{max_years} lat)."
+        fixed_period_applied: "Tryb docelowego okresu aktywny: %{years} lat, szacowana rata %{monthly_payment} PLN miesiecznie."
+    flash:
+      custom_offer_invalid: "Formularz oferty niestandardowej zawiera bledy."
+    custom:
+      title: "Niestandardowa oferta"
+      subtitle: "Policz symulacje na wlasnych parametrach."
+      bank_fallback: "Wlasny bank"
+      offer_fallback: "Wlasna oferta"
+      result_title: "Wynik oferty niestandardowej"
+      overpayment:
+        none: "Bez nadplaty"
+        coef: "Mnoznik raty"
+        absolute: "Stala kwota nadplaty"
+      form:
+        calculate: "Oblicz oferte"
+        bank_title: "Nazwa banku"
+        offer_title: "Nazwa oferty"
+        description: "Opis oferty"
+        bank_margin_percent: "Marza banku %"
+        wibor_kind: "Rodzaj WIBOR"
+        wibor_percent: "WIBOR % (opcjonalnie)"
+        bank_commission_percent: "Prowizja banku %"
+        life_insurance_percent: "Ubezpieczenie zycia %"
+        life_insurance_years: "Lata ubezpieczenia zycia"
+        life_insurance_total: "Suma ubezpieczenia zycia"
+        property_insurance_monthly: "Miesieczne ubezpieczenie nieruchomosci"
+        overpayment_grace_years: "Lata bez nadplat"
+        overpayment_mode: "Tryb nadplaty"
+        overpayment_coef: "Mnoznik nadplaty"
+        overpayment_amount: "Kwota nadplaty"
+        overpayment_penalty_years: "Lata oplaty za nadplate"
+        overpayment_penalty_percent: "Oplata %"
+        overpayment_penalty_min_amount: "Minimalna oplata"
+
+    notes:
+      rate: "Stopa %{rate}%% = marza %{margin}%% + %{wibor_kind} %{wibor}%%"
+      default_payment:
+        bank_part: "Rata banku (kapital + odsetki): %{amount} PLN"
+        user_overpayment: "Nadplata uzytkownika: %{amount} PLN"
+        overpayment_penalty: "Kara za nadplate: %{amount} PLN miesiecznie przez %{months} miesiecy"
+      first_month:
+        base_payment: "Podstawa miesieczna: %{amount} PLN"
+        life_insurance_recurring: "Ubezpieczenie zycia: %{amount} PLN miesiecznie przez %{months} miesiecy"
+        life_insurance_one_time: "Jednorazowe ubezpieczenie zycia: %{amount} PLN (pierwszy miesiac)"
+        property_insurance: "Ubezpieczenie nieruchomosci: %{amount} PLN miesiecznie przez %{months} miesiecy"
+        overpayment_penalty: "Oplata za nadplate: %{amount} PLN miesiecznie przez %{months} miesiecy"
+      total_paid_commission: "Zawiera prowizje banku: %{amount} PLN"
+      total_paid_penalty: "Zawiera kary za nadplate: %{amount} PLN"
+      total_cost: "Suma splaty minus kwota kredytu %{loan_amount} PLN"
+      bank_interest: "Same odsetki banku (bez ubezpieczen, prowizji i kar)"
+      life_insurance_fixed: "Jednorazowe ubezpieczenie zycia: %{amount} PLN"
+      life_insurance_percent: "Ubezpieczenie zycia %{percent}%% miesiecznie od salda przez %{years} lat"
+      life_insurance_none: "Brak kosztu ubezpieczenia zycia"
+      property_insurance: "Ubezpieczenie nieruchomosci %{monthly} PLN miesiecznie przez %{months_paid} miesiecy"
+      overpayment_none: "Brak strategii nadplat"
+      overpayment_coef: "Nadplata po %{years} latach z mnoznikiem raty x%{coef}"
+      overpayment_absolute: "Nadplata po %{years} latach o +%{amount} PLN miesiecznie"
+      overpayment_penalty: "Kara przez pierwsze %{years} lat: %{percent}%% nadplaty, min %{min} PLN"
+
+  admin:
+    nav:
+      dashboard: "Pulpit"
+      banks: "Banki"
+      loan_offers: "Oferty"
+      wibor: "WIBOR"
+      public: "Strona uzytkownika"
+    dashboard:
+      title: "Panel administracyjny"
+      stats:
+        banks: "Banki"
+        loan_offers: "Oferty"
+        wibor: "WIBOR"
+      wibor_missing: "Brak zapisanych danych WIBOR"
+      quick_actions: "Szybkie akcje"
+      latest_changes: "Ostatnie wpisy historii ofert"
+      change_date: "Data zmiany"
+      bank: "Bank"
+      loan_offer: "Oferta"
+      note: "Notatka"
+    banks:
+      title: "Zarzadzanie bankami"
+      new: "Nowy bank"
+      edit: "Edycja banku"
+      description: "Opis"
+      loan_offers: "Oferty kredytowe"
+      confirm_delete: "Usunac bank wraz z ofertami?"
+      form:
+        remove_logo: "Usun aktualne logo"
+      table:
+        logo: "Logo"
+        title: "Nazwa"
+        website: "Strona"
+        loan_offers: "Oferty"
+        actions: "Akcje"
+      flash:
+        created: "Bank zostal utworzony"
+        updated: "Bank zostal zaktualizowany"
+        destroyed: "Bank zostal usuniety"
+    loan_offers:
+      title: "Zarzadzanie ofertami"
+      new: "Nowa oferta"
+      edit: "Edycja oferty"
+      current_wibor: "Aktualny WIBOR z bazy"
+      details: "Szczegoly oferty"
+      history: "Historia"
+      full_history: "Pelna historia"
+      snapshot: "Zrzut danych"
+      confirm_delete: "Usunac oferte?"
+      form:
+        latest_wibor: "Ostatni zapis WIBOR"
+        no_wibor: "Brak danych WIBOR. Odswiez w sekcji WIBOR."
+        save_history: "Zapisz zmiany do historii"
+        history_note: "Notatka do historii"
+      table:
+        bank: "Bank"
+        title: "Nazwa"
+        margin: "Marza"
+        wibor: "WIBOR"
+        commission: "Prowizja"
+        active: "Aktywna"
+        actions: "Akcje"
+      flash:
+        created: "Oferta zostala utworzona"
+        updated: "Oferta zostala zaktualizowana"
+        destroyed: "Oferta zostala usunieta"
+    wibor:
+      title: "Zarzadzanie WIBOR"
+      refresh: "Odswiez z mBank"
+      latest_title: "Ostatnie wartosci WIBOR"
+      latest_date: "Data stawki"
+      last_refresh: "Ostatnie odswiezenie"
+      empty: "Brak zapisanych danych"
+      table:
+        effective_date: "Data stawki"
+        wibor_1m: "WIBOR 1M"
+        wibor_3m: "WIBOR 3M"
+        fetched_at: "Pobrano"
+      flash:
+        refreshed: "WIBOR odswiezony z dnia %{date}"
+        refresh_failed: "Nie udalo sie odswiezyc WIBOR: %{error}"

@@ -1,0 +1,50 @@
+<% content_for :title, t("admin.loan_offers.title") %>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+	<h1 class="h3 mb-0"><%= t("admin.loan_offers.title") %></h1>
+	<%= link_to t("admin.loan_offers.new"), new_admin_loan_offer_path, class: "btn btn-primary" %>
+</div>
+
+<% if @wibor_snapshot.present? %>
+	<div class="alert alert-info">
+		<%= t("admin.loan_offers.current_wibor") %>:
+		<strong>1M: <%= @wibor_snapshot.wibor_1m %>%</strong>
+		| <strong>3M: <%= @wibor_snapshot.wibor_3m %>%</strong>
+		| <%= I18n.l(@wibor_snapshot.effective_date) %>
+	</div>
+<% end %>
+
+<div class="table-box">
+	<div class="table-responsive">
+		<table class="table mb-0">
+			<thead class="admin-table-head">
+				<tr>
+					<th><%= t("admin.loan_offers.table.bank") %></th>
+					<th><%= t("admin.loan_offers.table.title") %></th>
+					<th><%= t("admin.loan_offers.table.margin") %></th>
+					<th><%= t("admin.loan_offers.table.wibor") %></th>
+					<th><%= t("admin.loan_offers.table.commission") %></th>
+					<th><%= t("admin.loan_offers.table.active") %></th>
+					<th class="text-end"><%= t("admin.loan_offers.table.actions") %></th>
+				</tr>
+			</thead>
+			<tbody>
+				<% @loan_offers.each do |loan_offer| %>
+					<tr>
+						<td><%= loan_offer.bank.title %></td>
+						<td><%= loan_offer.title %></td>
+						<td><%= loan_offer.bank_margin_percent %>%</td>
+						<td><%= loan_offer.wibor_kind.upcase %></td>
+						<td><%= loan_offer.bank_commission_percent %>%</td>
+						<td><%= loan_offer.active? ? t("common.yes") : t("common.no") %></td>
+						<td class="text-end">
+							<%= link_to t("actions.show"), admin_loan_offer_path(loan_offer), class: "btn btn-sm btn-outline-light" %>
+							<%= link_to t("actions.edit"), edit_admin_loan_offer_path(loan_offer), class: "btn btn-sm btn-outline-info" %>
+							<%= button_to t("actions.delete"), admin_loan_offer_path(loan_offer), method: :delete, class: "btn btn-sm btn-outline-danger", form: { data: { turbo_confirm: t("admin.loan_offers.confirm_delete") } } %>
+						</td>
+					</tr>
+				<% end %>
+			</tbody>
+		</table>
+	</div>
+</div>

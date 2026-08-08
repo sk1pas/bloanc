@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  effective_date: 2026-08-08
+  fetched_at: 2026-08-08 15:45:57
+  wibor_1m: 3.84
+  wibor_3m: 3.83
+  source_url: https://example.com/one
+  payload: { source: fixture_one }
+
+two:
+  effective_date: 2026-08-07
+  fetched_at: 2026-08-08 15:45:57
+  wibor_1m: 3.82
+  wibor_3m: 3.81
+  source_url: https://example.com/two
+  payload: { source: fixture_two }

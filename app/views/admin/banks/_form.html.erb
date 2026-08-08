@@ -1,0 +1,47 @@
+<%= form_with model: [:admin, @bank], class: "card admin-form-card" do |form| %>
+  <div class="card-body row g-3">
+    <% if @bank.errors.any? %>
+      <div class="col-12 alert alert-danger">
+        <ul class="mb-0">
+          <% @bank.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="col-md-6 col-lg-4">
+      <%= form.label :title, "Bank title", class: "form-label" %>
+      <%= form.text_field :title, class: "form-control", required: true %>
+    </div>
+
+    <div class="col-md-6 col-lg-4">
+      <%= form.label :website_url, "Website URL", class: "form-label" %>
+      <%= form.url_field :website_url, class: "form-control", placeholder: "https://" %>
+    </div>
+
+    <div class="col-12 col-lg-8">
+      <%= form.label :description, "Bank description", class: "form-label" %>
+      <%= form.text_area :description, class: "form-control", rows: 4 %>
+    </div>
+
+    <div class="col-md-6 col-lg-4">
+      <%= form.label :logo, "Logo file", class: "form-label" %>
+      <%= form.file_field :logo, class: "form-control" %>
+    </div>
+
+    <% if @bank.persisted? && @bank.logo.attached? %>
+      <div class="col-md-6 col-lg-4 d-flex align-items-end">
+        <div class="form-check">
+          <%= check_box_tag "bank[remove_logo]", "1", false, class: "form-check-input", id: "bank_remove_logo" %>
+          <%= label_tag "bank_remove_logo", t("admin.banks.form.remove_logo"), class: "form-check-label" %>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="col-12 d-flex justify-content-between mt-2">
+      <%= link_to t("actions.back"), admin_banks_path, class: "btn btn-outline-light" %>
+      <%= form.submit class: "btn btn-primary" %>
+    </div>
+  </div>
+<% end %>

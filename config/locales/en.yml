@@ -28,4 +28,241 @@
 #       enabled: "ON"
 
 en:
-  hello: "Hello world"
+  date:
+    formats:
+      default: "%Y-%m-%d"
+  time:
+    formats:
+      default: "%Y-%m-%d %H:%M"
+
+  nav:
+    admin: "Admin"
+  actions:
+    back: "Back"
+    show: "Show"
+    edit: "Edit"
+    delete: "Delete"
+  common:
+    "yes": "Yes"
+    "no": "No"
+
+  home:
+    page_title: "Mortgage comparison"
+    hero:
+      title: "Compare Polish mortgage offers"
+      subtitle: "Estimate monthly and total cost including commissions, insurance, and overpayment rules."
+    form:
+      loan_amount: "Loan amount (PLN)"
+      years: "Loan period (years)"
+      months: "Loan period (months)"
+      sort: "Sort results by"
+      calculate: "Calculate"
+    sort:
+      bank_margin_percent: "Bank margin"
+      monthly_payment: "Monthly payment"
+      total_paid: "Total paid"
+      total_cost: "Total cost"
+      life_insurance_total: "Life insurance total"
+      property_insurance_total: "Property insurance total"
+    wibor:
+      latest: "Latest WIBOR snapshot"
+      missing: "No WIBOR values saved yet. Open Admin -> WIBOR and click Refresh."
+    results:
+      title: "Bank offers"
+      bank: "Bank"
+      loan_offer: "Loan offer"
+      rate: "Rate"
+      monthly: "Monthly installment"
+      default_monthly: "Default monthly payment"
+      first_month_total: "First month payment"
+      loan_period: "Loan period"
+      total_paid: "Total paid"
+      total_cost: "Total cost"
+      bank_interest: "Bank interest"
+      life_insurance: "Life insurance"
+      property_insurance: "Property insurance"
+      notes: "Calculation notes"
+      promo_period: "Promo period"
+      margin: "Margin"
+      first_month: "First month"
+      show_notes: "Show notes"
+      sort_by: "Sort table by"
+      sort_direction: "Direction"
+      sort_asc: "Lowest first"
+      sort_desc: "Highest first"
+      period_hint: "%{months} months"
+      period_years_only: "%{years} years"
+      period_years_months: "%{years} years %{months} months"
+      breakdown:
+        loan_amount: "Loan amount"
+        bank_interest: "Bank interest"
+        life_insurance: "Life insurance"
+        property_insurance: "Property insurance"
+        loan_fee: "Loan fee"
+        overpayment_penalty: "Overpayment penalty"
+      breakdown_details:
+        life_insurance_one_time: "One-time package paid in first month: %{amount} PLN"
+        life_insurance_percent: "%{percent}%% monthly on remaining principal for %{months} months (first month about %{first_month} PLN)"
+        life_insurance_none: "No life insurance fee"
+        property_insurance_monthly: "%{monthly} PLN monthly for %{months} months"
+        property_insurance_none: "No property insurance fee"
+
+    overpayment:
+      title: "Overpayment simulation"
+      subtitle: "Choose one strategy to see how repayment period and totals change."
+      mode:
+        none_title: "No overpayment"
+        none_desc: "Keep standard monthly installments based on full loan period."
+        fixed_monthly_title: "Fixed monthly payment"
+        fixed_monthly_desc: "Set target total monthly payment (bank payment + insurance + overpayment)."
+        fixed_period_title: "Fixed repayment period"
+        fixed_period_desc: "Set target period and calculate the monthly payment needed to finish on time."
+      fields:
+        fixed_monthly_payment: "Target total monthly payment (PLN)"
+        target_years: "Target repayment period (years)"
+      notes:
+        none: "No user overpayment applied."
+        fixed_monthly_invalid: "Fixed payment must be above standard installment (min %{min_payment} PLN)."
+        fixed_monthly_applied: "Fixed payment mode active: %{monthly_payment} PLN per month."
+        fixed_period_invalid: "Target period must be shorter than base loan period (max %{max_years} years)."
+        fixed_period_applied: "Target period mode active: %{years} years, estimated %{monthly_payment} PLN per month."
+    flash:
+      custom_offer_invalid: "Custom offer form is invalid."
+    custom:
+      title: "Custom bank offer"
+      subtitle: "Run simulation with your own parameters."
+      bank_fallback: "Custom bank"
+      offer_fallback: "Custom offer"
+      result_title: "Custom offer result"
+      overpayment:
+        none: "No overpayment"
+        coef: "Multiply monthly installment"
+        absolute: "Fixed extra amount"
+      form:
+        calculate: "Calculate custom offer"
+        bank_title: "Bank title"
+        offer_title: "Offer title"
+        description: "Offer description"
+        bank_margin_percent: "Bank margin %"
+        wibor_kind: "WIBOR type"
+        wibor_percent: "WIBOR % (optional override)"
+        bank_commission_percent: "Bank commission %"
+        life_insurance_percent: "Life insurance %"
+        life_insurance_years: "Life insurance years"
+        life_insurance_total: "Life insurance total"
+        property_insurance_monthly: "Property insurance monthly"
+        overpayment_grace_years: "Overpayment grace years"
+        overpayment_mode: "Overpayment mode"
+        overpayment_coef: "Overpayment coefficient"
+        overpayment_amount: "Overpayment fixed amount"
+        overpayment_penalty_years: "Penalty years"
+        overpayment_penalty_percent: "Penalty %"
+        overpayment_penalty_min_amount: "Penalty minimum amount"
+
+    notes:
+      rate: "Rate %{rate}%% = margin %{margin}%% + %{wibor_kind} %{wibor}%%"
+      default_payment:
+        bank_part: "Bank principal + interest: %{amount} PLN"
+        user_overpayment: "User overpayment: %{amount} PLN"
+        overpayment_penalty: "Overpayment penalty: %{amount} PLN monthly for %{months} months"
+      first_month:
+        base_payment: "Base monthly payment: %{amount} PLN"
+        life_insurance_recurring: "Life insurance: %{amount} PLN monthly for %{months} months"
+        life_insurance_one_time: "One-time life insurance package: %{amount} PLN (first month)"
+        property_insurance: "Property insurance: %{amount} PLN monthly for %{months} months"
+        overpayment_penalty: "Overpayment penalty: %{amount} PLN monthly for %{months} months"
+      total_paid_commission: "Includes bank commission: %{amount} PLN"
+      total_paid_penalty: "Includes overpayment penalties: %{amount} PLN"
+      total_cost: "Total paid minus loan amount %{loan_amount} PLN"
+      bank_interest: "Interest only (without insurance, commission and penalties)"
+      life_insurance_fixed: "One-time life insurance package: %{amount} PLN"
+      life_insurance_percent: "Life insurance %{percent}%% monthly on remaining principal for %{years} years"
+      life_insurance_none: "No life insurance cost"
+      property_insurance: "Property insurance %{monthly} PLN per month for %{months_paid} months"
+      overpayment_none: "No overpayment strategy configured"
+      overpayment_coef: "Overpayment starts after %{years} years with monthly multiplier x%{coef}"
+      overpayment_absolute: "Overpayment starts after %{years} years with +%{amount} PLN per month"
+      overpayment_penalty: "Penalty for first %{years} years: %{percent}%% of overpayment, min %{min} PLN"
+
+  admin:
+    nav:
+      dashboard: "Dashboard"
+      banks: "Banks"
+      loan_offers: "Loan offers"
+      wibor: "WIBOR"
+      public: "Public site"
+    dashboard:
+      title: "Admin dashboard"
+      stats:
+        banks: "Banks"
+        loan_offers: "Loan offers"
+        wibor: "WIBOR"
+      wibor_missing: "No WIBOR snapshot yet"
+      quick_actions: "Quick actions"
+      latest_changes: "Latest offer history entries"
+      change_date: "Changed at"
+      bank: "Bank"
+      loan_offer: "Loan offer"
+      note: "Note"
+    banks:
+      title: "Manage banks"
+      new: "New bank"
+      edit: "Edit bank"
+      description: "Description"
+      loan_offers: "Loan offers"
+      confirm_delete: "Delete this bank and all its offers?"
+      form:
+        remove_logo: "Remove current logo"
+      table:
+        logo: "Logo"
+        title: "Title"
+        website: "Website"
+        loan_offers: "Offers"
+        actions: "Actions"
+      flash:
+        created: "Bank created"
+        updated: "Bank updated"
+        destroyed: "Bank deleted"
+    loan_offers:
+      title: "Manage loan offers"
+      new: "New loan offer"
+      edit: "Edit loan offer"
+      current_wibor: "Current WIBOR from database"
+      details: "Offer details"
+      history: "History"
+      full_history: "Full history"
+      snapshot: "Snapshot"
+      confirm_delete: "Delete this loan offer?"
+      form:
+        latest_wibor: "Latest WIBOR snapshot"
+        no_wibor: "WIBOR snapshot missing. Refresh in the WIBOR section."
+        percent_hint: "Percentage fields use regular percent values: 10 means 10%, 0.1 means 0.1%."
+        save_history: "Save update to history"
+        history_note: "History note"
+      table:
+        bank: "Bank"
+        title: "Title"
+        margin: "Margin"
+        wibor: "WIBOR"
+        commission: "Commission"
+        active: "Active"
+        actions: "Actions"
+      flash:
+        created: "Loan offer created"
+        updated: "Loan offer updated"
+        destroyed: "Loan offer deleted"
+    wibor:
+      title: "Manage WIBOR"
+      refresh: "Refresh from mBank"
+      latest_title: "Latest WIBOR values"
+      latest_date: "Rate date"
+      last_refresh: "Last refresh"
+      empty: "No snapshots available"
+      table:
+        effective_date: "Rate date"
+        wibor_1m: "WIBOR 1M"
+        wibor_3m: "WIBOR 3M"
+        fetched_at: "Fetched at"
+      flash:
+        refreshed: "WIBOR refreshed from %{date}"
+        refresh_failed: "WIBOR refresh failed: %{error}"

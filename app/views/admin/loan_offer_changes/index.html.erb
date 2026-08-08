@@ -1,0 +1,29 @@
+<% content_for :title, t("admin.loan_offers.full_history") %>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+	<h1 class="h4 mb-0"><%= t("admin.loan_offers.full_history") %>: <%= @loan_offer.title %></h1>
+	<%= link_to t("actions.back"), admin_loan_offer_path(@loan_offer), class: "btn btn-outline-light" %>
+</div>
+
+<div class="table-box">
+	<div class="table-responsive">
+		<table class="table mb-0">
+			<thead class="admin-table-head">
+				<tr>
+					<th><%= t("admin.dashboard.change_date") %></th>
+					<th><%= t("admin.dashboard.note") %></th>
+					<th><%= t("admin.loan_offers.snapshot") %></th>
+				</tr>
+			</thead>
+			<tbody>
+				<% @changes.each do |change| %>
+					<tr>
+						<td><%= l(change.changed_at) %></td>
+						<td><%= change.note.presence || "-" %></td>
+						<td><pre class="mb-0"><%= JSON.pretty_generate(change.snapshot) %></pre></td>
+					</tr>
+				<% end %>
+			</tbody>
+		</table>
+	</div>
+</div>

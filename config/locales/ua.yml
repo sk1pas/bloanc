@@ -1,0 +1,238 @@
+ua:
+  date:
+    formats:
+      default: "%Y-%m-%d"
+  time:
+    formats:
+      default: "%Y-%m-%d %H:%M"
+
+  nav:
+    admin: "Адмін"
+  actions:
+    back: "Назад"
+    show: "Показати"
+    edit: "Редагувати"
+    delete: "Видалити"
+  common:
+    "yes": "Так"
+    "no": "Ні"
+
+  home:
+    page_title: "Порівняння іпотечних кредитів"
+    hero:
+      title: "Порівнюйте іпотечні пропозиції польських банків"
+      subtitle: "Розрахунок платежів і повної вартості з урахуванням комісій, страхування та дострокових погашень."
+    form:
+      loan_amount: "Сума кредиту (PLN)"
+      years: "Термін кредиту (роки)"
+      months: "Термін кредиту (місяці)"
+      sort: "Сортувати за"
+      calculate: "Розрахувати"
+    sort:
+      bank_margin_percent: "Банківська маржа"
+      monthly_payment: "Щомісячний платіж"
+      total_paid: "Загальна виплата"
+      total_cost: "Повна вартість"
+      life_insurance_total: "Страхування життя"
+      property_insurance_total: "Страхування майна"
+    wibor:
+      latest: "Останній запис WIBOR"
+      missing: "Немає значень WIBOR. Відкрийте Admin -> WIBOR та натисніть Refresh."
+    results:
+      title: "Пропозиції банків"
+      bank: "Банк"
+      loan_offer: "Кредитна пропозиція"
+      rate: "Ставка"
+      monthly: "Щомісячний платіж"
+      default_monthly: "Базовий щомісячний платіж"
+      first_month_total: "Платіж у перший місяць"
+      loan_period: "Період погашення"
+      total_paid: "Загальна виплата"
+      total_cost: "Повна вартість"
+      bank_interest: "Банківські відсотки"
+      life_insurance: "Страхування життя"
+      property_insurance: "Страхування майна"
+      notes: "Пояснення розрахунку"
+      promo_period: "Період акції"
+      margin: "Маржа"
+      first_month: "Перший місяць"
+      show_notes: "Показати примітки"
+      sort_by: "Сортувати таблицю за"
+      sort_direction: "Напрям"
+      sort_asc: "Від меншого"
+      sort_desc: "Від більшого"
+      period_hint: "%{months} місяців"
+      period_years_only: "%{years} років"
+      period_years_months: "%{years} років %{months} місяців"
+      breakdown:
+        loan_amount: "Сума кредиту"
+        bank_interest: "Банківські відсотки"
+        life_insurance: "Страхування життя"
+        property_insurance: "Страхування майна"
+        loan_fee: "Комісія банку"
+        overpayment_penalty: "Штраф за дострокове погашення"
+      breakdown_details:
+        life_insurance_one_time: "Одноразовий пакет у перший місяць: %{amount} PLN"
+        life_insurance_percent: "%{percent}%% щомісяця від залишку боргу протягом %{months} місяців (перший місяць близько %{first_month} PLN)"
+        life_insurance_none: "Без страхового платежу за життя"
+        property_insurance_monthly: "%{monthly} PLN щомісяця протягом %{months} місяців"
+        property_insurance_none: "Без страхового платежу за майно"
+
+    overpayment:
+      title: "Симуляція дострокового погашення"
+      subtitle: "Оберіть стратегію та подивіться, як зміняться термін і загальна вартість."
+      mode:
+        none_title: "Без дострокового погашення"
+        none_desc: "Стандартний щомісячний платіж для повного терміну кредиту."
+        fixed_monthly_title: "Фіксований щомісячний платіж"
+        fixed_monthly_desc: "Вкажіть цільовий загальний щомісячний платіж (банк + страхування + дострокове погашення)."
+        fixed_period_title: "Фіксований термін погашення"
+        fixed_period_desc: "Вкажіть бажаний термін і дізнайтеся, який платіж потрібен щомісяця."
+      fields:
+        fixed_monthly_payment: "Цільовий загальний щомісячний платіж (PLN)"
+        target_years: "Цільовий термін погашення (роки)"
+      notes:
+        none: "Дострокове погашення користувача не застосовується."
+        fixed_monthly_invalid: "Фіксований платіж має бути вищим за стандартний (мін %{min_payment} PLN)."
+        fixed_monthly_applied: "Режим фіксованого платежу активний: %{monthly_payment} PLN щомісяця."
+        fixed_period_invalid: "Цільовий термін має бути коротшим за базовий (макс %{max_years} років)."
+        fixed_period_applied: "Режим цільового терміну активний: %{years} років, орієнтовно %{monthly_payment} PLN щомісяця."
+    flash:
+      custom_offer_invalid: "Форма власної пропозиції містить помилки."
+    custom:
+      title: "Власна пропозиція банку"
+      subtitle: "Запустіть симуляцію з вашими параметрами."
+      bank_fallback: "Власний банк"
+      offer_fallback: "Власна пропозиція"
+      result_title: "Результат власної пропозиції"
+      overpayment:
+        none: "Без дострокових платежів"
+        coef: "Коефіцієнт до щомісячного платежу"
+        absolute: "Фіксована сума"
+      form:
+        calculate: "Розрахувати власну пропозицію"
+        bank_title: "Назва банку"
+        offer_title: "Назва пропозиції"
+        description: "Опис пропозиції"
+        bank_margin_percent: "Маржа банку %"
+        wibor_kind: "Тип WIBOR"
+        wibor_percent: "WIBOR % (необов'язково)"
+        bank_commission_percent: "Комісія банку %"
+        life_insurance_percent: "Страхування життя %"
+        life_insurance_years: "Роки страхування життя"
+        life_insurance_total: "Загальна сума страхування життя"
+        property_insurance_monthly: "Щомісячне страхування майна"
+        overpayment_grace_years: "Пільгові роки без дострокового погашення"
+        overpayment_mode: "Режим дострокового погашення"
+        overpayment_coef: "Коефіцієнт"
+        overpayment_amount: "Фіксована сума"
+        overpayment_penalty_years: "Роки штрафу"
+        overpayment_penalty_percent: "Штраф %"
+        overpayment_penalty_min_amount: "Мінімальний штраф"
+
+    notes:
+      rate: "Ставка %{rate}%% = маржа %{margin}%% + %{wibor_kind} %{wibor}%%"
+      default_payment:
+        bank_part: "Банківський платіж (тіло + відсотки): %{amount} PLN"
+        user_overpayment: "Дострокове погашення користувача: %{amount} PLN"
+        overpayment_penalty: "Штраф за дострокове погашення: %{amount} PLN щомісяця протягом %{months} місяців"
+      first_month:
+        base_payment: "Базовий щомісячний платіж: %{amount} PLN"
+        life_insurance_recurring: "Страхування життя: %{amount} PLN щомісяця протягом %{months} місяців"
+        life_insurance_one_time: "Одноразове страхування життя: %{amount} PLN (перший місяць)"
+        property_insurance: "Страхування майна: %{amount} PLN щомісяця протягом %{months} місяців"
+        overpayment_penalty: "Штраф за дострокове погашення: %{amount} PLN щомісяця протягом %{months} місяців"
+      total_paid_commission: "Включає банківську комісію: %{amount} PLN"
+      total_paid_penalty: "Включає штрафи за дострокове погашення: %{amount} PLN"
+      total_cost: "Загальна виплата мінус сума кредиту %{loan_amount} PLN"
+      bank_interest: "Лише банківські відсотки (без страхування, комісій і штрафів)"
+      life_insurance_fixed: "Одноразове страхування життя: %{amount} PLN"
+      life_insurance_percent: "Страхування життя %{percent}%% щомісяця від залишку боргу протягом %{years} років"
+      life_insurance_none: "Без витрат на страхування життя"
+      property_insurance: "Страхування майна %{monthly} PLN на місяць протягом %{months_paid} місяців"
+      overpayment_none: "Стратегія дострокового погашення не задана"
+      overpayment_coef: "Дострокове погашення після %{years} років з множником платежу x%{coef}"
+      overpayment_absolute: "Дострокове погашення після %{years} років на +%{amount} PLN щомісяця"
+      overpayment_penalty: "Штраф перші %{years} років: %{percent}%% від дострокового платежу, мінімум %{min} PLN"
+
+  admin:
+    nav:
+      dashboard: "Панель"
+      banks: "Банки"
+      loan_offers: "Пропозиції"
+      wibor: "WIBOR"
+      public: "Публічний сайт"
+    dashboard:
+      title: "Панель адміністратора"
+      stats:
+        banks: "Банки"
+        loan_offers: "Пропозиції"
+        wibor: "WIBOR"
+      wibor_missing: "Дані WIBOR відсутні"
+      quick_actions: "Швидкі дії"
+      latest_changes: "Останні зміни пропозицій"
+      change_date: "Дата зміни"
+      bank: "Банк"
+      loan_offer: "Пропозиція"
+      note: "Примітка"
+    banks:
+      title: "Керування банками"
+      new: "Новий банк"
+      edit: "Редагування банку"
+      description: "Опис"
+      loan_offers: "Кредитні пропозиції"
+      confirm_delete: "Видалити банк разом з усіма пропозиціями?"
+      form:
+        remove_logo: "Видалити поточний логотип"
+      table:
+        logo: "Логотип"
+        title: "Назва"
+        website: "Сайт"
+        loan_offers: "Пропозиції"
+        actions: "Дії"
+      flash:
+        created: "Банк створено"
+        updated: "Банк оновлено"
+        destroyed: "Банк видалено"
+    loan_offers:
+      title: "Керування кредитними пропозиціями"
+      new: "Нова пропозиція"
+      edit: "Редагувати пропозицію"
+      current_wibor: "Поточний WIBOR з бази"
+      details: "Деталі пропозиції"
+      history: "Історія"
+      full_history: "Повна історія"
+      snapshot: "Знімок"
+      confirm_delete: "Видалити цю пропозицію?"
+      form:
+        latest_wibor: "Останній знімок WIBOR"
+        no_wibor: "Знімок WIBOR відсутній. Оновіть у розділі WIBOR."
+        save_history: "Зберегти зміни в історію"
+        history_note: "Примітка до історії"
+      table:
+        bank: "Банк"
+        title: "Назва"
+        margin: "Маржа"
+        wibor: "WIBOR"
+        commission: "Комісія"
+        active: "Активна"
+        actions: "Дії"
+      flash:
+        created: "Пропозицію створено"
+        updated: "Пропозицію оновлено"
+        destroyed: "Пропозицію видалено"
+    wibor:
+      title: "Керування WIBOR"
+      refresh: "Оновити з mBank"
+      latest_title: "Останні значення WIBOR"
+      latest_date: "Дата ставки"
+      last_refresh: "Останнє оновлення"
+      empty: "Дані відсутні"
+      table:
+        effective_date: "Дата ставки"
+        wibor_1m: "WIBOR 1M"
+        wibor_3m: "WIBOR 3M"
+        fetched_at: "Час завантаження"
+      flash:
+        refreshed: "WIBOR оновлено для дати %{date}"
+        refresh_failed: "Не вдалося оновити WIBOR: %{error}"

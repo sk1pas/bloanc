@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: Bank One
+  description: MyText
+  website_url: https://bank-one.test
+
+two:
+  title: Bank Two
+  description: MyText
+  website_url: https://bank-two.test

@@ -1,0 +1,77 @@
+<% content_for :title, t("admin.dashboard.title") %>
+
+<h1 class="h3 mb-4"><%= t("admin.dashboard.title") %></h1>
+
+<div class="row g-3 mb-4">
+	<div class="col-md-3">
+		<div class="card stat-card">
+			<div class="card-body">
+				<div class="text-uppercase small text-secondary"><%= t("admin.dashboard.stats.banks") %></div>
+				<div class="stat-value"><%= @banks_count %></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="card stat-card">
+			<div class="card-body">
+				<div class="text-uppercase small text-secondary"><%= t("admin.dashboard.stats.loan_offers") %></div>
+				<div class="stat-value"><%= @loan_offers_count %></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="card stat-card">
+			<div class="card-body">
+				<div class="text-uppercase small text-secondary"><%= t("admin.dashboard.stats.wibor") %></div>
+				<% if @wibor_snapshot.present? %>
+					<div>
+						<strong><%= I18n.l(@wibor_snapshot.effective_date) %></strong>
+						| 1M: <strong><%= @wibor_snapshot.wibor_1m %>%</strong>
+						| 3M: <strong><%= @wibor_snapshot.wibor_3m %>%</strong>
+					</div>
+				<% else %>
+					<div class="text-warning"><%= t("admin.dashboard.wibor_missing") %></div>
+				<% end %>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="card mb-4">
+	<div class="card-body">
+		<h2 class="h5 mb-3"><%= t("admin.dashboard.quick_actions") %></h2>
+		<div class="d-flex flex-wrap gap-2">
+			<%= link_to t("admin.nav.banks"), admin_banks_path, class: "btn btn-outline-light btn-sm" %>
+			<%= link_to t("admin.nav.loan_offers"), admin_loan_offers_path, class: "btn btn-outline-light btn-sm" %>
+			<%= button_to t("admin.wibor.refresh"), refresh_admin_wibor_snapshots_path, method: :post, class: "btn btn-info btn-sm" %>
+		</div>
+	</div>
+</div>
+
+<div class="table-box">
+	<div class="p-3 border-bottom">
+		<h2 class="h5 mb-0"><%= t("admin.dashboard.latest_changes") %></h2>
+	</div>
+	<div class="table-responsive">
+		<table class="table mb-0">
+			<thead class="admin-table-head">
+				<tr>
+					<th><%= t("admin.dashboard.change_date") %></th>
+					<th><%= t("admin.dashboard.bank") %></th>
+					<th><%= t("admin.dashboard.loan_offer") %></th>
+					<th><%= t("admin.dashboard.note") %></th>
+				</tr>
+			</thead>
+			<tbody>
+				<% @latest_changes.each do |change| %>
+					<tr>
+						<td><%= l(change.changed_at) %></td>
+						<td><%= change.loan_offer.bank.title %></td>
+						<td><%= link_to change.loan_offer.title, admin_loan_offer_path(change.loan_offer) %></td>
+						<td><%= change.note.presence || "-" %></td>
+					</tr>
+				<% end %>
+			</tbody>
+		</table>
+	</div>
+</div>

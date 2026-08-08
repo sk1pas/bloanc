@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  loan_offer: one
+  changed_at: 2026-08-08 15:45:35
+  snapshot: { previous: { title: Offer One Old }, current: { title: Offer One } }
+  note: MyString
+
+two:
+  loan_offer: two
+  changed_at: 2026-08-08 15:45:35
+  snapshot: { previous: { title: Offer Two Old }, current: { title: Offer Two } }
+  note: MyString

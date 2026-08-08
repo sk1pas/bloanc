@@ -1,9 +1,97 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+latest_date = Date.current
+
+WiborSnapshot.find_or_initialize_by(effective_date: latest_date).tap do |snapshot|
+	snapshot.fetched_at = Time.current
+	snapshot.wibor_1m = 3.84
+	snapshot.wibor_3m = 3.83
+	snapshot.source_url = "seed"
+	snapshot.payload = { "source" => "seeds" }
+	snapshot.save!
+end
+
+banks_data = [
+	{
+		title: "mBank",
+		description: "Popular digital-first mortgage products.",
+		website_url: "https://www.mbank.pl"
+	},
+	{
+		title: "Pekao",
+		description: "Large traditional bank with diversified mortgage offers.",
+		website_url: "https://www.pekao.com.pl"
+	},
+	{
+		title: "ING",
+		description: "Mortgage products with low commissions in selected campaigns.",
+		website_url: "https://www.ing.pl"
+	}
+]
+
+banks = banks_data.map do |attrs|
+	Bank.find_or_create_by!(title: attrs[:title]) do |bank|
+		bank.description = attrs[:description]
+		bank.website_url = attrs[:website_url]
+	end
+end
+
+loan_offers_data = [
+	{
+		bank_title: "mBank",
+		title: "Standard Mortgage",
+		description: "Balanced cost profile with life insurance in first years.",
+		bank_margin_percent: 1.85,
+		wibor_kind: :wibor_3m,
+		bank_commission_percent: 0.0,
+		life_insurance_percent: 0.05,
+		life_insurance_years: 5,
+		property_insurance_monthly: 25,
+		overpayment_mode: :no_overpayment,
+		overpayment_coef: 1.0,
+		active: true
+	},
+	{
+		bank_title: "Pekao",
+		title: "Promo Mortgage 3Y",
+		description: "Overpayment after grace period with x2 coefficient.",
+		promoted_from: Date.current,
+		promoted_until: Date.current + 3.years,
+		bank_margin_percent: 1.69,
+		wibor_kind: :wibor_3m,
+		bank_commission_percent: 0.0,
+		life_insurance_total: 8640,
+		property_insurance_monthly: 34,
+		overpayment_grace_years: 3,
+		overpayment_mode: :coef,
+		overpayment_coef: 2.0,
+		overpayment_penalty_years: 3,
+		overpayment_penalty_percent: 5,
+		overpayment_penalty_min_amount: 200,
+		active: true
+	},
+	{
+		bank_title: "ING",
+		title: "Low Start",
+		description: "Low margin and one-time commission.",
+		bank_margin_percent: 1.7,
+		wibor_kind: :wibor_1m,
+		bank_commission_percent: 1.5,
+		life_insurance_percent: 0.035,
+		life_insurance_years: 3,
+		property_insurance_monthly: 39,
+		overpayment_mode: :absolute,
+		overpayment_amount: 1000,
+		overpayment_penalty_years: 2,
+		overpayment_penalty_percent: 3,
+		overpayment_penalty_min_amount: 150,
+		active: true
+	}
+]
+
+loan_offers_data.each do |attrs|
+	bank = banks.find { |item| item.title == attrs[:bank_title] }
+	next if bank.blank?
+
+	LoanOffer.find_or_create_by!(bank: bank, title: attrs[:title]) do |loan_offer|
+		loan_offer.assign_attributes(attrs.except(:bank_title, :title))
+	end
+end

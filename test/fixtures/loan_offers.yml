@@ -1,0 +1,45 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  bank: one
+  title: Offer One
+  description: MyText
+  promoted_from: 2026-08-08
+  promoted_until: 2026-08-08
+  bank_margin_percent: 9.99
+  wibor_kind: 1
+  bank_commission_percent: 9.99
+  life_insurance_percent: 9.99
+  life_insurance_years: 1
+  life_insurance_total: 9.99
+  property_insurance_monthly: 9.99
+  overpayment_grace_years: 1
+  overpayment_mode: 1
+  overpayment_coef: 9.99
+  overpayment_amount: 9.99
+  overpayment_penalty_years: 1
+  overpayment_penalty_percent: 9.99
+  overpayment_penalty_min_amount: 9.99
+  active: true
+
+two:
+  bank: two
+  title: Offer Two
+  description: MyText
+  promoted_from: 2026-08-08
+  promoted_until: 2026-08-08
+  bank_margin_percent: 9.99
+  wibor_kind: 1
+  bank_commission_percent: 9.99
+  life_insurance_percent: 9.99
+  life_insurance_years: 1
+  life_insurance_total: 9.99
+  property_insurance_monthly: 9.99
+  overpayment_grace_years: 1
+  overpayment_mode: 1
+  overpayment_coef: 9.99
+  overpayment_amount: 9.99
+  overpayment_penalty_years: 1
+  overpayment_penalty_percent: 9.99
+  overpayment_penalty_min_amount: 9.99
+  active: true

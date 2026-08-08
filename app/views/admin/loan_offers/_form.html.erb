@@ -1,0 +1,147 @@
+<%= form_with model: [:admin, @loan_offer], class: "card admin-form-card" do |form| %>
+  <div class="card-body row g-3">
+    <% if @loan_offer.errors.any? %>
+      <div class="col-12 alert alert-danger">
+        <ul class="mb-0">
+          <% @loan_offer.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="col-md-6 col-lg-4">
+      <%= form.label :bank_id, "Bank", class: "form-label" %>
+      <%= form.collection_select :bank_id, @banks, :id, :title, {}, class: "form-select" %>
+    </div>
+    <div class="col-md-6 col-lg-4">
+      <%= form.label :title, "Offer title", class: "form-label" %>
+      <%= form.text_field :title, class: "form-control", required: true %>
+    </div>
+    <div class="col-md-6 col-lg-3 d-flex align-items-end">
+      <div class="form-check">
+        <%= form.check_box :active, class: "form-check-input" %>
+        <%= form.label :active, "Active offer", class: "form-check-label" %>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-8">
+      <%= form.label :description, "Offer description", class: "form-label" %>
+      <%= form.text_area :description, class: "form-control", rows: 3 %>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+      <%= form.label :promoted_from, "Promo from (date)", class: "form-label" %>
+      <%= form.date_field :promoted_from, class: "form-control" %>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <%= form.label :promoted_until, "Promo until (date)", class: "form-label" %>
+      <%= form.date_field :promoted_until, class: "form-control" %>
+    </div>
+
+    <div class="col-12"><hr></div>
+
+    <div class="col-md-6 col-lg-3">
+      <%= form.label :bank_margin_percent, "Bank margin (%)", class: "form-label" %>
+      <%= form.number_field :bank_margin_percent, class: "form-control", step: "0.001", required: true %>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <%= form.label :wibor_kind, "WIBOR reference", class: "form-label" %>
+      <%= form.select :wibor_kind, LoanOffer.wibor_kinds.keys.map { |kind| [kind.upcase, kind] }, {}, class: "form-select" %>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <%= form.label :bank_commission_percent, "Bank commission (%)", class: "form-label" %>
+      <%= form.number_field :bank_commission_percent, class: "form-control", step: "0.001" %>
+    </div>
+
+    <div class="col-12 col-lg-9">
+      <p class="form-hint mb-0"><%= t("admin.loan_offers.form.percent_hint") %></p>
+    </div>
+
+    <div class="col-12 col-lg-9">
+      <p class="form-hint mb-0">
+        <% latest_snapshot = WiborSnapshot.latest %>
+        <% if latest_snapshot.present? %>
+          <%= t("admin.loan_offers.form.latest_wibor") %>:
+          1M: <strong><%= latest_snapshot.wibor_1m %>%</strong>,
+          3M: <strong><%= latest_snapshot.wibor_3m %>%</strong>,
+          <%= I18n.l(latest_snapshot.effective_date) %>
+        <% else %>
+          <%= t("admin.loan_offers.form.no_wibor") %>
+        <% end %>
+      </p>
+    </div>
+
+    <div class="col-12"><hr></div>
+
+    <div class="col-md-6 col-lg-3">
+      <%= form.label :life_insurance_percent, "Life insurance (%)", class: "form-label" %>
+      <%= form.number_field :life_insurance_percent, class: "form-control", step: "0.0001" %>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <%= form.label :life_insurance_years, "Life insurance period (years)", class: "form-label" %>
+      <%= form.number_field :life_insurance_years, class: "form-control", step: 1 %>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <%= form.label :life_insurance_total, "Life insurance total (PLN, one-time)", class: "form-label" %>
+      <%= form.number_field :life_insurance_total, class: "form-control", step: "0.01" %>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <%= form.label :property_insurance_monthly, "Property insurance (PLN/month)", class: "form-label" %>
+      <%= form.number_field :property_insurance_monthly, class: "form-control", step: "0.01" %>
+    </div>
+
+    <div class="col-12"><hr></div>
+
+    <div class="col-md-6 col-lg-3">
+      <%= form.label :overpayment_grace_years, "Overpayment starts after (years)", class: "form-label" %>
+      <%= form.number_field :overpayment_grace_years, class: "form-control", step: 1 %>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <%= form.label :overpayment_mode, "Overpayment mode", class: "form-label" %>
+      <%= form.select :overpayment_mode,
+                      LoanOffer.overpayment_modes.keys.map { |kind| [kind.humanize, kind] },
+                      {},
+                      class: "form-select" %>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <%= form.label :overpayment_coef, "Overpayment coefficient (x)", class: "form-label" %>
+      <%= form.number_field :overpayment_coef, class: "form-control", step: "0.01" %>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <%= form.label :overpayment_amount, "Overpayment fixed amount (PLN/month)", class: "form-label" %>
+      <%= form.number_field :overpayment_amount, class: "form-control", step: "0.01" %>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <%= form.label :overpayment_penalty_years, "Overpayment penalty period (years)", class: "form-label" %>
+      <%= form.number_field :overpayment_penalty_years, class: "form-control", step: 1 %>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <%= form.label :overpayment_penalty_percent, "Overpayment penalty (%)", class: "form-label" %>
+      <%= form.number_field :overpayment_penalty_percent, class: "form-control", step: "0.01" %>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <%= form.label :overpayment_penalty_min_amount, "Overpayment penalty minimum (PLN)", class: "form-label" %>
+      <%= form.number_field :overpayment_penalty_min_amount, class: "form-control", step: "0.01" %>
+    </div>
+
+    <% if @loan_offer.persisted? %>
+      <div class="col-12"><hr></div>
+      <div class="col-md-6 col-lg-4 d-flex align-items-end">
+        <div class="form-check">
+          <%= check_box_tag :save_history, "1", false, class: "form-check-input", id: "save_history" %>
+          <%= label_tag "save_history", t("admin.loan_offers.form.save_history"), class: "form-check-label" %>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-5">
+        <%= label_tag :history_note, t("admin.loan_offers.form.history_note"), class: "form-label" %>
+        <%= text_field_tag :history_note, nil, class: "form-control" %>
+      </div>
+    <% end %>
+
+    <div class="col-12 d-flex justify-content-between">
+      <%= link_to t("actions.back"), admin_loan_offers_path, class: "btn btn-outline-light" %>
+      <%= form.submit class: "btn btn-primary" %>
+    </div>
+  </div>
+<% end %>
