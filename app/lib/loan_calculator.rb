@@ -93,29 +93,6 @@
 
 # #################################################
 
-# # Velo bank
-# calculate_loan(
-#   loan_net: 400_000,
-#   months: 120,
-#   bank_margin_percent: 1.75,
-#   wibor_percent: 3.71,
-#   insurance: {
-#     life_insurance_percent: 0.030129,
-#     life_insurance_years: 5,
-#     # life_insurance_total: 6852,
-#     property_insurance_monthly: 41
-#   },
-#   bank_comission_percentage: 0
-# )
-# {monthly_principal_interest: 2447,
-#  first_month_payment: 2488,
-#  life_insurance_total: 6852,
-#  total_paid_without_insurance: 734041,
-#  total_paid: 753155,
-#  bank_earnings: 334041}
-
-# #################################################
-
 # # BNP Paribas
 # calculate_loan(
 #   loan_net: 400_000,
@@ -237,8 +214,8 @@ class LoanCalculator
         (
           @loan_net *
           monthly_rate *
-          (1 + monthly_rate)**@months
-        ) / ((1 + monthly_rate)**@months - 1)
+          ((1 + monthly_rate)**@months)
+        ) / (((1 + monthly_rate)**@months) - 1)
       end
 
     remaining_balance = @loan_net
@@ -309,13 +286,11 @@ class LoanCalculator
       bank_commission_total +
       total_overpayment_penalty
 
-    first_month_insurance =
-      if @fixed_life_insurance_total
-        @fixed_life_insurance_total
-      elsif @life_insurance_percent
-        @loan_net * (@life_insurance_percent / 100.0)
+    first_month_life_insurance =
+      if @fixed_life_insurance_total || !(@life_insurance_percent && @life_insurance_years.to_i.positive?)
+        0.0
       else
-        0
+        @loan_net * (@life_insurance_percent / 100.0)
       end
 
     notes = []
@@ -341,7 +316,7 @@ class LoanCalculator
       monthly_principal_interest: monthly_principal_interest.round,
       first_month_payment: (
         monthly_principal_interest +
-        first_month_insurance +
+        first_month_life_insurance +
         @property_insurance_monthly.to_f +
         first_month_extra_payment +
         first_month_overpayment_penalty

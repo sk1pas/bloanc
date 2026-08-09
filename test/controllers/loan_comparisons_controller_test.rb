@@ -11,6 +11,7 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     refute_includes response.body, "Zalozenia ogolne"
     refute_includes response.body, "submitNow"
     assert_includes response.body, "Docelowa laczna rata miesieczna (PLN)"
+    assert_includes response.body, "Nadplacaj w okresie kary"
   end
 
   test "defaults to no user overpayment note" do
@@ -52,6 +53,19 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Tryb docelowego okresu aktywny: 15 lat"
   end
 
+  test "does not apply penalty when fixed monthly overpayment starts after penalty period" do
+    get root_path(locale: :pl), params: {
+      loan_amount: 400_000,
+      years: 25,
+      overpayment_mode: "fixed_monthly",
+      fixed_monthly_payment: 9_000,
+      fixed_monthly_overpay_during_penalty: "0"
+    }
+
+    assert_response :success
+    refute_includes response.body, "Kara za nadplate:"
+  end
+
   test "renders loan period sort option" do
     get root_path(locale: :pl)
 
@@ -61,7 +75,7 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Rata w pierwszym miesiacu"
     assert_includes response.body, "Kwota kredytu"
     assert_includes response.body, "Odsetki banku"
-    assert_includes response.body, "Jednorazowy pakiet oplacony w pierwszym miesiacu"
+    assert_includes response.body, "Jednorazowy pakiet poza kolumna raty pierwszego miesiaca"
     assert_includes response.body, "miesiecznie przez"
   end
 

@@ -92,6 +92,22 @@ body {
 	margin-bottom: 0.25rem;
 }
 
+.simulation-penalty-check {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	margin-bottom: 0;
+}
+
+.simulation-penalty-check .form-check-input {
+	margin-top: 0;
+}
+
+.simulation-penalty-check .form-check-label {
+	font-size: 0.8rem;
+	color: #365c78;
+}
+
 .compact-number-input {
 	max-width: 230px;
 }
@@ -274,4 +290,29 @@ body {
 
 .admin-form-card textarea.form-control {
 	max-width: 100%;
+}
+
+.admin-bank-cell {
+	min-width: 180px;
+}
+
+.admin-bank-logo {
+	width: 32px;
+	height: 32px;
+	object-fit: contain;
+	border-radius: 8px;
+	background: #ffffff;
+	border: 1px solid rgba(118, 142, 160, 0.35);
+	padding: 3px;
+}
+
+.admin-actions-group {
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.45rem;
+	flex-wrap: wrap;
+}
+
+.admin-actions-group form {
+	margin: 0;
 }

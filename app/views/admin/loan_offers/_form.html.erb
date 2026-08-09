@@ -94,25 +94,6 @@
     <div class="col-12"><hr></div>
 
     <div class="col-md-6 col-lg-3">
-      <%= form.label :overpayment_grace_years, "Overpayment starts after (years)", class: "form-label" %>
-      <%= form.number_field :overpayment_grace_years, class: "form-control", step: 1 %>
-    </div>
-    <div class="col-md-6 col-lg-3">
-      <%= form.label :overpayment_mode, "Overpayment mode", class: "form-label" %>
-      <%= form.select :overpayment_mode,
-                      LoanOffer.overpayment_modes.keys.map { |kind| [kind.humanize, kind] },
-                      {},
-                      class: "form-select" %>
-    </div>
-    <div class="col-md-6 col-lg-3">
-      <%= form.label :overpayment_coef, "Overpayment coefficient (x)", class: "form-label" %>
-      <%= form.number_field :overpayment_coef, class: "form-control", step: "0.01" %>
-    </div>
-    <div class="col-md-6 col-lg-3">
-      <%= form.label :overpayment_amount, "Overpayment fixed amount (PLN/month)", class: "form-label" %>
-      <%= form.number_field :overpayment_amount, class: "form-control", step: "0.01" %>
-    </div>
-    <div class="col-md-6 col-lg-3">
       <%= form.label :overpayment_penalty_years, "Overpayment penalty period (years)", class: "form-label" %>
       <%= form.number_field :overpayment_penalty_years, class: "form-control", step: 1 %>
     </div>

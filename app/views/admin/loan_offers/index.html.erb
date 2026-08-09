@@ -31,16 +31,32 @@
 			<tbody>
 				<% @loan_offers.each do |loan_offer| %>
 					<tr>
-						<td><%= loan_offer.bank.title %></td>
+						<td class="admin-bank-cell">
+							<div class="d-flex align-items-center gap-2">
+								<% if loan_offer.bank.logo.attached? %>
+									<%= image_tag loan_offer.bank.logo, class: "admin-bank-logo", alt: loan_offer.bank.title %>
+								<% end %>
+								<span><%= loan_offer.bank.title %></span>
+							</div>
+						</td>
 						<td><%= loan_offer.title %></td>
 						<td><%= loan_offer.bank_margin_percent %>%</td>
 						<td><%= loan_offer.wibor_kind.upcase %></td>
 						<td><%= loan_offer.bank_commission_percent %>%</td>
 						<td><%= loan_offer.active? ? t("common.yes") : t("common.no") %></td>
 						<td class="text-end">
-							<%= link_to t("actions.show"), admin_loan_offer_path(loan_offer), class: "btn btn-sm btn-outline-light" %>
-							<%= link_to t("actions.edit"), edit_admin_loan_offer_path(loan_offer), class: "btn btn-sm btn-outline-info" %>
-							<%= button_to t("actions.delete"), admin_loan_offer_path(loan_offer), method: :delete, class: "btn btn-sm btn-outline-danger", form: { data: { turbo_confirm: t("admin.loan_offers.confirm_delete") } } %>
+							<div class="admin-actions-group">
+								<%= link_to t("actions.show"), admin_loan_offer_path(loan_offer), class: "btn btn-sm btn-outline-light" %>
+								<%= link_to t("actions.edit"), edit_admin_loan_offer_path(loan_offer), class: "btn btn-sm btn-outline-info" %>
+								<%= button_to t("actions.delete"),
+													admin_loan_offer_path(loan_offer),
+													method: :delete,
+													class: "btn btn-sm btn-outline-danger",
+													form: {
+														class: "d-inline",
+														data: { turbo_confirm: t("admin.loan_offers.confirm_delete") }
+													} %>
+							</div>
 						</td>
 					</tr>
 				<% end %>

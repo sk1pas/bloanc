@@ -65,6 +65,6 @@ class LoanCalculatorTest < ActiveSupport::TestCase
     ).call
 
     assert_equal 9000, fixed[:life_insurance_total]
-    assert_operator fixed[:first_month_payment], :>=, 9000
+    assert_equal fixed[:monthly_principal_interest] + 20, fixed[:first_month_payment]
   end
 end

@@ -101,7 +101,7 @@ en:
         loan_fee: "Loan fee"
         overpayment_penalty: "Overpayment penalty"
       breakdown_details:
-        life_insurance_one_time: "One-time package paid in first month: %{amount} PLN"
+        life_insurance_one_time: "One-time package outside first month payment column: %{amount} PLN"
         life_insurance_percent: "%{percent}%% monthly on remaining principal for %{months} months (first month about %{first_month} PLN)"
         life_insurance_none: "No life insurance fee"
         property_insurance_monthly: "%{monthly} PLN monthly for %{months} months"
@@ -114,12 +114,13 @@ en:
         none_title: "No overpayment"
         none_desc: "Keep standard monthly installments based on full loan period."
         fixed_monthly_title: "Fixed monthly payment"
-        fixed_monthly_desc: "Set target total monthly payment (bank payment + insurance + overpayment)."
+        fixed_monthly_desc: "Set target monthly payment (loan payment + property insurance + overpayment)."
         fixed_period_title: "Fixed repayment period"
         fixed_period_desc: "Set target period and calculate the monthly payment needed to finish on time."
       fields:
         fixed_monthly_payment: "Target total monthly payment (PLN)"
         target_years: "Target repayment period (years)"
+        overpay_during_penalty: "Overpay during penalty period"
       notes:
         none: "No user overpayment applied."
         fixed_monthly_invalid: "Fixed payment must be above standard installment (min %{min_payment} PLN)."

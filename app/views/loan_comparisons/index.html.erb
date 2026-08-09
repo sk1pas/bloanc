@@ -112,6 +112,17 @@
 														 comparison_form_target: "fixedMonthlyRange",
 														 action: "input->comparison-form#syncFixedMonthlyFromRange"
 													 } %>
+						<div class="form-check simulation-penalty-check mt-2">
+							<%= hidden_field_tag :fixed_monthly_overpay_during_penalty, "0" %>
+							<%= check_box_tag :fixed_monthly_overpay_during_penalty,
+													"1",
+													@fixed_monthly_overpay_during_penalty,
+													class: "form-check-input",
+													id: "fixed_monthly_overpay_during_penalty_1" %>
+							<label for="fixed_monthly_overpay_during_penalty_1" class="form-check-label">
+                <%= t("home.overpayment.fields.overpay_during_penalty") %>
+              </label>
+						</div>
 					</div>
 				</label>
 			</div>
@@ -150,6 +161,17 @@
 														 comparison_form_target: "targetYearsRange",
 														 action: "input->comparison-form#syncTargetYearsFromRange"
 													 } %>
+						<div class="form-check simulation-penalty-check mt-2">
+							<%= hidden_field_tag :fixed_period_overpay_during_penalty, "0" %>
+							<%= check_box_tag :fixed_period_overpay_during_penalty,
+													"1",
+													@fixed_period_overpay_during_penalty,
+													class: "form-check-input",
+													id: "fixed_period_overpay_during_penalty_1" %>
+							<label for="fixed_period_overpay_during_penalty_1" class="form-check-label">
+                <%= t("home.overpayment.fields.overpay_during_penalty") %>
+              </label>
+						</div>
 					</div>
 				</label>
 			</div>
@@ -320,6 +342,8 @@
 			<%= hidden_field_tag :overpayment_mode, @overpayment_mode %>
 			<%= hidden_field_tag :fixed_monthly_payment, @fixed_monthly_payment %>
 			<%= hidden_field_tag :target_years, @target_years %>
+			<%= hidden_field_tag :fixed_monthly_overpay_during_penalty, @fixed_monthly_overpay_during_penalty ? "1" : "0" %>
+			<%= hidden_field_tag :fixed_period_overpay_during_penalty, @fixed_period_overpay_during_penalty ? "1" : "0" %>
 
 			<div class="col-md-4">
 				<%= form.label :bank_title, t("home.custom.form.bank_title"), class: "form-label" %>

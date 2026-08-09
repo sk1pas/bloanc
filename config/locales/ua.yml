@@ -72,7 +72,7 @@ ua:
         loan_fee: "Комісія банку"
         overpayment_penalty: "Штраф за дострокове погашення"
       breakdown_details:
-        life_insurance_one_time: "Одноразовий пакет у перший місяць: %{amount} PLN"
+        life_insurance_one_time: "Одноразовий пакет поза колонкою платежу першого місяця: %{amount} PLN"
         life_insurance_percent: "%{percent}%% щомісяця від залишку боргу протягом %{months} місяців (перший місяць близько %{first_month} PLN)"
         life_insurance_none: "Без страхового платежу за життя"
         property_insurance_monthly: "%{monthly} PLN щомісяця протягом %{months} місяців"
@@ -85,12 +85,13 @@ ua:
         none_title: "Без дострокового погашення"
         none_desc: "Стандартний щомісячний платіж для повного терміну кредиту."
         fixed_monthly_title: "Фіксований щомісячний платіж"
-        fixed_monthly_desc: "Вкажіть цільовий загальний щомісячний платіж (банк + страхування + дострокове погашення)."
+        fixed_monthly_desc: "Вкажіть цільовий щомісячний платіж (кредит + страхування майна + дострокове погашення)."
         fixed_period_title: "Фіксований термін погашення"
         fixed_period_desc: "Вкажіть бажаний термін і дізнайтеся, який платіж потрібен щомісяця."
       fields:
         fixed_monthly_payment: "Цільовий загальний щомісячний платіж (PLN)"
         target_years: "Цільовий термін погашення (роки)"
+        overpay_during_penalty: "Робити дострокове погашення в період штрафу"
       notes:
         none: "Дострокове погашення користувача не застосовується."
         fixed_monthly_invalid: "Фіксований платіж має бути вищим за стандартний (мін %{min_payment} PLN)."
