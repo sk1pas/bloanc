@@ -5,6 +5,7 @@ Mortgage offer comparison app for Polish PLN home loans.
 ## Product Summary
 - Compare active bank offers with realistic total costs, not only base installment.
 - Include margin, WIBOR, commission, life/property insurance, and overpayment penalty impact.
+- Support two interest-rate offer types: variable and fixed-period-then-variable.
 - Let users simulate overpayment strategies on the homepage.
 - Let admins manage banks, offers, and WIBOR snapshots.
 
@@ -15,9 +16,13 @@ Mortgage offer comparison app for Polish PLN home loans.
 - Inputs:
     - Loan amount: number input + slider
     - Loan period in years: number input + slider
+- Loan type tabs:
+    - Variable rate
+    - Fixed period (fixed percent for first years, then variable margin + WIBOR)
 - Form behavior:
     - Manual submit only (Calculate button)
     - Sliders only synchronize values with paired numeric inputs
+    - Switching loan type tab triggers recalculation for selected type
 - Overpayment simulation modes:
     - No overpayment
     - Fixed monthly payment
@@ -27,6 +32,7 @@ Mortgage offer comparison app for Polish PLN home loans.
     - If disabled, overpayment starts after offer penalty period ends
 
 ### Results Table
+- Shows offers only for selected loan type tab.
 - Bank column:
     - Bank logo first line
     - Bank title below (clickable link, no raw URL text)
@@ -38,6 +44,7 @@ Mortgage offer comparison app for Polish PLN home loans.
     - First month payment
     - Loan period
     - Total paid (with expanded breakdown)
+- For fixed-period offers, rate column also explains fixed-years phase before variable phase.
 
 ### Payment Semantics
 - Default monthly payment:
@@ -59,6 +66,9 @@ Mortgage offer comparison app for Polish PLN home loans.
 ### Custom Offer Simulation
 - Public custom offer form allows manual parameter simulation.
 - Keeps current main homepage simulation settings in hidden fields.
+- Custom offer supports rate type selection:
+    - Variable rate
+    - Fixed-period rate with fixed percent and fixed years
 
 ### Admin Panel
 - HTTP Basic Auth protected.
@@ -70,7 +80,7 @@ Mortgage offer comparison app for Polish PLN home loans.
     - Website URL and description
 - Loan offers management:
     - CRUD
-    - Bank, margin, WIBOR, commission, insurance, penalty settings
+    - Bank, rate type, fixed-rate phase, margin, WIBOR, commission, insurance, penalty settings
     - Active flag
     - Optional history entry on update
     - Edit form no longer exposes deprecated overpayment strategy fields:
@@ -89,6 +99,7 @@ Mortgage offer comparison app for Polish PLN home loans.
 - Overpayment strategy fields still exist in schema for compatibility.
 - Homepage simulation uses user-driven strategy, not per-offer default strategy fields.
 - Offer penalties are still applied according to offer penalty configuration.
+- Fixed-period offers use fixed percent for configured years, then recalculate installment on variable rate (margin + WIBOR) for remaining term.
 
 ## Tech Stack
 - Ruby on Rails 8

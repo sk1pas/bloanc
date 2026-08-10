@@ -58,6 +58,7 @@
 											 action: "input->comparison-form#syncYearsFromRange"
 										 } %>
 			</div>
+			<%= hidden_field_tag :rate_type, @rate_type, data: { comparison_form_target: "rateTypeInput" } %>
 
 			<div class="col-12 pt-2">
 				<h2 class="h6 mb-2"><%= t("home.overpayment.title") %></h2>
@@ -176,7 +177,7 @@
 				</label>
 			</div>
 
-			<div class="col-12 d-grid d-md-flex justify-content-md-end pt-1">
+			<div class="col-12 d-flex justify-content-center pt-1">
 				<%= form.submit t("home.form.calculate"), class: "btn btn-primary" %>
 			</div>
 		<% end %>
@@ -184,37 +185,68 @@
 	</div>
 </section>
 
+<% rate_switch_params = {
+		 loan_amount: @loan_amount,
+		 years: @loan_years,
+		 overpayment_mode: @overpayment_mode,
+		 fixed_monthly_payment: @fixed_monthly_payment,
+		 target_years: @target_years,
+		 fixed_monthly_overpay_during_penalty: @fixed_monthly_overpay_during_penalty ? "1" : "0",
+		 fixed_period_overpay_during_penalty: @fixed_period_overpay_during_penalty ? "1" : "0"
+	 } %>
+
 <section id="results-table" class="table-box mb-4" data-controller="table-sort">
-	<div class="p-3 border-bottom d-flex flex-wrap justify-content-between align-items-center gap-3">
-		<div>
-			<h2 class="h5 mb-1"><%= t("home.results.title") %></h2>
-			<% if @wibor_snapshot.present? %>
-				<p class="form-hint mb-0">
-					<%= t("home.wibor.latest") %>:
-					<strong><%= I18n.l(@wibor_snapshot.effective_date) %></strong>
-					| WIBOR 1M: <strong><%= number_with_precision(@wibor_snapshot.wibor_1m, precision: 2, strip_insignificant_zeros: true) %>%</strong>
-					| WIBOR 3M: <strong><%= number_with_precision(@wibor_snapshot.wibor_3m, precision: 2, strip_insignificant_zeros: true) %>%</strong>
-				</p>
-			<% else %>
-				<p class="form-hint mb-0"><%= t("home.wibor.missing") %></p>
-			<% end %>
-		</div>
-		<div class="d-flex flex-wrap align-items-end gap-2">
+	<div class="p-3 border-bottom">
+		<div class="d-flex flex-wrap justify-content-between align-items-end gap-3">
 			<div>
-				<label class="form-label mb-1"><%= t("home.results.sort_by") %></label>
-				<select class="form-select form-select-sm" data-table-sort-target="sortKey" data-action="change->table-sort#sort">
-					<option value="bank-margin"><%= t("home.sort.bank_margin_percent") %></option>
-					<option value="monthly-payment"><%= t("home.sort.monthly_payment") %></option>
-					<option value="loan-period"><%= t("home.results.loan_period") %></option>
-					<option value="total-paid" selected><%= t("home.sort.total_paid") %></option>
-				</select>
+				<h2 class="h5 mb-1"><%= t("home.results.title") %></h2>
+				<% if @wibor_snapshot.present? %>
+					<p class="form-hint mb-0">
+						<%= t("home.wibor.latest") %>:
+						<strong><%= I18n.l(@wibor_snapshot.effective_date) %></strong>
+						| WIBOR 1M: <strong><%= number_with_precision(@wibor_snapshot.wibor_1m, precision: 2, strip_insignificant_zeros: true) %>%</strong>
+						| WIBOR 3M: <strong><%= number_with_precision(@wibor_snapshot.wibor_3m, precision: 2, strip_insignificant_zeros: true) %>%</strong>
+					</p>
+				<% else %>
+					<p class="form-hint mb-0"><%= t("home.wibor.missing") %></p>
+				<% end %>
 			</div>
-			<div>
-				<label class="form-label mb-1"><%= t("home.results.sort_direction") %></label>
-				<select class="form-select form-select-sm" data-table-sort-target="direction" data-action="change->table-sort#sort">
-					<option value="asc" selected><%= t("home.results.sort_asc") %></option>
-					<option value="desc"><%= t("home.results.sort_desc") %></option>
-				</select>
+			<div class="d-flex flex-wrap align-items-end gap-2">
+				<div>
+					<label class="form-label mb-1"><%= t("home.results.sort_by") %></label>
+					<select class="form-select form-select-sm" data-table-sort-target="sortKey" data-action="change->table-sort#sort">
+						<option value="bank-margin"><%= t("home.sort.bank_margin_percent") %></option>
+						<option value="monthly-payment"><%= t("home.sort.monthly_payment") %></option>
+						<option value="loan-period"><%= t("home.results.loan_period") %></option>
+						<option value="total-paid" selected><%= t("home.sort.total_paid") %></option>
+					</select>
+				</div>
+				<div>
+					<label class="form-label mb-1"><%= t("home.results.sort_direction") %></label>
+					<select class="form-select form-select-sm" data-table-sort-target="direction" data-action="change->table-sort#sort">
+						<option value="asc" selected><%= t("home.results.sort_asc") %></option>
+						<option value="desc"><%= t("home.results.sort_desc") %></option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="results-rate-switcher mt-3">
+			<div class="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-2">
+				<label class="form-label mb-0"><%= t("home.rate_type.title") %></label>
+				<span class="form-hint"><%= t("home.rate_type.subtitle") %></span>
+			</div>
+			<div class="loan-type-tabs loan-type-tabs-featured" role="tablist" aria-label="<%= t("home.rate_type.title") %>">
+				<%= link_to root_path(locale: I18n.locale, **rate_switch_params, rate_type: "variable", anchor: "results-table"),
+								class: "loan-type-tab #{"active" if @rate_type == "variable"}" do %>
+					<span class="loan-type-tab-title"><%= t("home.rate_type.tabs.variable") %></span>
+					<span class="loan-type-tab-desc"><%= t("home.rate_type.descriptions.variable") %></span>
+				<% end %>
+
+				<%= link_to root_path(locale: I18n.locale, **rate_switch_params, rate_type: "fixed_period", anchor: "results-table"),
+								class: "loan-type-tab #{"active" if @rate_type == "fixed_period"}" do %>
+					<span class="loan-type-tab-title"><%= t("home.rate_type.tabs.fixed_period") %></span>
+					<span class="loan-type-tab-desc"><%= t("home.rate_type.descriptions.fixed_period") %></span>
+				<% end %>
 			</div>
 		</div>
 	</div>
@@ -222,17 +254,17 @@
 		<table class="table table-hover align-middle mb-0 results-table">
 			<thead class="table-light">
 				<tr>
-					<th><%= t("home.results.bank") %></th>
-					<th><%= t("home.results.loan_offer") %></th>
-					<th><%= t("home.results.rate") %></th>
-					<th><%= t("home.results.default_monthly") %></th>
+					<th><%= t("home.results.bank_loan_offer") %></th>
+					<th><%= t("home.results.rate_selected_type", type: t("home.rate_type.tabs.#{@rate_type}")) %></th>
+					<th class="monthly-total-cell"><%= t("home.results.default_monthly") %></th>
 					<th><%= t("home.results.first_month_total") %></th>
-					<th><%= t("home.results.loan_period") %></th>
+					<th class="loan-period-cell"><%= t("home.results.loan_period") %></th>
 					<th><%= t("home.results.total_paid") %></th>
 				</tr>
 			</thead>
 			<tbody data-table-sort-target="tbody">
-				<% @results.each do |result| %>
+				<% if @results.any? %>
+					<% @results.each do |result| %>
 					<tr
 						data-table-sort-target="row"
 						data-sort-bank-margin="<%= result[:bank_margin_percent] %>"
@@ -240,22 +272,21 @@
 						data-sort-loan-period="<%= result[:loan_period_months] %>"
 						data-sort-total-paid="<%= result[:total_paid] %>"
 					>
-						<td class="bank-cell">
-							<div class="d-flex flex-column align-items-center gap-2 text-center">
-								<% if result[:bank_logo].present? && result[:bank_logo].attached? %>
-									<%= image_tag result[:bank_logo], class: "bank-logo", alt: result[:bank_title] %>
-								<% end %>
-								<div>
-									<% if result[:bank_website_url].present? %>
-										<strong><%= link_to result[:bank_title], result[:bank_website_url], target: "_blank", rel: "noopener" %></strong>
-									<% else %>
-										<strong><%= result[:bank_title] %></strong>
+						<td class="bank-offer-cell">
+							<div class="bank-offer-meta">
+								<div class="bank-offer-topline">
+									<% if result[:bank_logo].present? && result[:bank_logo].attached? %>
+										<%= image_tag result[:bank_logo], class: "bank-logo", alt: result[:bank_title] %>
 									<% end %>
-								</div>
+									<div class="bank-offer-bank-name">
+										<% if result[:bank_website_url].present? %>
+											<strong><%= link_to result[:bank_title], result[:bank_website_url], target: "_blank", rel: "noopener" %></strong>
+										<% else %>
+											<strong><%= result[:bank_title] %></strong>
+										<% end %>
+									</div>
 							</div>
-						</td>
-						<td>
-							<strong><%= result[:offer_title] %></strong>
+							<div class="bank-offer-title"><strong><%= result[:offer_title] %></strong></div>
 							<% if result[:offer_description].present? %>
 								<div class="small text-secondary"><%= result[:offer_description] %></div>
 							<% end %>
@@ -265,20 +296,24 @@
 									<%= I18n.l(result[:promoted_from]) %> - <%= I18n.l(result[:promoted_until]) %>
 								</div>
 							<% end %>
+							</div>
 						</td>
 						<td>
 							<div><strong><%= number_with_precision(result[:rate_percent], precision: 2, strip_insignificant_zeros: true) %>%</strong></div>
+							<% if result[:rate_type] == "fixed_period" %>
+								<div class="table-note"><%= t("home.results.fixed_rate_period_hint", years: result[:fixed_rate_years]) %></div>
+							<% end %>
 							<%= expandable_note(result.dig(:notes, :rate)) %>
 						</td>
-						<td>
-							<div><strong><%= number_to_currency(result[:default_monthly_payment], unit: "PLN", precision: 0, format: "%n %u") %></strong></div>
+						<td class="monthly-total-cell">
+							<div class="amount-nowrap"><strong><%= number_to_currency(result[:default_monthly_payment], unit: "PLN", precision: 0, format: "%n %u") %></strong></div>
 							<%= expandable_note(result.dig(:notes, :default_monthly)) %>
 						</td>
 						<td>
 							<div><strong><%= number_to_currency(result[:first_month_payment], unit: "PLN", precision: 0, format: "%n %u") %></strong></div>
-							<%= expandable_note_lines(result.dig(:notes, :first_month_lines)) %>
+							<%= first_month_breakdown(result.dig(:notes, :first_month_lines)) %>
 						</td>
-						<td>
+						<td class="loan-period-cell">
 							<strong><%= result[:loan_period_label] %></strong>
 							<div class="table-note"><%= t("home.results.period_hint", months: result[:loan_period_months]) %></div>
 						</td>
@@ -313,16 +348,26 @@
 										<strong><%= number_to_currency(result[:bank_commission_total], unit: "PLN", precision: 0, format: "%n %u") %></strong>
 									</div>
 								<% end %>
-								<% if result[:overpayment_penalty_total].to_f.positive? %>
+								<% if result[:overpayment_penalty_total].to_f.positive? || result[:overpayment_penalty_details].present? %>
 									<div class="total-paid-row">
 										<span><%= t("home.results.breakdown.overpayment_penalty") %></span>
 										<strong><%= number_to_currency(result[:overpayment_penalty_total], unit: "PLN", precision: 0, format: "%n %u") %></strong>
 									</div>
+									<% if result[:overpayment_penalty_details].present? %>
+										<div class="total-paid-row-note"><%= result[:overpayment_penalty_details] %></div>
+									<% end %>
 								<% end %>
 							</div>
 							<% if result.dig(:notes, :total_paid).present? %>
 								<%= expandable_note(result.dig(:notes, :total_paid)) %>
 							<% end %>
+						</td>
+					</tr>
+					<% end %>
+				<% else %>
+					<tr class="results-empty-row">
+						<td colspan="6">
+							<div class="results-empty-message"><%= t("home.results.empty", type: t("home.rate_type.tabs.#{@rate_type}")) %></div>
 						</td>
 					</tr>
 				<% end %>
@@ -339,6 +384,7 @@
 		<%= form_with url: custom_compare_path(locale: I18n.locale), method: :post, class: "row g-3" do |form| %>
 			<%= hidden_field_tag :loan_amount, @loan_amount %>
 			<%= hidden_field_tag :years, @loan_years %>
+			<%= hidden_field_tag :rate_type, @rate_type %>
 			<%= hidden_field_tag :overpayment_mode, @overpayment_mode %>
 			<%= hidden_field_tag :fixed_monthly_payment, @fixed_monthly_payment %>
 			<%= hidden_field_tag :target_years, @target_years %>
@@ -354,12 +400,32 @@
 				<%= form.text_field :title, name: "custom_offer[title]", value: @custom_offer["title"], class: "form-control" %>
 			</div>
 			<div class="col-md-4">
+				<%= form.label :custom_rate_type, t("home.custom.form.rate_type"), class: "form-label" %>
+				<%= form.select :rate_type,
+											options_for_select([
+												[t("home.rate_type.tabs.variable"), "variable"],
+												[t("home.rate_type.tabs.fixed_period"), "fixed_period"]
+											], @custom_offer["rate_type"] || @rate_type || "variable"),
+											{},
+											name: "custom_offer[rate_type]",
+											class: "form-select",
+                      id: "custom_rate_type" %>
+			</div>
+			<div class="col-md-4">
 				<%= form.label :bank_margin_percent, t("home.custom.form.bank_margin_percent"), class: "form-label" %>
 				<%= form.number_field :bank_margin_percent, name: "custom_offer[bank_margin_percent]", value: @custom_offer["bank_margin_percent"], class: "form-control", step: "0.001", required: true %>
 			</div>
 			<div class="col-12">
 				<%= form.label :description, t("home.custom.form.description"), class: "form-label" %>
 				<%= form.text_area :description, name: "custom_offer[description]", value: @custom_offer["description"], class: "form-control", rows: 2 %>
+			</div>
+			<div class="col-md-4">
+				<%= form.label :fixed_rate_percent, t("home.custom.form.fixed_rate_percent"), class: "form-label" %>
+				<%= form.number_field :fixed_rate_percent, name: "custom_offer[fixed_rate_percent]", value: @custom_offer["fixed_rate_percent"], class: "form-control", step: "0.001" %>
+			</div>
+			<div class="col-md-4">
+				<%= form.label :fixed_rate_years, t("home.custom.form.fixed_rate_years"), class: "form-label" %>
+				<%= form.number_field :fixed_rate_years, name: "custom_offer[fixed_rate_years]", value: @custom_offer["fixed_rate_years"], class: "form-control", step: 1 %>
 			</div>
 			<div class="col-md-4">
 				<%= form.label :wibor_kind, t("home.custom.form.wibor_kind"), class: "form-label" %>
@@ -398,7 +464,7 @@
 				<%= form.number_field :overpayment_grace_years, name: "custom_offer[overpayment_grace_years]", value: @custom_offer["overpayment_grace_years"], class: "form-control", step: 1 %>
 			</div>
 			<div class="col-md-3">
-				<%= form.label :overpayment_mode, t("home.custom.form.overpayment_mode"), class: "form-label" %>
+				<%= form.label :custom_overpayment_mode, t("home.custom.form.overpayment_mode"), class: "form-label" %>
 				<%= form.select :overpayment_mode,
 												options_for_select([
 													[t("home.custom.overpayment.none"), "none"],
@@ -407,7 +473,8 @@
 												], @custom_offer["overpayment_mode"] || "none"),
 												{},
 												name: "custom_offer[overpayment_mode]",
-												class: "form-select" %>
+												class: "form-select",
+                        id: "custom_overpayment_mode" %>
 			</div>
 			<div class="col-md-3">
 				<%= form.label :overpayment_coef, t("home.custom.form.overpayment_coef"), class: "form-label" %>

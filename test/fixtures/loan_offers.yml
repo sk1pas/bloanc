@@ -6,7 +6,10 @@ one:
   description: MyText
   promoted_from: 2026-08-08
   promoted_until: 2026-08-08
+  rate_type: 0
   bank_margin_percent: 9.99
+  fixed_rate_percent:
+  fixed_rate_years:
   wibor_kind: 1
   bank_commission_percent: 9.99
   life_insurance_percent: 9.99
@@ -28,7 +31,10 @@ two:
   description: MyText
   promoted_from: 2026-08-08
   promoted_until: 2026-08-08
+  rate_type: 1
   bank_margin_percent: 9.99
+  fixed_rate_percent: 7.20
+  fixed_rate_years: 5
   wibor_kind: 1
   bank_commission_percent: 9.99
   life_insurance_percent: 9.99

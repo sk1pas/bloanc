@@ -10,8 +10,39 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     refute_includes response.body, "Wyniki aktualizuja sie automatycznie po zmianie pola."
     refute_includes response.body, "Zalozenia ogolne"
     refute_includes response.body, "submitNow"
+    assert_match(/<th>\s*Oprocentowanie zmienne\s*<\/th>/, response.body)
+    assert_includes response.body, "Oferta banku"
+    assert_includes response.body, "Oprocentowanie zmienne"
+    assert_includes response.body, "Oprocentowanie stale"
     assert_includes response.body, "Docelowa laczna rata miesieczna (PLN)"
     assert_includes response.body, "Nadplacaj w okresie kary"
+  end
+
+  test "filters offers by fixed-period rate type" do
+    get root_path(locale: :pl), params: {
+      rate_type: "fixed_period",
+      loan_amount: 400_000,
+      years: 25
+    }
+
+    assert_response :success
+    assert_includes response.body, "Offer Two"
+    refute_includes response.body, "Offer One"
+    assert_match(/<th>\s*Oprocentowanie stale\s*<\/th>/, response.body)
+    assert_includes response.body, "Oprocentowanie stale"
+  end
+
+  test "shows empty-state message when selected type has no offers" do
+    LoanOffer.update_all(rate_type: LoanOffer.rate_types[:variable])
+
+    get root_path(locale: :pl), params: {
+      rate_type: "fixed_period",
+      loan_amount: 400_000,
+      years: 25
+    }
+
+    assert_response :success
+    assert_includes response.body, "Brak ofert dla typu"
   end
 
   test "defaults to no user overpayment note" do
@@ -50,7 +81,8 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     }
 
     assert_response :success
-    assert_includes response.body, "Tryb docelowego okresu aktywny: 15 lat"
+    assert_includes response.body, "Tryb docelowego okresu aktywny:"
+    assert_includes response.body, "15 lat, szacowana rata"
   end
 
   test "does not apply penalty when fixed monthly overpayment starts after penalty period" do
@@ -71,12 +103,33 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_includes response.body, 'value="loan-period"'
-    assert_includes response.body, "Rata bazowa"
+    assert_includes response.body, "Laczna rata"
     assert_includes response.body, "Rata w pierwszym miesiacu"
     assert_includes response.body, "Kwota kredytu"
     assert_includes response.body, "Odsetki banku"
     assert_includes response.body, "Jednorazowy pakiet poza kolumna raty pierwszego miesiaca"
     assert_includes response.body, "miesiecznie przez"
+  end
+
+  test "shows rate notes for variable and fixed offers" do
+    get root_path(locale: :pl), params: {
+      rate_type: "variable",
+      loan_amount: 400_000,
+      years: 25
+    }
+
+    assert_response :success
+    assert_includes response.body, "= marza"
+
+    get root_path(locale: :pl), params: {
+      rate_type: "fixed_period",
+      loan_amount: 400_000,
+      years: 25
+    }
+
+    assert_response :success
+    assert_includes response.body, "Stale"
+    assert_includes response.body, "potem obowiazuje stopa zmienna"
   end
 
   test "calculates custom offer" do

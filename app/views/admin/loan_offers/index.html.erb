@@ -21,6 +21,7 @@
 				<tr>
 					<th><%= t("admin.loan_offers.table.bank") %></th>
 					<th><%= t("admin.loan_offers.table.title") %></th>
+					<th><%= t("admin.loan_offers.table.rate_type") %></th>
 					<th><%= t("admin.loan_offers.table.margin") %></th>
 					<th><%= t("admin.loan_offers.table.wibor") %></th>
 					<th><%= t("admin.loan_offers.table.commission") %></th>
@@ -40,6 +41,12 @@
 							</div>
 						</td>
 						<td><%= loan_offer.title %></td>
+						<td>
+							<div><%= t("admin.loan_offers.table.rate_type_#{loan_offer.rate_type}") %></div>
+							<% if loan_offer.fixed_period? %>
+								<div class="form-hint"><%= t("admin.loan_offers.table.fixed_details", rate: loan_offer.fixed_rate_percent, years: loan_offer.fixed_rate_years) %></div>
+							<% end %>
+						</td>
 						<td><%= loan_offer.bank_margin_percent %>%</td>
 						<td><%= loan_offer.wibor_kind.upcase %></td>
 						<td><%= loan_offer.bank_commission_percent %>%</td>

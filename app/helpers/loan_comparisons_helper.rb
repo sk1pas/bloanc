@@ -1,4 +1,13 @@
 module LoanComparisonsHelper
+	def first_month_breakdown(lines)
+		parts = Array(lines).map { |line| line.to_s.strip }.reject(&:blank?)
+		return if parts.empty?
+
+		content_tag(:div, class: "first-month-breakdown") do
+			safe_join(parts.map { |line| first_month_breakdown_row(line) })
+		end
+	end
+
 	def expandable_note(note, max_length: 140)
 		text = note.to_s.strip
 		return if text.blank?
@@ -33,6 +42,30 @@ module LoanComparisonsHelper
 	end
 
 	private
+
+	def first_month_breakdown_row(line)
+		label, value = split_note_label_value(line)
+
+		if value.present?
+			content_tag(:div, class: "first-month-breakdown-row") do
+				safe_join(
+					[
+						content_tag(:span, label, class: "first-month-breakdown-label"),
+						content_tag(:strong, value, class: "first-month-breakdown-value")
+					]
+				)
+			end
+		else
+			content_tag(:div, line, class: "first-month-breakdown-note")
+		end
+	end
+
+	def split_note_label_value(line)
+		label, value = line.split(":", 2).map { |part| part&.strip }
+		return [line, nil] if value.blank?
+
+		["#{label}:", value]
+	end
 
 	def note_lines_block(lines, extra_class: nil)
 		classes = ["table-note-lines", extra_class].compact.join(" ")

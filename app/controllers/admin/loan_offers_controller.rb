@@ -15,6 +15,7 @@ class Admin::LoanOffersController < Admin::BaseController
   def new
     @loan_offer = LoanOffer.new(
       active: true,
+      rate_type: :variable,
       wibor_kind: :wibor_3m,
       overpayment_mode: :no_overpayment,
       overpayment_coef: 1.0
@@ -82,6 +83,9 @@ class Admin::LoanOffersController < Admin::BaseController
       :description,
       :promoted_from,
       :promoted_until,
+      :rate_type,
+      :fixed_rate_percent,
+      :fixed_rate_years,
       :bank_margin_percent,
       :wibor_kind,
       :bank_commission_percent,

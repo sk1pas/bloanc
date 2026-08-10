@@ -1,4 +1,9 @@
 pl:
+  seo:
+    site_name: "bloanc"
+    description: "Porownuj polskie oferty kredytow hipotecznych: oprocentowanie zmienne i stale, raty miesieczne oraz laczny koszt splaty."
+    keywords: "porownanie kredytu hipotecznego, WIBOR, oprocentowanie stale, oprocentowanie zmienne, kalkulator kredytu"
+
   date:
     formats:
       default: "%Y-%m-%d"
@@ -28,6 +33,19 @@ pl:
       months: "Okres kredytu (miesiace)"
       sort: "Sortuj wyniki po"
       calculate: "Oblicz"
+    rate_type:
+      title: "Typ oprocentowania"
+      subtitle: "Wybierz porownanie ofert ze stala lub zmienna stopa procentowa."
+      tabs:
+        variable: "Oprocentowanie zmienne"
+        fixed_period: "Oprocentowanie stale"
+      descriptions:
+        variable: "Marza + WIBOR przez caly okres kredytu."
+        fixed_period: "Staly procent przez pierwsze lata, potem marza + WIBOR."
+      badges:
+        variable: "Stopa zmienna"
+        fixed_period: "Stopa stala (okresowa)"
+      active_filter: "Pokazane oferty: %{type}"
     sort:
       bank_margin_percent: "Marza banku"
       monthly_payment: "Rata miesieczna"
@@ -42,9 +60,11 @@ pl:
       title: "Oferty bankow"
       bank: "Bank"
       loan_offer: "Oferta"
-      rate: "Oprocentowanie"
+      bank_loan_offer: "Oferta banku"
+      rate: "Stopa startowa"
+      rate_selected_type: "%{type}"
       monthly: "Rata"
-      default_monthly: "Rata bazowa"
+      default_monthly: "Laczna rata"
       first_month_total: "Rata w pierwszym miesiacu"
       loan_period: "Okres splaty"
       total_paid: "Suma splaty"
@@ -64,6 +84,8 @@ pl:
       period_hint: "%{months} miesiecy"
       period_years_only: "%{years} lat"
       period_years_months: "%{years} lat %{months} miesiecy"
+      fixed_rate_period_hint: "Stala stopa przez %{years} lat, potem zmienna"
+      empty: "Brak ofert dla typu %{type}. Zmien typ oprocentowania."
       breakdown:
         loan_amount: "Kwota kredytu"
         bank_interest: "Odsetki banku"
@@ -77,6 +99,8 @@ pl:
         life_insurance_none: "Brak oplaty za ubezpieczenie zycia"
         property_insurance_monthly: "%{monthly} PLN miesiecznie przez %{months} miesiecy"
         property_insurance_none: "Brak oplaty za ubezpieczenie nieruchomosci"
+        overpayment_penalty_rule: "Zasada: przez pierwsze %{years} lat %{percent}%% od kazdej nadplaty, minimum %{min} PLN"
+        overpayment_penalty_skipped: "W tej symulacji nadplata startuje po okresie kary."
 
     overpayment:
       title: "Symulacja nadplat"
@@ -115,6 +139,9 @@ pl:
         bank_title: "Nazwa banku"
         offer_title: "Nazwa oferty"
         description: "Opis oferty"
+        rate_type: "Typ oprocentowania"
+        fixed_rate_percent: "Stale oprocentowanie %"
+        fixed_rate_years: "Lata stalego oprocentowania"
         bank_margin_percent: "Marza banku %"
         wibor_kind: "Rodzaj WIBOR"
         wibor_percent: "WIBOR % (opcjonalnie)"
@@ -133,6 +160,8 @@ pl:
 
     notes:
       rate: "Stopa %{rate}%% = marza %{margin}%% + %{wibor_kind} %{wibor}%%"
+      rate_variable: "Stopa %{rate}%% = marza %{margin}%% + %{wibor_kind} %{wibor}%%"
+      rate_fixed: "Stale %{fixed_rate}%% przez %{fixed_years} lat, potem obowiazuje stopa zmienna."
       default_payment:
         bank_part: "Rata banku (kapital + odsetki): %{amount} PLN"
         user_overpayment: "Nadplata uzytkownika: %{amount} PLN"
@@ -213,6 +242,10 @@ pl:
       table:
         bank: "Bank"
         title: "Nazwa"
+        rate_type: "Typ oprocentowania"
+        rate_type_variable: "Zmienne"
+        rate_type_fixed_period: "Stale"
+        fixed_details: "%{rate}%% przez %{years} lat"
         margin: "Marza"
         wibor: "WIBOR"
         commission: "Prowizja"

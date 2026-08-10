@@ -28,6 +28,11 @@
 #       enabled: "ON"
 
 en:
+  seo:
+    site_name: "bloanc"
+    description: "Compare Polish mortgage offers, variable and fixed-period rates, monthly totals, and full repayment costs."
+    keywords: "mortgage comparison, Poland mortgage, WIBOR, fixed rate mortgage, variable rate mortgage, loan calculator"
+
   date:
     formats:
       default: "%Y-%m-%d"
@@ -57,6 +62,19 @@ en:
       months: "Loan period (months)"
       sort: "Sort results by"
       calculate: "Calculate"
+    rate_type:
+      title: "Interest rate type"
+      subtitle: "Choose whether to compare variable-rate or fixed-period offers."
+      tabs:
+        variable: "Variable rate"
+        fixed_period: "Fixed period"
+      descriptions:
+        variable: "Margin + WIBOR for the full loan term."
+        fixed_period: "Fixed percent for first years, then margin + WIBOR."
+      badges:
+        variable: "Variable rate"
+        fixed_period: "Fixed-period rate"
+      active_filter: "Showing offers: %{type}"
     sort:
       bank_margin_percent: "Bank margin"
       monthly_payment: "Monthly payment"
@@ -71,10 +89,12 @@ en:
       title: "Bank offers"
       bank: "Bank"
       loan_offer: "Loan offer"
-      rate: "Rate"
+      bank_loan_offer: "Bank loan offer"
+      rate: "Start rate"
+      rate_selected_type: "%{type}"
       monthly: "Monthly installment"
-      default_monthly: "Default monthly payment"
-      first_month_total: "First month payment"
+      default_monthly: "Credit payment"
+      first_month_total: "First month full payment"
       loan_period: "Loan period"
       total_paid: "Total paid"
       total_cost: "Total cost"
@@ -93,6 +113,8 @@ en:
       period_hint: "%{months} months"
       period_years_only: "%{years} years"
       period_years_months: "%{years} years %{months} months"
+      fixed_rate_period_hint: "Fixed for %{years} years, then variable"
+      empty: "No offers for %{type}. Try switching the interest type."
       breakdown:
         loan_amount: "Loan amount"
         bank_interest: "Bank interest"
@@ -106,6 +128,8 @@ en:
         life_insurance_none: "No life insurance fee"
         property_insurance_monthly: "%{monthly} PLN monthly for %{months} months"
         property_insurance_none: "No property insurance fee"
+        overpayment_penalty_rule: "Rule: first %{years} years, %{percent}%% of each overpayment, minimum %{min} PLN"
+        overpayment_penalty_skipped: "In this simulation, overpayment starts after penalty period."
 
     overpayment:
       title: "Overpayment simulation"
@@ -144,6 +168,9 @@ en:
         bank_title: "Bank title"
         offer_title: "Offer title"
         description: "Offer description"
+        rate_type: "Rate type"
+        fixed_rate_percent: "Fixed rate %"
+        fixed_rate_years: "Fixed period years"
         bank_margin_percent: "Bank margin %"
         wibor_kind: "WIBOR type"
         wibor_percent: "WIBOR % (optional override)"
@@ -162,12 +189,14 @@ en:
 
     notes:
       rate: "Rate %{rate}%% = margin %{margin}%% + %{wibor_kind} %{wibor}%%"
+      rate_variable: "Rate %{rate}%% = margin %{margin}%% + %{wibor_kind} %{wibor}%%"
+      rate_fixed: "Fixed %{fixed_rate}%% for %{fixed_years} years, then variable rate applies."
       default_payment:
         bank_part: "Bank principal + interest: %{amount} PLN"
         user_overpayment: "User overpayment: %{amount} PLN"
         overpayment_penalty: "Overpayment penalty: %{amount} PLN monthly for %{months} months"
       first_month:
-        base_payment: "Base monthly payment: %{amount} PLN"
+        base_payment: "Credit payment: %{amount} PLN"
         life_insurance_recurring: "Life insurance: %{amount} PLN monthly for %{months} months"
         life_insurance_one_time: "One-time life insurance package: %{amount} PLN (first month)"
         property_insurance: "Property insurance: %{amount} PLN monthly for %{months} months"
@@ -243,6 +272,10 @@ en:
       table:
         bank: "Bank"
         title: "Title"
+        rate_type: "Rate type"
+        rate_type_variable: "Variable"
+        rate_type_fixed_period: "Fixed period"
+        fixed_details: "%{rate}%% for %{years} years"
         margin: "Margin"
         wibor: "WIBOR"
         commission: "Commission"

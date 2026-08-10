@@ -13,6 +13,10 @@
 		<div class="card h-100">
 			<div class="card-body">
 				<p class="mb-1"><strong><%= t("admin.loan_offers.table.bank") %>:</strong> <%= @loan_offer.bank.title %></p>
+				<p class="mb-1"><strong><%= t("admin.loan_offers.table.rate_type") %>:</strong> <%= t("admin.loan_offers.table.rate_type_#{@loan_offer.rate_type}") %></p>
+				<% if @loan_offer.fixed_period? %>
+					<p class="mb-1"><strong>Fixed phase:</strong> <%= @loan_offer.fixed_rate_percent %>% for <%= @loan_offer.fixed_rate_years %> years</p>
+				<% end %>
 				<p class="mb-1"><strong><%= t("admin.loan_offers.table.margin") %>:</strong> <%= @loan_offer.bank_margin_percent %>%</p>
 				<p class="mb-1"><strong><%= t("admin.loan_offers.table.wibor") %>:</strong> <%= @loan_offer.wibor_kind.upcase %></p>
 				<p class="mb-1"><strong><%= t("admin.loan_offers.table.commission") %>:</strong> <%= @loan_offer.bank_commission_percent %>%</p>

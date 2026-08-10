@@ -1,6 +1,7 @@
 class LoanComparisonsController < ApplicationController
   DEFAULT_LOAN_AMOUNT = 400_000
   DEFAULT_YEARS = 25
+  RATE_TYPES = %w[variable fixed_period].freeze
   OVERPAYMENT_MODES = %w[none fixed_monthly fixed_period].freeze
 
   def index
@@ -24,6 +25,7 @@ class LoanComparisonsController < ApplicationController
   def prepare_request
     @loan_amount = normalize_integer(params[:loan_amount], DEFAULT_LOAN_AMOUNT)
     @loan_years, @months = extract_period
+    @rate_type = normalize_rate_type(params[:rate_type])
     @overpayment_mode = normalize_overpayment_mode(params[:overpayment_mode])
     @fixed_monthly_payment = normalize_decimal(params[:fixed_monthly_payment], 3_000)
     @target_years = normalize_target_years(params[:target_years])
@@ -35,13 +37,14 @@ class LoanComparisonsController < ApplicationController
   end
 
   def load_offer_results
-    @loan_offers = LoanOffer.active.ordered.includes(:bank)
+    @loan_offers = LoanOffer.active.where(rate_type: @rate_type).ordered.includes(:bank)
     @results = @loan_offers.map { |offer| calculate_offer(offer) }
   end
 
   def calculate_offer(loan_offer)
     wibor_percent = loan_offer.current_wibor_percent(@wibor_snapshot).to_f
-    rate_percent = loan_offer.bank_margin_percent.to_f + wibor_percent
+    variable_rate_percent = loan_offer.variable_rate_percent(@wibor_snapshot).to_f
+    rate_percent = loan_offer.initial_rate_percent(@wibor_snapshot).to_f
 
     base_calculation = calculate_for_offer(
       loan_offer: loan_offer,
@@ -73,7 +76,11 @@ class LoanComparisonsController < ApplicationController
       promoted_from: loan_offer.promoted_from,
       promoted_until: loan_offer.promoted_until,
       bank_margin_percent: loan_offer.bank_margin_percent.to_f,
+      rate_type: loan_offer.rate_type,
+      fixed_rate_percent: loan_offer.fixed_rate_percent.to_f,
+      fixed_rate_years: loan_offer.fixed_rate_years.to_i,
       rate_percent: rate_percent,
+      variable_rate_percent: variable_rate_percent,
       wibor_kind: loan_offer.wibor_kind,
       wibor_percent: wibor_percent,
       monthly_bank_payment: monthly_bank_payment,
@@ -93,18 +100,27 @@ class LoanComparisonsController < ApplicationController
       property_insurance_details: property_insurance_detail_for_total_paid(loan_offer: loan_offer, calculation: calculation),
       bank_commission_total: calculation[:bank_commission_total],
       overpayment_penalty_total: calculation[:overpayment_penalty_total],
+      overpayment_penalty_details: overpayment_penalty_rule_detail_for_total_paid(
+        loan_offer: loan_offer,
+        overpay_during_penalty: simulation.fetch(:overpay_during_penalty, true)
+      ),
       months_paid: calculation[:months_paid],
       notes: build_column_notes(
         loan_offer: loan_offer,
         calculation: calculation,
         simulation: simulation,
-        rate_percent: rate_percent
+        rate_percent: rate_percent,
+        wibor_percent: wibor_percent,
+        variable_rate_percent: variable_rate_percent
       )
     }
   end
 
   def calculate_custom_offer(raw_offer)
+    rate_type = normalize_rate_type(raw_offer.fetch("rate_type", @rate_type))
     wibor_kind = raw_offer.fetch('wibor_kind', 'wibor_3m')
+    fixed_rate_percent = normalize_optional_decimal(raw_offer['fixed_rate_percent'])
+    fixed_rate_years = normalize_optional_integer(raw_offer['fixed_rate_years'])
     wibor_percent =
       if raw_offer['wibor_percent'].present?
         normalize_decimal(raw_offer['wibor_percent'])
@@ -115,6 +131,9 @@ class LoanComparisonsController < ApplicationController
     calculation = LoanCalculator.new(
       loan_net: @loan_amount,
       months: @months,
+      rate_type: rate_type,
+      fixed_rate_percent: fixed_rate_percent,
+      fixed_rate_years: fixed_rate_years,
       bank_margin_percent: normalize_decimal(raw_offer['bank_margin_percent']),
       wibor_percent: wibor_percent,
       bank_commission_percentage: normalize_decimal(raw_offer['bank_commission_percent']),
@@ -142,6 +161,9 @@ class LoanComparisonsController < ApplicationController
       offer_description: raw_offer['description'],
       promoted_from: nil,
       promoted_until: nil,
+      rate_type: rate_type,
+      fixed_rate_percent: fixed_rate_percent,
+      fixed_rate_years: fixed_rate_years,
       bank_margin_percent: normalize_decimal(raw_offer['bank_margin_percent']),
       wibor_kind: wibor_kind,
       wibor_percent: wibor_percent,
@@ -210,7 +232,8 @@ class LoanComparisonsController < ApplicationController
     requested_total_payment = @fixed_monthly_payment.to_f
     minimum_total_payment = minimum_total_payment_for_fixed_monthly(
       loan_offer: loan_offer,
-      base_monthly_payment: base_monthly_payment
+      base_monthly_payment: base_monthly_payment,
+      overpay_during_penalty: overpay_during_penalty
     )
 
     if requested_total_payment <= minimum_total_payment
@@ -226,7 +249,8 @@ class LoanComparisonsController < ApplicationController
     overpayment_amount = overpayment_amount_for_target_total_payment(
       loan_offer: loan_offer,
       requested_total_payment: requested_total_payment,
-      base_monthly_payment: base_monthly_payment
+      base_monthly_payment: base_monthly_payment,
+      overpay_during_penalty: overpay_during_penalty
     )
 
     if overpayment_amount <= 0
@@ -246,11 +270,19 @@ class LoanComparisonsController < ApplicationController
       overpayment_grace_years: overpayment_grace_years
     )
 
+    recurring_charges = recurring_monthly_charges_for_offer(loan_offer: loan_offer)
+    monthly_penalty = monthly_penalty_for(
+      loan_offer: loan_offer,
+      monthly_overpayment: overpayment_amount,
+      overpay_during_penalty: overpay_during_penalty
+    )
+    loan_component_monthly_payment = [requested_total_payment - recurring_charges - monthly_penalty, 0.0].max
+
     {
       calculation: calculation,
       monthly_overpayment: overpayment_amount,
       note: t("home.overpayment.notes.fixed_monthly_applied", monthly_payment: format_number(requested_total_payment, 0)),
-      default_monthly_payment: requested_total_payment,
+      default_monthly_payment: loan_component_monthly_payment,
       overpay_during_penalty: overpay_during_penalty
     }
   end
@@ -321,7 +353,7 @@ class LoanComparisonsController < ApplicationController
     }
   end
 
-  def build_column_notes(loan_offer:, calculation:, simulation:, rate_percent:)
+  def build_column_notes(loan_offer:, calculation:, simulation:, rate_percent:, wibor_percent:, variable_rate_percent:)
     monthly_overpayment = simulation[:monthly_overpayment].to_f
     overpay_during_penalty = simulation.fetch(:overpay_during_penalty, true)
     monthly_penalty = monthly_penalty_for(
@@ -386,17 +418,38 @@ class LoanComparisonsController < ApplicationController
     end
 
     {
-      rate: t(
-        "home.notes.rate",
-        rate: format_number(rate_percent, 2),
-        margin: format_number(loan_offer.bank_margin_percent, 2),
-        wibor_kind: loan_offer.wibor_kind.upcase,
-        wibor: format_number(loan_offer.current_wibor_percent(@wibor_snapshot), 2)
+      rate: rate_note_for(
+        loan_offer: loan_offer,
+        rate_percent: rate_percent,
+        wibor_percent: wibor_percent,
+        variable_rate_percent: variable_rate_percent
       ),
       default_monthly: default_payment_note_parts.join(". ").presence,
       first_month_lines: first_month_note_parts,
       total_paid: total_paid_note(calculation: calculation)
     }
+  end
+
+  def rate_note_for(loan_offer:, rate_percent:, wibor_percent:, variable_rate_percent:)
+    if loan_offer.fixed_period?
+      t(
+        "home.notes.rate_fixed",
+        fixed_rate: format_number(rate_percent, 2),
+        fixed_years: loan_offer.fixed_rate_years,
+        variable_rate: format_number(variable_rate_percent, 2),
+        margin: format_number(loan_offer.bank_margin_percent, 2),
+        wibor_kind: loan_offer.wibor_kind.upcase,
+        wibor: format_number(wibor_percent, 2)
+      )
+    else
+      t(
+        "home.notes.rate_variable",
+        rate: format_number(rate_percent, 2),
+        margin: format_number(loan_offer.bank_margin_percent, 2),
+        wibor_kind: loan_offer.wibor_kind.upcase,
+        wibor: format_number(wibor_percent, 2)
+      )
+    end
   end
 
   def life_insurance_detail_for_total_paid(loan_offer:, calculation:)
@@ -433,6 +486,20 @@ class LoanComparisonsController < ApplicationController
     )
   end
 
+  def overpayment_penalty_rule_detail_for_total_paid(loan_offer:, overpay_during_penalty:)
+    return nil unless loan_offer.overpayment_penalty_years.to_i.positive?
+
+    rule = t(
+      "home.results.breakdown_details.overpayment_penalty_rule",
+      years: loan_offer.overpayment_penalty_years,
+      percent: format_number(loan_offer.overpayment_penalty_percent, 3),
+      min: format_number(loan_offer.overpayment_penalty_min_amount, 0)
+    )
+    return rule if overpay_during_penalty
+
+    "#{rule}. #{t("home.results.breakdown_details.overpayment_penalty_skipped")}"
+  end
+
   def total_paid_note(calculation:)
     notes = []
     if calculation[:bank_commission_total].to_f.positive?
@@ -445,8 +512,20 @@ class LoanComparisonsController < ApplicationController
     notes.join(". ")
   end
 
-  def minimum_total_payment_for_fixed_monthly(loan_offer:, base_monthly_payment:)
-    base_monthly_payment.to_f + loan_offer.property_insurance_monthly.to_f
+  def minimum_total_payment_for_fixed_monthly(loan_offer:, base_monthly_payment:, overpay_during_penalty:)
+    base_monthly_payment.to_f +
+      recurring_monthly_charges_for_offer(loan_offer: loan_offer) +
+      minimum_penalty_monthly_for_fixed_mode(loan_offer: loan_offer, overpay_during_penalty: overpay_during_penalty)
+  end
+
+  def minimum_penalty_monthly_for_fixed_mode(loan_offer:, overpay_during_penalty:)
+    return 0.0 unless penalty_applies_for_overpayment?(loan_offer: loan_offer, overpay_during_penalty: overpay_during_penalty)
+
+    loan_offer.overpayment_penalty_min_amount.to_f
+  end
+
+  def recurring_monthly_charges_for_offer(loan_offer:)
+    loan_offer.property_insurance_monthly.to_f + recurring_life_insurance_for_offer(loan_offer)
   end
 
   def recurring_life_insurance_for_offer(loan_offer)
@@ -456,11 +535,43 @@ class LoanComparisonsController < ApplicationController
     @loan_amount.to_f * (loan_offer.life_insurance_percent.to_f / 100.0)
   end
 
-  def overpayment_amount_for_target_total_payment(loan_offer:, requested_total_payment:, base_monthly_payment:)
-    available_extra_budget = requested_total_payment.to_f - base_monthly_payment.to_f - loan_offer.property_insurance_monthly.to_f
+  def overpayment_amount_for_target_total_payment(loan_offer:, requested_total_payment:, base_monthly_payment:, overpay_during_penalty:)
+    available_extra_budget =
+      requested_total_payment.to_f -
+      base_monthly_payment.to_f -
+      recurring_monthly_charges_for_offer(loan_offer: loan_offer)
     return 0.0 if available_extra_budget <= 0
 
-    available_extra_budget
+    return available_extra_budget unless penalty_applies_for_overpayment?(loan_offer: loan_offer, overpay_during_penalty: overpay_during_penalty)
+
+    solve_overpayment_amount_with_penalty(available_extra_budget: available_extra_budget, loan_offer: loan_offer)
+  end
+
+  def solve_overpayment_amount_with_penalty(available_extra_budget:, loan_offer:)
+    penalty_percent_rate = loan_offer.overpayment_penalty_percent.to_f / 100.0
+    penalty_minimum = loan_offer.overpayment_penalty_min_amount.to_f
+
+    return available_extra_budget if penalty_percent_rate <= 0 && penalty_minimum <= 0
+
+    if penalty_minimum.positive?
+      overpayment_with_min_penalty = available_extra_budget - penalty_minimum
+      if overpayment_with_min_penalty.positive? &&
+         (penalty_percent_rate <= 0 || (overpayment_with_min_penalty * penalty_percent_rate) < penalty_minimum)
+        return overpayment_with_min_penalty
+      end
+    end
+
+    return 0.0 if penalty_percent_rate <= 0
+
+    overpayment_with_percent_penalty = available_extra_budget / (1.0 + penalty_percent_rate)
+    return 0.0 unless overpayment_with_percent_penalty.positive?
+    return 0.0 if penalty_minimum.positive? && (overpayment_with_percent_penalty * penalty_percent_rate) < penalty_minimum
+
+    overpayment_with_percent_penalty
+  end
+
+  def penalty_applies_for_overpayment?(loan_offer:, overpay_during_penalty:)
+    overpay_during_penalty && loan_offer.overpayment_penalty_years.to_i.positive?
   end
 
   def overpayment_amount_for_target_period(loan_offer:, target_months:, overpayment_grace_years:)
@@ -546,6 +657,11 @@ class LoanComparisonsController < ApplicationController
     OVERPAYMENT_MODES.include?(mode) ? mode : "none"
   end
 
+  def normalize_rate_type(value)
+    type = value.to_s
+    RATE_TYPES.include?(type) ? type : "variable"
+  end
+
   def normalize_target_years(value)
     target = normalize_integer(value, 10)
     upper_bound = [@loan_years - 1, 1].max
@@ -601,6 +717,9 @@ class LoanComparisonsController < ApplicationController
       :bank_title,
       :title,
       :description,
+      :rate_type,
+      :fixed_rate_percent,
+      :fixed_rate_years,
       :bank_margin_percent,
       :wibor_kind,
       :wibor_percent,

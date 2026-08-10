@@ -42,6 +42,22 @@
     <div class="col-12"><hr></div>
 
     <div class="col-md-6 col-lg-3">
+      <%= form.label :rate_type, "Rate type", class: "form-label" %>
+      <%= form.select :rate_type,
+                      [["Variable", "variable"], ["Fixed period then variable", "fixed_period"]],
+                      {},
+                      class: "form-select" %>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <%= form.label :fixed_rate_percent, "Fixed rate (%)", class: "form-label" %>
+      <%= form.number_field :fixed_rate_percent, class: "form-control", step: "0.001" %>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <%= form.label :fixed_rate_years, "Fixed period (years)", class: "form-label" %>
+      <%= form.number_field :fixed_rate_years, class: "form-control", step: 1 %>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
       <%= form.label :bank_margin_percent, "Bank margin (%)", class: "form-label" %>
       <%= form.number_field :bank_margin_percent, class: "form-control", step: "0.001", required: true %>
     </div>

@@ -161,10 +161,14 @@
 #  bank_earnings: 362196}
 
 class LoanCalculator
+  RATE_TYPES = %w[variable fixed_period].freeze
   OVERPAYMENT_MODES = %w[none coef absolute].freeze
 
   def initialize(loan_net:,
                   months:,
+                  rate_type: :variable,
+                  fixed_rate_percent: nil,
+                  fixed_rate_years: nil,
                   bank_margin_percent:,
                   wibor_percent:,
                   bank_commission_percentage: nil,
@@ -185,6 +189,9 @@ class LoanCalculator
                  )
     @loan_net = loan_net.to_f
     @months = months.to_i
+    @rate_type = normalize_rate_type(rate_type)
+    @fixed_rate_percent = fixed_rate_percent.presence&.to_f
+    @fixed_rate_years = fixed_rate_years.presence&.to_i
     @bank_margin_percent = bank_margin_percent.to_f
     @wibor_percent = wibor_percent.to_f
     @bank_commission_percentage = bank_commission_percentage.nil? ? bank_comission_percentage.to_f : bank_commission_percentage.to_f
@@ -204,19 +211,21 @@ class LoanCalculator
   end
 
   def call
-    annual_rate = (@bank_margin_percent + @wibor_percent) / 100.0
-    monthly_rate = annual_rate / 12.0
+    fixed_months = fixed_period_months
+    starts_with_fixed_rate = fixed_months.positive?
+    switches_to_variable_rate = starts_with_fixed_rate && fixed_months < @months
 
-    monthly_principal_interest =
-      if monthly_rate.zero?
-        @loan_net.to_f / @months
-      else
-        (
-          @loan_net *
-          monthly_rate *
-          ((1 + monthly_rate)**@months)
-        ) / (((1 + monthly_rate)**@months) - 1)
-      end
+    variable_monthly_rate = ((@bank_margin_percent + @wibor_percent) / 100.0) / 12.0
+    fixed_monthly_rate = (@fixed_rate_percent.to_f / 100.0) / 12.0
+
+    phase_monthly_rate = starts_with_fixed_rate ? fixed_monthly_rate : variable_monthly_rate
+    scheduled_payment = annuity_payment(
+      principal: @loan_net,
+      monthly_rate: phase_monthly_rate,
+      months_remaining: @months
+    )
+    first_month_scheduled_payment = scheduled_payment
+    post_fixed_monthly_payment = nil
 
     remaining_balance = @loan_net
 
@@ -230,7 +239,7 @@ class LoanCalculator
     overpayment_start_month = @overpayment_grace_years.to_i * 12
     overpayment_penalty_months = @overpayment_penalty_years.to_i * 12
 
-    first_month_extra_payment = additional_overpayment(month_index: 0, scheduled_payment: monthly_principal_interest,
+    first_month_extra_payment = additional_overpayment(month_index: 0, scheduled_payment: first_month_scheduled_payment,
                                                        overpayment_start_month: overpayment_start_month)
     first_month_overpayment_penalty =
       if first_month_extra_payment.positive? && overpayment_penalty_months.positive?
@@ -244,13 +253,23 @@ class LoanCalculator
     @months.times do |month_index|
       break if remaining_balance <= 0
 
-      interest_part = remaining_balance * monthly_rate
-      actual_monthly_payment = monthly_principal_interest
+      if switches_to_variable_rate && month_index == fixed_months
+        phase_monthly_rate = variable_monthly_rate
+        scheduled_payment = annuity_payment(
+          principal: remaining_balance,
+          monthly_rate: phase_monthly_rate,
+          months_remaining: @months - month_index
+        )
+        post_fixed_monthly_payment = scheduled_payment
+      end
+
+      interest_part = remaining_balance * phase_monthly_rate
+      actual_monthly_payment = scheduled_payment
 
       additional_payment =
         additional_overpayment(
           month_index: month_index,
-          scheduled_payment: monthly_principal_interest,
+          scheduled_payment: scheduled_payment,
           overpayment_start_month: overpayment_start_month
         )
       actual_monthly_payment += additional_payment
@@ -294,7 +313,15 @@ class LoanCalculator
       end
 
     notes = []
-    notes << "Rate base: margin #{@bank_margin_percent.round(3)}% + WIBOR #{@wibor_percent.round(3)}%"
+    if starts_with_fixed_rate
+      if switches_to_variable_rate
+        notes << "Rate base: fixed #{@fixed_rate_percent.round(3)}% for #{@fixed_rate_years} years, then margin #{@bank_margin_percent.round(3)}% + WIBOR #{@wibor_percent.round(3)}%"
+      else
+        notes << "Rate base: fixed #{@fixed_rate_percent.round(3)}% for full repayment period"
+      end
+    else
+      notes << "Rate base: margin #{@bank_margin_percent.round(3)}% + WIBOR #{@wibor_percent.round(3)}%"
+    end
     notes << "Bank commission: #{@bank_commission_percentage.round(3)}% of net loan" if @bank_commission_percentage.positive?
     if @fixed_life_insurance_total
       notes << "Life insurance as one-time total amount"
@@ -313,9 +340,10 @@ class LoanCalculator
     end
 
     {
-      monthly_principal_interest: monthly_principal_interest.round,
+      monthly_principal_interest: first_month_scheduled_payment.round,
+      monthly_principal_interest_after_fixed: post_fixed_monthly_payment&.round,
       first_month_payment: (
-        monthly_principal_interest +
+        first_month_scheduled_payment +
         first_month_life_insurance +
         @property_insurance_monthly.to_f +
         first_month_extra_payment +
@@ -336,12 +364,38 @@ class LoanCalculator
 
   private
 
+  def normalize_rate_type(rate_type)
+    normalized = rate_type.to_s
+    return normalized if RATE_TYPES.include?(normalized)
+
+    "variable"
+  end
+
   def normalize_overpayment_mode(mode)
     normalized = mode.to_s
     return "none" if normalized == "no_overpayment"
     return normalized if OVERPAYMENT_MODES.include?(normalized)
 
     "none"
+  end
+
+  def fixed_period_months
+    return 0 unless @rate_type == "fixed_period"
+    return 0 unless @fixed_rate_percent.to_f.positive?
+    return 0 unless @fixed_rate_years.to_i.positive?
+
+    [@fixed_rate_years * 12, @months].min
+  end
+
+  def annuity_payment(principal:, monthly_rate:, months_remaining:)
+    return 0.0 if months_remaining.to_i <= 0
+
+    if monthly_rate.zero?
+      principal.to_f / months_remaining
+    else
+      factor = (1 + monthly_rate)**months_remaining
+      (principal.to_f * monthly_rate * factor) / (factor - 1)
+    end
   end
 
   def additional_overpayment(month_index:, scheduled_payment:, overpayment_start_month:)

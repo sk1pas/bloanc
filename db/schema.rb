@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_08_134610) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_09_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -69,6 +69,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_08_134610) do
     t.decimal "bank_margin_percent", precision: 6, scale: 3, null: false
     t.datetime "created_at", null: false
     t.text "description"
+    t.decimal "fixed_rate_percent", precision: 6, scale: 3
+    t.integer "fixed_rate_years"
     t.decimal "life_insurance_percent", precision: 8, scale: 4
     t.decimal "life_insurance_total", precision: 12, scale: 2
     t.integer "life_insurance_years"
@@ -82,11 +84,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_08_134610) do
     t.date "promoted_from"
     t.date "promoted_until"
     t.decimal "property_insurance_monthly", precision: 12, scale: 2, default: "0.0", null: false
+    t.integer "rate_type", default: 0, null: false
     t.string "title", null: false
     t.datetime "updated_at", null: false
     t.integer "wibor_kind", default: 1, null: false
     t.index ["active"], name: "index_loan_offers_on_active"
     t.index ["bank_id"], name: "index_loan_offers_on_bank_id"
+    t.index ["rate_type"], name: "index_loan_offers_on_rate_type"
   end
 
   create_table "wibor_snapshots", force: :cascade do |t|

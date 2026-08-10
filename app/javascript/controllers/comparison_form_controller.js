@@ -6,6 +6,8 @@ export default class extends Controller {
     "loanAmountRange",
     "yearsInput",
     "yearsRange",
+    "rateTypeInput",
+    "rateTypeTab",
     "modeRadio",
     "fixedMonthlyWrap",
     "fixedPeriodWrap",
@@ -16,9 +18,27 @@ export default class extends Controller {
   ]
 
   connect() {
+    this.updateRateTypeTabs()
     this.updateTargetYearsBounds()
     this.updateOverpaymentFields()
     this.scrollToResultsIfRequested()
+  }
+
+  selectRateType(event) {
+    event.preventDefault()
+
+    if (!this.hasRateTypeInputTarget) return
+
+    const selectedType = event.currentTarget.dataset.rateType
+    if (!selectedType) return
+
+    const changed = this.rateTypeInputTarget.value !== selectedType
+    this.rateTypeInputTarget.value = selectedType
+    this.updateRateTypeTabs()
+
+    if (changed) {
+      this.element.requestSubmit()
+    }
   }
 
   syncLoanAmountFromInput() {
@@ -93,6 +113,15 @@ export default class extends Controller {
     const clamped = Math.min(Math.max(current, 1), maxYears)
     this.targetYearsInputTarget.value = String(clamped)
     this.targetYearsRangeTarget.value = String(clamped)
+  }
+
+  updateRateTypeTabs() {
+    if (!this.hasRateTypeInputTarget) return
+
+    const selectedType = this.rateTypeInputTarget.value || "variable"
+    this.rateTypeTabTargets.forEach((tab) => {
+      tab.classList.toggle("active", tab.dataset.rateType === selectedType)
+    })
   }
 
   toggleFieldGroup(wrapper, inputs, enabled) {

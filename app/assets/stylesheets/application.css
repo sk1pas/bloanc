@@ -108,6 +108,115 @@ body {
 	color: #365c78;
 }
 
+.locale-switch-btn {
+	min-width: 72px;
+	font-weight: 600;
+	letter-spacing: 0.01em;
+}
+
+.loan-type-tabs {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 0.65rem;
+	max-width: 760px;
+}
+
+.loan-type-tabs-inline {
+	max-width: none;
+	display: flex;
+	align-items: center;
+	gap: 0.45rem;
+}
+
+.loan-type-tabs-featured {
+	max-width: none;
+	grid-template-columns: repeat(2, minmax(260px, 1fr));
+	gap: 0.85rem;
+}
+
+.loan-type-tab {
+	padding: 0.75rem 0.85rem;
+	border: 1px solid #cddce8;
+	border-radius: 11px;
+	background: #f7fbff;
+	text-align: left;
+	color: #204660;
+	text-decoration: none;
+	transition: background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.loan-type-tab:hover {
+	border-color: #90b2cc;
+	background: #eef7ff;
+}
+
+.loan-type-tab.active {
+	border-color: #0f5e9c;
+	background: linear-gradient(145deg, rgba(15, 94, 156, 0.13), rgba(58, 154, 141, 0.1));
+	box-shadow: 0 6px 18px rgba(15, 94, 156, 0.15);
+}
+
+.results-rate-switcher .loan-type-tab {
+	padding: 0.85rem 0.95rem;
+	border-radius: 12px;
+	box-shadow: 0 3px 10px rgba(22, 66, 97, 0.08);
+}
+
+.results-rate-switcher .loan-type-tab-title {
+	font-size: 0.98rem;
+}
+
+.results-rate-switcher .loan-type-tab-desc {
+	font-size: 0.83rem;
+}
+
+.loan-type-tab-title {
+	display: block;
+	font-weight: 700;
+	font-size: 0.9rem;
+}
+
+.loan-type-tab-desc {
+	display: block;
+	margin-top: 0.18rem;
+	font-size: 0.79rem;
+	line-height: 1.35;
+	color: #4f6f87;
+}
+
+.loan-type-tab-compact {
+	padding: 0.35rem 0.65rem;
+	font-size: 0.79rem;
+	font-weight: 600;
+	line-height: 1.2;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.results-rate-switcher {
+	width: 100%;
+}
+
+@media (max-width: 767px) {
+	.loan-type-tabs {
+		grid-template-columns: 1fr;
+	}
+
+	.loan-type-tabs-inline {
+		width: 100%;
+		display: grid;
+		grid-template-columns: 1fr;
+	}
+
+	.loan-type-tabs-featured {
+		grid-template-columns: 1fr;
+	}
+
+	.results-rate-switcher {
+		min-width: 100%;
+	}
+}
+
 .compact-number-input {
 	max-width: 230px;
 }
@@ -127,6 +236,10 @@ body {
 
 .results-table > :not(caption) > * > * {
 	vertical-align: top;
+}
+
+.results-table th {
+  font-size: 0.85rem;
 }
 
 .table-note {
@@ -158,12 +271,97 @@ body {
 	margin-top: 0.15rem;
 }
 
+.results-empty-row td {
+	padding: 1.4rem 1rem;
+}
+
+.results-empty-message {
+	padding: 0.9rem 1rem;
+	text-align: center;
+	border: 1px dashed #b9ccdc;
+	border-radius: 10px;
+	background: #f7fbff;
+	color: #3a5f7a;
+	font-weight: 500;
+}
+
 .bank-cell {
 	text-align: center;
 }
 
+.bank-offer-cell {
+	min-width: 180px;
+}
+
+.bank-offer-topline {
+	display: flex;
+	align-items: center;
+	gap: 0.7rem;
+}
+
+.bank-offer-meta {
+	min-width: 0;
+}
+
+.bank-offer-bank-name {
+	min-width: 0;
+}
+
+.bank-offer-title {
+	margin-top: 0.15rem;
+}
+
+.monthly-total-cell {
+	min-width: 100px;
+}
+
+.amount-nowrap strong {
+	white-space: nowrap;
+}
+
+.loan-period-cell {
+	min-width: 100px;
+}
+
+.first-month-breakdown {
+	display: grid;
+	gap: 0.3rem;
+	padding: 0.5rem 0.65rem;
+	border: 1px solid #dbe6ef;
+	border-radius: 10px;
+	background: #f8fbfe;
+	margin-top: 0.5rem;
+}
+
+.first-month-breakdown-row {
+	display: grid;
+	grid-template-columns: minmax(125px, 1fr) minmax(110px, 1fr);
+	gap: 0.75rem;
+	align-items: start;
+	font-size: 0.8rem;
+	line-height: 1.3;
+	color: #2e4e67;
+}
+
+.first-month-breakdown-label {
+	display: block;
+}
+
+.first-month-breakdown-value {
+	white-space: normal;
+	overflow-wrap: anywhere;
+	text-align: right;
+	font-size: 0.8rem;
+}
+
+.first-month-breakdown-note {
+	font-size: 0.78rem;
+	line-height: 1.35;
+	color: #557189;
+}
+
 .total-paid-cell {
-	min-width: 330px;
+	min-width: 200px;
 }
 
 .total-paid-breakdown {

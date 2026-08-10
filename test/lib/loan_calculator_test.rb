@@ -67,4 +67,24 @@ class LoanCalculatorTest < ActiveSupport::TestCase
     assert_equal 9000, fixed[:life_insurance_total]
     assert_equal fixed[:monthly_principal_interest] + 20, fixed[:first_month_payment]
   end
+
+  test "fixed-period rate switches to variable payment after fixed years" do
+    result = LoanCalculator.new(
+      loan_net: 400_000,
+      months: 300,
+      rate_type: :fixed_period,
+      fixed_rate_percent: 6.2,
+      fixed_rate_years: 5,
+      bank_margin_percent: 1.8,
+      wibor_percent: 3.8,
+      insurance: {
+        property_insurance_monthly: 25
+      }
+    ).call
+
+    assert result[:monthly_principal_interest].positive?
+    assert result[:monthly_principal_interest_after_fixed].present?
+    assert_operator result[:monthly_principal_interest_after_fixed], :>, 0
+    assert_includes result[:notes].join(" "), "fixed"
+  end
 end
