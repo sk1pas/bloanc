@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+echo "==> Stopping app"
+bin/kamal app stop
+
+echo "==> Deploying"
+bin/kamal deploy
+
+echo "==> Pruning stopped containers"
+bin/kamal prune containers
+
+echo "==> Deploy finished"

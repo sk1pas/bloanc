@@ -16,6 +16,10 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Oprocentowanie stale"
     assert_includes response.body, "Docelowa laczna rata miesieczna (PLN)"
     assert_includes response.body, "Nadplacaj w okresie kary"
+    assert_includes response.body, "data-controller=\"cookie-consent\""
+    assert_includes response.body, "Akceptuj wszystkie"
+    refute_includes response.body, "Panel admina"
+    refute_includes response.body, admin_root_path
   end
 
   test "filters offers by fixed-period rate type" do

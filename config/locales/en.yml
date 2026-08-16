@@ -40,8 +40,11 @@ en:
     formats:
       default: "%Y-%m-%d %H:%M"
 
-  nav:
-    admin: "Admin"
+  cookies:
+    title: "Cookies"
+    description: "We use necessary cookies so the site works properly (for example session and security). Optional analytics or marketing cookies are used only with your consent. You can accept all cookies or keep necessary ones only."
+    accept: "Accept all"
+    reject: "Necessary only"
   actions:
     back: "Back"
     show: "Show"

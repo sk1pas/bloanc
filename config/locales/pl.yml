@@ -11,8 +11,11 @@ pl:
     formats:
       default: "%Y-%m-%d %H:%M"
 
-  nav:
-    admin: "Panel admina"
+  cookies:
+    title: "Pliki cookie"
+    description: "Uzywamy niezbednych plikow cookie, aby strona dzialala poprawnie (np. sesja i bezpieczenstwo). Opcjonalne cookie analityczne lub marketingowe uruchamiamy tylko po Twojej zgodzie. Mozesz zaakceptowac wszystkie albo odrzucic opcjonalne."
+    accept: "Akceptuj wszystkie"
+    reject: "Tylko niezbedne"
   actions:
     back: "Wroc"
     show: "Pokaz"
