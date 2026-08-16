@@ -126,6 +126,7 @@ pl:
     overpayment:
       title: "Symulacja nadpłat"
       subtitle: "Wybierz strategię i sprawdź jak zmieni się okres spłaty oraz łączny koszt."
+      options_toggle: "Opcje nadpłat"
       mode:
         none_title: "Bez nadpłat"
         none_desc: "Standardowa rata liczona dla pełnego okresu kredytu."

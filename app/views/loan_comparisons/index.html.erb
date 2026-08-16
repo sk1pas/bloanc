@@ -12,7 +12,7 @@
 									method: :get,
 									class: "hero-form",
 									data: { controller: "comparison-form" } do |form| %>
-			<% fixed_monthly_slider_max = [(@loan_amount.to_i / 8), 10_000].max %>
+			<% fixed_monthly_slider_max = [[[@loan_amount.to_i / 8, 10_000].max, 20_000].min, 1_000].max %>
 			<% fixed_monthly_slider_value = [[@fixed_monthly_payment.to_i, fixed_monthly_slider_max].min, 1_000].max %>
 			<%= hidden_field_tag :rate_type, @rate_type %>
 
@@ -20,54 +20,90 @@
 				<div class="col-sm-8 col-md-5 col-lg-4">
 					<div class="hero-field">
 						<%= form.label :loan_amount, t("home.form.loan_amount"), class: "form-label" %>
-						<%= form.number_field :loan_amount,
-													value: @loan_amount,
-													class: "form-control compact-number-input",
-													min: 50_000,
-													max: 2_500_000,
-													step: 1000,
-													required: true,
-													data: {
-														comparison_form_target: "loanAmountInput",
-														action: "input->comparison-form#syncLoanAmountFromInput change->comparison-form#syncLoanAmountFromInput"
-													} %>
-						<%= tag.input type: "range",
-												 min: 50_000,
-												 max: 2_500_000,
-												 step: 5_000,
-												 value: @loan_amount,
-												 class: "form-range mt-2",
-												 data: {
-													 comparison_form_target: "loanAmountRange",
-													 action: "input->comparison-form#syncLoanAmountFromRange"
-												 } %>
+						<div class="slider-field">
+							<div class="slider-field__input-row">
+								<button type="button"
+												class="slider-field__btn"
+												aria-label="-"
+												data-action="comparison-form#nudgeRange"
+												data-range-target="loanAmountRange"
+												data-range-direction="-1">−</button>
+								<%= form.number_field :loan_amount,
+															value: @loan_amount,
+															class: "form-control slider-field__input",
+															min: 50_000,
+															max: 2_500_000,
+															step: 1000,
+															required: true,
+															data: {
+																comparison_form_target: "loanAmountInput",
+																action: "input->comparison-form#syncLoanAmountFromInput change->comparison-form#syncLoanAmountFromInput"
+															} %>
+								<button type="button"
+												class="slider-field__btn"
+												aria-label="+"
+												data-action="comparison-form#nudgeRange"
+												data-range-target="loanAmountRange"
+												data-range-direction="1">+</button>
+							</div>
+							<div class="slider-field__range-row">
+								<%= tag.input type: "range",
+														 min: 50_000,
+														 max: 2_500_000,
+														 step: 5_000,
+														 value: @loan_amount,
+														 class: "form-range slider-field__range",
+														 data: {
+															 comparison_form_target: "loanAmountRange",
+															 action: "input->comparison-form#syncLoanAmountFromRange"
+														 } %>
+							</div>
+						</div>
 					</div>
 				</div>
 
 				<div class="col-sm-8 col-md-4 col-lg-3">
 					<div class="hero-field">
 						<%= form.label :years, t("home.form.years"), class: "form-label" %>
-						<%= form.number_field :years,
-													value: @loan_years,
-													class: "form-control compact-number-input",
-													min: 5,
-													max: 40,
-													step: 1,
-													required: true,
-													data: {
-														comparison_form_target: "yearsInput",
-														action: "input->comparison-form#syncYearsFromInput change->comparison-form#syncYearsFromInput"
-													} %>
-						<%= tag.input type: "range",
-												 min: 5,
-												 max: 40,
-												 step: 1,
-												 value: @loan_years,
-												 class: "form-range mt-2",
-												 data: {
-													 comparison_form_target: "yearsRange",
-													 action: "input->comparison-form#syncYearsFromRange"
-												 } %>
+						<div class="slider-field">
+							<div class="slider-field__input-row">
+								<button type="button"
+												class="slider-field__btn"
+												aria-label="-"
+												data-action="comparison-form#nudgeRange"
+												data-range-target="yearsRange"
+												data-range-direction="-1">−</button>
+								<%= form.number_field :years,
+															value: @loan_years,
+															class: "form-control slider-field__input",
+															min: 1,
+															max: 30,
+															step: 1,
+															required: true,
+															data: {
+																comparison_form_target: "yearsInput",
+																action: "input->comparison-form#syncYearsFromInput change->comparison-form#syncYearsFromInput"
+															} %>
+								<button type="button"
+												class="slider-field__btn"
+												aria-label="+"
+												data-action="comparison-form#nudgeRange"
+												data-range-target="yearsRange"
+												data-range-direction="1">+</button>
+							</div>
+							<div class="slider-field__range-row">
+								<%= tag.input type: "range",
+														 min: 1,
+														 max: 30,
+														 step: 1,
+														 value: @loan_years,
+														 class: "form-range slider-field__range",
+														 data: {
+															 comparison_form_target: "yearsRange",
+															 action: "input->comparison-form#syncYearsFromRange"
+														 } %>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -77,7 +113,9 @@
 				<p class="small text-secondary mb-0"><%= t("home.overpayment.subtitle") %></p>
 			</div>
 
-			<div class="hero-form-row row g-3 justify-content-center">
+			<details class="overpayment-options" data-controller="mobile-details">
+				<summary class="overpayment-options-summary"><%= t("home.overpayment.options_toggle") %></summary>
+				<div class="overpayment-options-body hero-form-row row g-3 justify-content-center">
 				<div class="col-md-4 col-lg-3">
 					<label class="simulation-option">
 						<%= form.radio_button :overpayment_mode,
@@ -107,25 +145,43 @@
 						<span class="simulation-option-desc"><%= t("home.overpayment.mode.fixed_monthly_desc") %></span>
 						<div class="simulation-option-fields mt-2" data-comparison-form-target="fixedMonthlyWrap">
 							<span class="simulation-option-field-label"><%= t("home.overpayment.fields.fixed_monthly_payment") %></span>
-							<%= form.number_field :fixed_monthly_payment,
-																	value: @fixed_monthly_payment,
-																	class: "form-control form-control-sm compact-number-input",
-																	step: 100,
-																	min: 0,
-																	data: {
-																		comparison_form_target: "fixedMonthlyInput",
-																		action: "input->comparison-form#syncFixedMonthlyFromInput change->comparison-form#syncFixedMonthlyFromInput"
-																	} %>
-							<%= tag.input type: "range",
-														 min: 1_000,
-														 max: fixed_monthly_slider_max,
-														 step: 100,
-														 value: fixed_monthly_slider_value,
-														 class: "form-range mt-2",
-														 data: {
-															 comparison_form_target: "fixedMonthlyRange",
-															 action: "input->comparison-form#syncFixedMonthlyFromRange"
-														 } %>
+							<div class="slider-field">
+								<div class="slider-field__input-row">
+									<button type="button"
+													class="slider-field__btn"
+													aria-label="-"
+													data-action="comparison-form#nudgeRange"
+													data-range-target="fixedMonthlyRange"
+													data-range-direction="-1">−</button>
+									<%= form.number_field :fixed_monthly_payment,
+																			value: @fixed_monthly_payment,
+																			class: "form-control form-control-sm slider-field__input",
+																			step: 100,
+																			min: 0,
+																			data: {
+																				comparison_form_target: "fixedMonthlyInput",
+																				action: "input->comparison-form#syncFixedMonthlyFromInput change->comparison-form#syncFixedMonthlyFromInput"
+																			} %>
+									<button type="button"
+													class="slider-field__btn"
+													aria-label="+"
+													data-action="comparison-form#nudgeRange"
+													data-range-target="fixedMonthlyRange"
+													data-range-direction="1">+</button>
+								</div>
+								<div class="slider-field__range-row">
+									<%= tag.input type: "range",
+																 min: 1_000,
+																 max: fixed_monthly_slider_max,
+																 step: 100,
+																 value: fixed_monthly_slider_value,
+																 class: "form-range slider-field__range",
+																 data: {
+																	 comparison_form_target: "fixedMonthlyRange",
+																	 action: "input->comparison-form#syncFixedMonthlyFromRange"
+																 } %>
+								</div>
+							</div>
 							<div class="form-check simulation-penalty-check mt-2">
 								<%= hidden_field_tag :fixed_monthly_overpay_during_penalty, "0" %>
 								<%= check_box_tag :fixed_monthly_overpay_during_penalty,
@@ -155,26 +211,44 @@
 						<span class="simulation-option-desc"><%= t("home.overpayment.mode.fixed_period_desc") %></span>
 						<div class="simulation-option-fields mt-2" data-comparison-form-target="fixedPeriodWrap">
 							<span class="simulation-option-field-label"><%= t("home.overpayment.fields.target_years") %></span>
-							<%= form.number_field :target_years,
-																	value: @target_years,
-																	class: "form-control form-control-sm compact-number-input",
-																	step: 1,
-																	min: 1,
-																	max: [@loan_years - 1, 1].max,
-																	data: {
-																		comparison_form_target: "targetYearsInput",
-																		action: "input->comparison-form#syncTargetYearsFromInput change->comparison-form#syncTargetYearsFromInput"
-																	} %>
-							<%= tag.input type: "range",
-														 min: 1,
-														 max: [@loan_years - 1, 1].max,
-														 step: 1,
-														 value: @target_years,
-														 class: "form-range mt-2",
-														 data: {
-															 comparison_form_target: "targetYearsRange",
-															 action: "input->comparison-form#syncTargetYearsFromRange"
-														 } %>
+							<div class="slider-field">
+								<div class="slider-field__input-row">
+									<button type="button"
+													class="slider-field__btn"
+													aria-label="-"
+													data-action="comparison-form#nudgeRange"
+													data-range-target="targetYearsRange"
+													data-range-direction="-1">−</button>
+									<%= form.number_field :target_years,
+																			value: @target_years,
+																			class: "form-control form-control-sm slider-field__input",
+																			step: 1,
+																			min: 1,
+																			max: [@loan_years - 1, 1].max,
+																			data: {
+																				comparison_form_target: "targetYearsInput",
+																				action: "input->comparison-form#syncTargetYearsFromInput change->comparison-form#syncTargetYearsFromInput"
+																			} %>
+									<button type="button"
+													class="slider-field__btn"
+													aria-label="+"
+													data-action="comparison-form#nudgeRange"
+													data-range-target="targetYearsRange"
+													data-range-direction="1">+</button>
+								</div>
+								<div class="slider-field__range-row">
+									<%= tag.input type: "range",
+																 min: 1,
+																 max: [@loan_years - 1, 1].max,
+																 step: 1,
+																 value: @target_years,
+																 class: "form-range slider-field__range",
+																 data: {
+																	 comparison_form_target: "targetYearsRange",
+																	 action: "input->comparison-form#syncTargetYearsFromRange"
+																 } %>
+								</div>
+							</div>
 							<div class="form-check simulation-penalty-check mt-2">
 								<%= hidden_field_tag :fixed_period_overpay_during_penalty, "0" %>
 								<%= check_box_tag :fixed_period_overpay_during_penalty,
@@ -189,7 +263,8 @@
 						</div>
 					</label>
 				</div>
-			</div>
+				</div>
+			</details>
 
 			<div class="hero-form-actions">
 				<%= form.submit t("home.form.calculate"), class: "btn btn-primary btn-lg px-4" %>
@@ -208,7 +283,7 @@
 		 fixed_period_overpay_during_penalty: @fixed_period_overpay_during_penalty ? "1" : "0"
 	 } %>
 
-<section id="results-table" class="table-box mb-4" data-controller="table-sort">
+<section id="results-table" class="table-box mb-4" data-controller="table-sort sticky-table-header">
 	<div class="p-3 border-bottom">
 		<div class="d-flex flex-wrap justify-content-between align-items-end gap-3">
 			<div>
@@ -303,9 +378,11 @@
 			</div>
 		</div>
 	</div>
-	<div class="table-responsive">
-		<table class="table table-hover align-middle mb-0 results-table">
-			<thead class="table-light">
+	<div class="table-responsive"
+			 data-sticky-table-header-target="scroller"
+			 data-action="scroll->sticky-table-header#update">
+		<table class="table table-hover align-middle mb-0 results-table" data-sticky-table-header-target="table">
+			<thead class="table-light" data-sticky-table-header-target="head">
 				<tr>
 					<th><%= t("home.results.bank_loan_offer") %></th>
 					<th><%= t("home.results.rate_selected_type", type: t("home.rate_type.tabs.#{@rate_type}")) %></th>

@@ -30,7 +30,7 @@
 en:
   seo:
     site_name: "wCredit.pl"
-    description: "Compare Polish mortgage offers, variable and fixed-period rates, monthly totals, and full repayment costs."
+    description: "Compare Polish mortgage offers, variable and fixed-period rates, monthly totals, and full loan costs."
     keywords: "mortgage comparison, Poland mortgage, WIBOR, fixed rate mortgage, variable rate mortgage, loan calculator"
 
   date:
@@ -59,7 +59,7 @@ en:
     seo:
       variable:
         title: "Variable-rate mortgage comparison"
-        description: "Compare Polish variable-rate mortgage offers (margin + WIBOR): monthly payments, insurance, and total repayment cost."
+        description: "Compare Polish variable-rate mortgage offers (margin + WIBOR): monthly payments, insurance, and total loan cost."
       fixed_period:
         title: "Fixed-period mortgage comparison"
         description: "Compare fixed-period mortgage offers that switch to variable rate later. Check payments, insurance, and total cost."
@@ -106,8 +106,8 @@ en:
       monthly: "Monthly installment"
       default_monthly: "Credit payment"
       first_month_total: "First month total"
-      loan_period: "Repayment period"
-      total_paid: "Total repayment"
+      loan_period: "Loan term"
+      total_paid: "Total paid"
       total_cost: "Total cost"
       bank_interest: "Bank interest"
       life_insurance: "Life insurance"
@@ -154,17 +154,18 @@ en:
 
     overpayment:
       title: "Overpayment simulation"
-      subtitle: "Choose one strategy to see how repayment period and totals change."
+      subtitle: "Choose one strategy to see how the loan term and totals change."
+      options_toggle: "Overpayment options"
       mode:
         none_title: "No overpayment"
         none_desc: "Keep standard monthly installments based on full loan period."
         fixed_monthly_title: "Fixed monthly payment"
         fixed_monthly_desc: "Set target monthly payment (loan payment + property insurance + overpayment)."
-        fixed_period_title: "Fixed repayment period"
+        fixed_period_title: "Fixed loan term"
         fixed_period_desc: "Set target period and calculate the monthly payment needed to finish on time."
       fields:
         fixed_monthly_payment: "Target total monthly payment (PLN)"
-        target_years: "Target repayment period (years)"
+        target_years: "Target loan term (years)"
         overpay_during_penalty: "Overpay during penalty period"
       notes:
         none: "No user overpayment applied."

@@ -42,7 +42,7 @@ export default class extends Controller {
   }
 
   syncLoanAmountFromInput() {
-    this.loanAmountRangeTarget.value = this.loanAmountInputTarget.value
+    this.#setRangeFromInput(this.loanAmountRangeTarget, this.loanAmountInputTarget.value)
   }
 
   syncLoanAmountFromRange() {
@@ -50,7 +50,7 @@ export default class extends Controller {
   }
 
   syncYearsFromInput() {
-    this.yearsRangeTarget.value = this.yearsInputTarget.value
+    this.#setRangeFromInput(this.yearsRangeTarget, this.yearsInputTarget.value)
     this.updateTargetYearsBounds()
   }
 
@@ -60,7 +60,10 @@ export default class extends Controller {
   }
 
   syncFixedMonthlyFromInput() {
-    this.fixedMonthlyRangeTarget.value = this.fixedMonthlyInputTarget.value || this.fixedMonthlyRangeTarget.min
+    this.#setRangeFromInput(
+      this.fixedMonthlyRangeTarget,
+      this.fixedMonthlyInputTarget.value || this.fixedMonthlyRangeTarget.min
+    )
   }
 
   syncFixedMonthlyFromRange() {
@@ -79,6 +82,26 @@ export default class extends Controller {
 
   syncTargetYearsFromRange() {
     this.targetYearsInputTarget.value = this.targetYearsRangeTarget.value
+  }
+
+  nudgeRange(event) {
+    event.preventDefault()
+    event.stopPropagation()
+
+    const button = event.currentTarget
+    const rangeName = button.dataset.rangeTarget
+    const direction = Number(button.dataset.rangeDirection || "0")
+    if (!rangeName || !direction) return
+
+    const range = this[`has${this.#capitalize(rangeName)}Target`] ? this[`${rangeName}Target`] : null
+    if (!range || range.disabled) return
+
+    const step = Number(range.step || 1)
+    const min = Number(range.min)
+    const max = Number(range.max)
+    const next = Math.min(max, Math.max(min, Number(range.value) + direction * step))
+    range.value = String(next)
+    range.dispatchEvent(new Event("input", { bubbles: true }))
   }
 
   modeChanged() {
@@ -100,6 +123,13 @@ export default class extends Controller {
       [this.targetYearsInputTarget, this.targetYearsRangeTarget],
       useFixedPeriod
     )
+
+    this.element.querySelectorAll("[data-range-target='fixedMonthlyRange']").forEach((button) => {
+      button.disabled = !useFixedMonthly
+    })
+    this.element.querySelectorAll("[data-range-target='targetYearsRange']").forEach((button) => {
+      button.disabled = !useFixedPeriod
+    })
   }
 
   updateTargetYearsBounds() {
@@ -145,5 +175,21 @@ export default class extends Controller {
     requestAnimationFrame(() => {
       resultsSection.scrollIntoView({ behavior: "smooth", block: "start" })
     })
+  }
+
+  #setRangeFromInput(range, rawValue) {
+    const min = Number(range.min)
+    const max = Number(range.max)
+    const parsed = Number(rawValue)
+    if (!Number.isFinite(parsed)) {
+      range.value = String(min)
+      return
+    }
+
+    range.value = String(Math.min(max, Math.max(min, parsed)))
+  }
+
+  #capitalize(value) {
+    return value.charAt(0).toUpperCase() + value.slice(1)
   }
 }
