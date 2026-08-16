@@ -218,3 +218,17 @@ bin/deploy
 ```
 
 `bin/deploy` stops the app, frees host port `3000` if a leftover container still holds it, runs `kamal deploy`, migrates inside the running web container (`app exec --reuse`), then prunes exited bloanc containers.
+
+### WIBOR refresh
+
+Manual:
+
+```bash
+bin/rails wibor:refresh
+# production:
+bin/kamal app exec --reuse "bin/rails wibor:refresh"
+```
+
+If rates are unchanged since the latest snapshot, the task only updates `fetched_at` (no new history row).
+
+Production also runs this hourly via the Kamal `cron` role (`config/crontab`).

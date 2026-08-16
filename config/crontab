@@ -1,0 +1,6 @@
+# Hourly WIBOR refresh for the Kamal cron role.
+# Environment variables are prepended by: (env && cat config/crontab) | crontab -
+SHELL=/bin/bash
+PATH=/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+0 * * * * cd /rails && bin/rails wibor:refresh >> /proc/1/fd/1 2>> /proc/1/fd/2

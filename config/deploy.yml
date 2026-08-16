@@ -16,6 +16,12 @@ servers:
     options:
       publish:
         - "127.0.0.1:3000:80"
+  cron:
+    hosts:
+      - 192.168.0.32
+    cmd: bash -c "(env && cat config/crontab) | crontab - && cron -f"
+    options:
+      user: root
   #   cmd: bin/jobs
   # job:
 

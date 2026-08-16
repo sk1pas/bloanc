@@ -5,9 +5,9 @@ class Admin::WiborSnapshotsController < Admin::BaseController
   end
 
   def refresh
-    snapshot = Wibor::Fetcher.new.call
+    result = Wibor::Fetcher.new.call
     redirect_to admin_wibor_snapshots_path,
-                notice: t("admin.wibor.flash.refreshed", date: I18n.l(snapshot.effective_date))
+                notice: t("admin.wibor.flash.refreshed", date: I18n.l(result.snapshot.effective_date))
   rescue Wibor::Fetcher::FetchError => e
     redirect_to admin_wibor_snapshots_path,
                 alert: t("admin.wibor.flash.refresh_failed", error: e.message)
