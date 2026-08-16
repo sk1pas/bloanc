@@ -79,12 +79,12 @@ class LoanComparisonsController < ApplicationController
 
     monthly_bank_payment = calculation[:monthly_principal_interest].to_f
     monthly_user_overpayment = simulation[:monthly_overpayment].to_f
-    property_insurance_monthly = loan_offer.property_insurance_monthly.to_f
+    # Credit payment = principal + interest (+ optional user overpayment). No insurance/fees.
     default_monthly_payment =
       if simulation[:default_monthly_payment].present?
         simulation[:default_monthly_payment].to_f
       else
-        monthly_bank_payment + monthly_user_overpayment + property_insurance_monthly
+        monthly_bank_payment + monthly_user_overpayment
       end
     loan_period_months = calculation[:months_paid]
 

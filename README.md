@@ -217,4 +217,4 @@ sudo cloudflared tunnel route dns wcredit wcredit.pl
 bin/deploy
 ```
 
-`bin/deploy` runs `kamal app stop`, `kamal deploy`, then prunes exited bloanc containers.
+`bin/deploy` stops the app, frees host port `3000` if a leftover container still holds it, runs `kamal deploy`, migrates inside the running web container (`app exec --reuse`), then prunes exited bloanc containers.

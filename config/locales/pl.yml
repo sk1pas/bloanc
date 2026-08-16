@@ -58,7 +58,7 @@ pl:
       active_filter: "Pokazane oferty: %{type}"
     sort:
       bank_margin_percent: "Marża"
-      monthly_payment: "Rata"
+      monthly_payment: "Rata kredytowa"
       loan_period: "Okres"
       total_paid: "Suma"
       total_cost: "Łączny koszt"
@@ -74,8 +74,8 @@ pl:
       bank_loan_offer: "Oferta banku"
       rate: "Stopa startowa"
       rate_selected_type: "%{type}"
-      monthly: "Rata"
-      default_monthly: "Łączna rata"
+      monthly: "Rata miesięczna"
+      default_monthly: "Rata kredytowa"
       first_month_total: "Rata w pierwszym miesiącu"
       loan_period: "Okres spłaty"
       total_paid: "Suma spłaty"
@@ -88,6 +88,7 @@ pl:
       promo_period: "Okres promocyjny"
       offer_link_fallback: "Link"
       updated_at: "Aktualizacja: %{date}"
+      ltv_assumption: "Obliczenia zakładają, że wkład własny wynosi więcej niż 20% wartości nieruchomości, a część bankowa jest mniejsza niż 80% (LTV poniżej 80%)."
       disclaimer:
         lead: "Dane o kredytach na tej stronie pochodzą z publicznie dostępnych materiałów banków i mogą nie odzwierciedlać pełnej ani ostatecznej oferty."
         body: "Niektóre opłaty, warunki ubezpieczeń, zasady przyznawania kredytu lub inne szczegóły mogą być pominięte, nieaktualne albo inne niż w ofercie przedstawionej przy złożeniu wniosku. Przed podjęciem decyzji zawsze sprawdź aktualne warunki bezpośrednio w banku."
@@ -181,9 +182,9 @@ pl:
     notes:
       rate: "Stopa %{rate}%% = marża %{margin}%% + %{wibor_kind} %{wibor}%%"
       rate_variable: "Stopa %{rate}%% = marża %{margin}%% + %{wibor_kind} %{wibor}%%"
-      rate_fixed: "Stałe %{fixed_rate}%% przez %{fixed_years} lat, potem obowiązuje stopa zmienna."
+      rate_fixed: "Stała stopa %{fixed_rate}%% przez %{fixed_years} lat, potem zmienna %{variable_rate}%% (marża %{margin}%% + %{wibor_kind} %{wibor}%%)."
       default_payment:
-        bank_part: "Rata banku (kapitał + odsetki): %{amount} PLN"
+        bank_part: "Rata kredytowa (kapitał + odsetki): %{amount} PLN"
         user_overpayment: "Nadpłata użytkownika: %{amount} PLN"
         overpayment_penalty: "Kara za nadpłatę: %{amount} PLN miesięcznie przez %{months} miesięcy"
       first_month:

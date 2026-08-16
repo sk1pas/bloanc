@@ -375,9 +375,6 @@
 						</td>
 						<td>
 							<div><strong><%= number_with_precision(result[:rate_percent], precision: 2, strip_insignificant_zeros: true) %>%</strong></div>
-							<% if result[:rate_type] == "fixed_period" %>
-								<div class="table-note"><%= t("home.results.fixed_rate_period_hint", years: result[:fixed_rate_years]) %></div>
-							<% end %>
 							<%= expandable_note(result.dig(:notes, :rate)) %>
 						</td>
 						<td class="monthly-total-cell">
@@ -407,7 +404,7 @@
 									<span><%= t("home.results.breakdown.life_insurance") %></span>
 									<strong>
 										<% if result[:life_insurance_unknown] %>
-											<%= t("home.results.unknown") %>
+											<span class="value-unknown"><%= t("home.results.unknown") %></span>
 										<% else %>
 											<%= number_to_currency(result[:life_insurance_total], unit: "PLN", precision: 0, format: "%n %u") %>
 										<% end %>
@@ -420,7 +417,7 @@
 									<span><%= t("home.results.breakdown.property_insurance") %></span>
 									<strong>
 										<% if result[:property_insurance_unknown] %>
-											<%= t("home.results.unknown") %>
+											<span class="value-unknown"><%= t("home.results.unknown") %></span>
 										<% else %>
 											<%= number_to_currency(result[:property_insurance_total], unit: "PLN", precision: 0, format: "%n %u") %>
 										<% end %>
@@ -461,6 +458,9 @@
 			</tbody>
 		</table>
 	</div>
+	<aside class="results-assumption" role="note">
+		<p class="results-assumption__text"><%= t("home.results.ltv_assumption") %></p>
+	</aside>
 	<aside class="results-disclaimer" role="note">
 		<p class="results-disclaimer__lead"><%= t("home.results.disclaimer.lead") %></p>
 		<p class="results-disclaimer__body"><%= t("home.results.disclaimer.body") %></p>

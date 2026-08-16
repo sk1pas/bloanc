@@ -87,7 +87,7 @@ en:
       active_filter: "Showing offers: %{type}"
     sort:
       bank_margin_percent: "Margin"
-      monthly_payment: "Payment"
+      monthly_payment: "Credit payment"
       loan_period: "Period"
       total_paid: "Total"
       total_cost: "Total cost"
@@ -105,9 +105,9 @@ en:
       rate_selected_type: "%{type}"
       monthly: "Monthly installment"
       default_monthly: "Credit payment"
-      first_month_total: "First month full payment"
-      loan_period: "Loan period"
-      total_paid: "Total paid"
+      first_month_total: "First month total"
+      loan_period: "Repayment period"
+      total_paid: "Total repayment"
       total_cost: "Total cost"
       bank_interest: "Bank interest"
       life_insurance: "Life insurance"
@@ -117,6 +117,7 @@ en:
       promo_period: "Promo period"
       offer_link_fallback: "Link"
       updated_at: "Updated: %{date}"
+      ltv_assumption: "Calculations assume your own contribution is more than 20% of the property value, and the bank finances less than 80% (LTV below 80%)."
       disclaimer:
         lead: "Loan figures on this page are based on publicly available bank materials and may not reflect a full or final offer."
         body: "Some fees, insurance terms, eligibility rules, or other conditions can be missing, outdated, or different from what a bank actually offers in a personal application. Always confirm the current terms directly with the bank before making any decision."
@@ -138,7 +139,7 @@ en:
         bank_interest: "Bank interest"
         life_insurance: "Life insurance"
         property_insurance: "Property insurance"
-        loan_fee: "Loan fee"
+        loan_fee: "Bank commission"
         overpayment_penalty: "Overpayment penalty"
       breakdown_details:
         life_insurance_one_time: "One-time package outside first month payment column: %{amount} PLN"
@@ -210,9 +211,9 @@ en:
     notes:
       rate: "Rate %{rate}%% = margin %{margin}%% + %{wibor_kind} %{wibor}%%"
       rate_variable: "Rate %{rate}%% = margin %{margin}%% + %{wibor_kind} %{wibor}%%"
-      rate_fixed: "Fixed %{fixed_rate}%% for %{fixed_years} years, then variable rate applies."
+      rate_fixed: "Fixed %{fixed_rate}%% for %{fixed_years} years, then variable %{variable_rate}%% (margin %{margin}%% + %{wibor_kind} %{wibor}%%)."
       default_payment:
-        bank_part: "Bank principal + interest: %{amount} PLN"
+        bank_part: "Credit payment (principal + interest): %{amount} PLN"
         user_overpayment: "User overpayment: %{amount} PLN"
         overpayment_penalty: "Overpayment penalty: %{amount} PLN monthly for %{months} months"
       first_month:

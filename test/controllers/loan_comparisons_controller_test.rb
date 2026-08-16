@@ -124,14 +124,31 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, 'value="loan-period"'
     assert_includes response.body, "type=\"radio\""
-    assert_includes response.body, "Łączna rata"
+    assert_includes response.body, "Rata kredytowa"
     assert_includes response.body, "Rata w pierwszym miesiącu"
     assert_includes response.body, "Kwota kredytu"
     assert_includes response.body, "Odsetki banku"
     assert_includes response.body, "Jednorazowy pakiet poza kolumną raty pierwszego miesiąca"
     assert_includes response.body, "miesięcznie przez"
+    assert_includes response.body, "wkład własny wynosi więcej niż 20%"
     refute_includes response.body, "Niestandardowa oferta"
     assert_includes response.body, "wCredit.pl"
+  end
+
+  test "highlights unknown insurance values in total repayment breakdown" do
+    offer = loan_offers(:one)
+    offer.update!(
+      life_insurance_percent: nil,
+      life_insurance_years: nil,
+      life_insurance_total: nil,
+      property_insurance_monthly: nil
+    )
+
+    get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-zmienne")
+
+    assert_response :success
+    assert_includes response.body, 'class="value-unknown"'
+    assert_includes response.body, "Nieznane"
   end
 
   test "shows rate notes for variable and fixed offers" do
@@ -149,8 +166,10 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     }
 
     assert_response :success
-    assert_includes response.body, "Stałe"
-    assert_includes response.body, "potem obowiązuje stopa zmienna"
+    assert_includes response.body, "Stała stopa"
+    assert_includes response.body, "potem zmienna"
+    assert_includes response.body, "marża"
+    refute_match(/Stała stopa przez .* lat, potem zmienna\s*<\/div>/, response.body)
   end
 
   test "uses localized english and ukrainian rate type slugs" do
