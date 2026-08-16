@@ -177,4 +177,8 @@ cloudflared tunnel list
 ### Create the DNS record
 sudo cloudflared tunnel route dns wcredit wcredit.pl
 
+## Deploy
 
+```
+kamal app exec 'bin/rails db:migrate'
+```
