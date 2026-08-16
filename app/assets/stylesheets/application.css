@@ -29,8 +29,7 @@ body {
 .public-brand {
 	color: #ffffff;
 	font-weight: 700;
-	letter-spacing: 0.04em;
-	text-transform: lowercase;
+	letter-spacing: 0.02em;
 }
 
 .hero-card {
@@ -38,6 +37,53 @@ body {
 	border: 0;
 	border-radius: 16px;
 	box-shadow: 0 12px 40px rgba(8, 42, 67, 0.12);
+}
+
+.hero-card-body {
+	padding: 1.5rem;
+}
+
+@media (min-width: 992px) {
+	.hero-card-body {
+		padding: 2rem 2.25rem;
+	}
+}
+
+.hero-intro {
+	margin-bottom: 1.5rem;
+}
+
+.hero-form {
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+}
+
+.hero-form-row {
+	margin: 0;
+}
+
+.hero-field {
+	height: 100%;
+	padding: 0.9rem 1rem;
+	border: 1px solid #d7e3ec;
+	border-radius: 12px;
+	background: #f8fbfe;
+}
+
+.hero-field .form-label {
+	font-weight: 600;
+	margin-bottom: 0.4rem;
+}
+
+.hero-section-heading {
+	margin-top: 0.25rem;
+}
+
+.hero-form-actions {
+	display: flex;
+	justify-content: center;
+	padding-top: 0.25rem;
 }
 
 .section-card {
@@ -59,29 +105,49 @@ body {
 }
 
 .simulation-option {
-	display: block;
-	padding: 0.7rem 0.8rem;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	padding: 0.85rem 0.9rem;
 	border: 1px solid #d4e1ea;
-	border-radius: 10px;
+	border-radius: 12px;
 	background: #fbfdff;
 	cursor: pointer;
+	transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.simulation-option:hover {
+	border-color: #9fbfd4;
+	background: #ffffff;
+}
+
+.simulation-option:has(.form-check-input:checked) {
+	border-color: #0f5e9c;
+	box-shadow: 0 0 0 1px rgba(15, 94, 156, 0.25);
+	background: #ffffff;
+}
+
+.simulation-option > .form-check-input {
+	margin-bottom: 0.35rem;
 }
 
 .simulation-option-title {
 	display: block;
 	font-weight: 600;
-	margin-top: 0.15rem;
+	margin-top: 0.1rem;
 }
 
 .simulation-option-desc {
 	display: block;
 	font-size: 0.85rem;
 	color: #5b7388;
-	margin-top: 0.1rem;
+	margin-top: 0.15rem;
+	line-height: 1.35;
 }
 
 .simulation-option-fields {
-	padding-top: 0.25rem;
+	padding-top: 0.35rem;
+	margin-top: auto;
 }
 
 .simulation-option-field-label {
@@ -106,6 +172,52 @@ body {
 .simulation-penalty-check .form-check-label {
 	font-size: 0.8rem;
 	color: #365c78;
+}
+
+.results-sort-filters {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem 1rem;
+	justify-content: flex-end;
+}
+
+.results-sort-group {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.35rem;
+}
+
+.results-sort-label {
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: #365c78;
+	margin-right: 0.15rem;
+}
+
+.results-sort-option {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.3rem;
+	margin: 0;
+	padding: 0.28rem 0.55rem;
+	border: 1px solid #d4e1ea;
+	border-radius: 999px;
+	background: #f8fbfe;
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: #16324f;
+	cursor: pointer;
+}
+
+.results-sort-option input {
+	margin: 0;
+}
+
+.results-sort-option:has(input:checked) {
+	border-color: #0f5e9c;
+	background: #e7f1f8;
+	color: #0f5e9c;
 }
 
 .locale-switch-btn {

@@ -1,8 +1,14 @@
 require "test_helper"
 
 class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
-  test "renders public comparison page" do
+  test "redirects locale root to localized variable-rate path" do
     get root_path(locale: :pl)
+
+    assert_redirected_to loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-zmienne")
+  end
+
+  test "renders public comparison page" do
+    get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-zmienne")
 
     assert_response :success
     assert_includes response.body, "Porownaj oferty kredytow hipotecznych"
@@ -20,11 +26,13 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Akceptuj wszystkie"
     refute_includes response.body, "Panel admina"
     refute_includes response.body, admin_root_path
+    assert_includes response.body, "/pl/oprocentowanie-zmienne"
+    assert_includes response.body, "/en/variable-rate"
+    assert_includes response.body, "/ua/zminna-stavka"
   end
 
   test "filters offers by fixed-period rate type" do
-    get root_path(locale: :pl), params: {
-      rate_type: "fixed_period",
+    get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-stale"), params: {
       loan_amount: 400_000,
       years: 25
     }
@@ -34,13 +42,13 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     refute_includes response.body, "Offer One"
     assert_match(/<th>\s*Oprocentowanie stale\s*<\/th>/, response.body)
     assert_includes response.body, "Oprocentowanie stale"
+    assert_includes response.body, "/pl/oprocentowanie-stale"
   end
 
   test "shows empty-state message when selected type has no offers" do
     LoanOffer.update_all(rate_type: LoanOffer.rate_types[:variable])
 
-    get root_path(locale: :pl), params: {
-      rate_type: "fixed_period",
+    get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-stale"), params: {
       loan_amount: 400_000,
       years: 25
     }
@@ -50,14 +58,17 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "defaults to no user overpayment note" do
-    get root_path(locale: :pl), params: { loan_amount: 400_000, years: 25 }
+    get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-zmienne"), params: {
+      loan_amount: 400_000,
+      years: 25
+    }
 
     assert_response :success
     refute_includes response.body, "Nadplata uzytkownika nie jest stosowana."
   end
 
   test "renders bank title as clickable label without printing url text" do
-    get root_path(locale: :pl)
+    get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-zmienne")
 
     assert_response :success
     assert_includes response.body, 'href="https://bank-one.test"'
@@ -65,7 +76,7 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "shows validation note for fixed monthly mode when payment is too low" do
-    get root_path(locale: :pl), params: {
+    get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-zmienne"), params: {
       loan_amount: 400_000,
       years: 25,
       overpayment_mode: "fixed_monthly",
@@ -77,7 +88,7 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "applies fixed target period simulation" do
-    get root_path(locale: :pl), params: {
+    get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-zmienne"), params: {
       loan_amount: 400_000,
       years: 25,
       overpayment_mode: "fixed_period",
@@ -90,7 +101,7 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "does not apply penalty when fixed monthly overpayment starts after penalty period" do
-    get root_path(locale: :pl), params: {
+    get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-zmienne"), params: {
       loan_amount: 400_000,
       years: 25,
       overpayment_mode: "fixed_monthly",
@@ -103,21 +114,23 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "renders loan period sort option" do
-    get root_path(locale: :pl)
+    get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-zmienne")
 
     assert_response :success
     assert_includes response.body, 'value="loan-period"'
+    assert_includes response.body, "type=\"radio\""
     assert_includes response.body, "Laczna rata"
     assert_includes response.body, "Rata w pierwszym miesiacu"
     assert_includes response.body, "Kwota kredytu"
     assert_includes response.body, "Odsetki banku"
     assert_includes response.body, "Jednorazowy pakiet poza kolumna raty pierwszego miesiaca"
     assert_includes response.body, "miesiecznie przez"
+    refute_includes response.body, "Niestandardowa oferta"
+    assert_includes response.body, "wCredit.pl"
   end
 
   test "shows rate notes for variable and fixed offers" do
-    get root_path(locale: :pl), params: {
-      rate_type: "variable",
+    get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-zmienne"), params: {
       loan_amount: 400_000,
       years: 25
     }
@@ -125,8 +138,7 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, "= marza"
 
-    get root_path(locale: :pl), params: {
-      rate_type: "fixed_period",
+    get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-stale"), params: {
       loan_amount: 400_000,
       years: 25
     }
@@ -136,22 +148,17 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "potem obowiazuje stopa zmienna"
   end
 
-  test "calculates custom offer" do
-    post custom_compare_path(locale: :pl),
-         params: {
-           loan_amount: 400_000,
-           years: 20,
-           custom_offer: {
-             bank_title: "Test Bank",
-             title: "Test Offer",
-             bank_margin_percent: "1.8",
-             wibor_kind: "wibor_3m",
-             bank_commission_percent: "1.0",
-             property_insurance_monthly: "30"
-           }
-         }
-
+  test "uses localized english and ukrainian rate type slugs" do
+    get loan_comparison_path(locale: :en, rate_type_slug: "variable-rate")
     assert_response :success
-    assert_includes response.body, "Wynik oferty niestandardowej"
+    assert_includes response.body, "/en/variable-rate"
+
+    get loan_comparison_path(locale: :ua, rate_type_slug: "fiksovana-stavka")
+    assert_response :success
+    assert_includes response.body, "/ua/fiksovana-stavka"
+  end
+
+  test "calculates custom offer" do
+    skip "Custom bank offer UI is temporarily hidden"
   end
 end

@@ -1,187 +1,200 @@
-<% content_for :title, t("home.page_title") %>
+<% content_for :title, t("home.seo.#{@rate_type}.title") %>
+<% content_for :meta_description, t("home.seo.#{@rate_type}.description") %>
 
 <section class="card hero-card mb-4">
-	<div class="card-body p-4 p-lg-5">
-		<h1 class="h2 mb-2"><%= t("home.hero.title") %></h1>
-		<p class="text-secondary mb-4"><%= t("home.hero.subtitle") %></p>
+	<div class="card-body hero-card-body">
+		<div class="hero-intro text-center">
+			<h1 class="h2 mb-2"><%= t("home.hero.title") %></h1>
+			<p class="text-secondary mb-0"><%= t("home.hero.subtitle") %></p>
+		</div>
 
-		<%= form_with url: "#{root_path(locale: I18n.locale)}#results-table", method: :get, class: "row g-3 align-items-end", data: { controller: "comparison-form" } do |form| %>
+		<%= form_with url: "#{loan_comparison_url_for(locale: I18n.locale, rate_type: @rate_type)}#results-table",
+									method: :get,
+									class: "hero-form",
+									data: { controller: "comparison-form" } do |form| %>
 			<% fixed_monthly_slider_max = [(@loan_amount.to_i / 8), 10_000].max %>
 			<% fixed_monthly_slider_value = [[@fixed_monthly_payment.to_i, fixed_monthly_slider_max].min, 1_000].max %>
+			<%= hidden_field_tag :rate_type, @rate_type %>
 
-			<div class="col-lg-4 col-xl-3">
-				<%= form.label :loan_amount, t("home.form.loan_amount"), class: "form-label" %>
-				<%= form.number_field :loan_amount,
-											value: @loan_amount,
-											class: "form-control compact-number-input",
-											min: 50_000,
-											max: 2_500_000,
-											step: 1000,
-											required: true,
-											data: {
-												comparison_form_target: "loanAmountInput",
-												action: "input->comparison-form#syncLoanAmountFromInput change->comparison-form#syncLoanAmountFromInput"
-											} %>
-				<%= tag.input type: "range",
-										 min: 50_000,
-										 max: 2_500_000,
-										 step: 5_000,
-										 value: @loan_amount,
-										 class: "form-range mt-2",
-										 data: {
-											 comparison_form_target: "loanAmountRange",
-											 action: "input->comparison-form#syncLoanAmountFromRange"
-										 } %>
-			</div>
-
-			<div class="col-lg-3 col-xl-2">
-				<%= form.label :years, t("home.form.years"), class: "form-label" %>
-				<%= form.number_field :years,
-											value: @loan_years,
-											class: "form-control compact-number-input",
-											min: 5,
-											max: 40,
-											step: 1,
-											required: true,
-											data: {
-												comparison_form_target: "yearsInput",
-												action: "input->comparison-form#syncYearsFromInput change->comparison-form#syncYearsFromInput"
-											} %>
-				<%= tag.input type: "range",
-										 min: 5,
-										 max: 40,
-										 step: 1,
-										 value: @loan_years,
-										 class: "form-range mt-2",
-										 data: {
-											 comparison_form_target: "yearsRange",
-											 action: "input->comparison-form#syncYearsFromRange"
-										 } %>
-			</div>
-			<%= hidden_field_tag :rate_type, @rate_type, data: { comparison_form_target: "rateTypeInput" } %>
-
-			<div class="col-12 pt-2">
-				<h2 class="h6 mb-2"><%= t("home.overpayment.title") %></h2>
-				<p class="small text-secondary mb-2"><%= t("home.overpayment.subtitle") %></p>
-			</div>
-
-			<div class="col-md-4">
-				<label class="simulation-option">
-					<%= form.radio_button :overpayment_mode,
-															"none",
-															checked: @overpayment_mode == "none",
-															class: "form-check-input",
-															data: {
-																comparison_form_target: "modeRadio",
-																action: "change->comparison-form#modeChanged"
-															} %>
-					<span class="simulation-option-title"><%= t("home.overpayment.mode.none_title") %></span>
-					<span class="simulation-option-desc"><%= t("home.overpayment.mode.none_desc") %></span>
-				</label>
-			</div>
-
-			<div class="col-md-4">
-				<label class="simulation-option">
-					<%= form.radio_button :overpayment_mode,
-															"fixed_monthly",
-															checked: @overpayment_mode == "fixed_monthly",
-															class: "form-check-input",
-															data: {
-																comparison_form_target: "modeRadio",
-																action: "change->comparison-form#modeChanged"
-															} %>
-					<span class="simulation-option-title"><%= t("home.overpayment.mode.fixed_monthly_title") %></span>
-					<span class="simulation-option-desc"><%= t("home.overpayment.mode.fixed_monthly_desc") %></span>
-					<div class="simulation-option-fields mt-2" data-comparison-form-target="fixedMonthlyWrap">
-						<span class="simulation-option-field-label"><%= t("home.overpayment.fields.fixed_monthly_payment") %></span>
-						<%= form.number_field :fixed_monthly_payment,
-																value: @fixed_monthly_payment,
-																class: "form-control form-control-sm compact-number-input",
-																step: 100,
-																min: 0,
-																data: {
-																	comparison_form_target: "fixedMonthlyInput",
-																	action: "input->comparison-form#syncFixedMonthlyFromInput change->comparison-form#syncFixedMonthlyFromInput"
-																} %>
+			<div class="hero-form-row row g-3 justify-content-center">
+				<div class="col-sm-8 col-md-5 col-lg-4">
+					<div class="hero-field">
+						<%= form.label :loan_amount, t("home.form.loan_amount"), class: "form-label" %>
+						<%= form.number_field :loan_amount,
+													value: @loan_amount,
+													class: "form-control compact-number-input",
+													min: 50_000,
+													max: 2_500_000,
+													step: 1000,
+													required: true,
+													data: {
+														comparison_form_target: "loanAmountInput",
+														action: "input->comparison-form#syncLoanAmountFromInput change->comparison-form#syncLoanAmountFromInput"
+													} %>
 						<%= tag.input type: "range",
-													 min: 1_000,
-													 max: fixed_monthly_slider_max,
-													 step: 100,
-													 value: fixed_monthly_slider_value,
-													 class: "form-range mt-2",
-													 data: {
-														 comparison_form_target: "fixedMonthlyRange",
-														 action: "input->comparison-form#syncFixedMonthlyFromRange"
-													 } %>
-						<div class="form-check simulation-penalty-check mt-2">
-							<%= hidden_field_tag :fixed_monthly_overpay_during_penalty, "0" %>
-							<%= check_box_tag :fixed_monthly_overpay_during_penalty,
-													"1",
-													@fixed_monthly_overpay_during_penalty,
-													class: "form-check-input",
-													id: "fixed_monthly_overpay_during_penalty_1" %>
-							<label for="fixed_monthly_overpay_during_penalty_1" class="form-check-label">
-                <%= t("home.overpayment.fields.overpay_during_penalty") %>
-              </label>
-						</div>
+												 min: 50_000,
+												 max: 2_500_000,
+												 step: 5_000,
+												 value: @loan_amount,
+												 class: "form-range mt-2",
+												 data: {
+													 comparison_form_target: "loanAmountRange",
+													 action: "input->comparison-form#syncLoanAmountFromRange"
+												 } %>
 					</div>
-				</label>
-			</div>
+				</div>
 
-			<div class="col-md-4">
-				<label class="simulation-option">
-					<%= form.radio_button :overpayment_mode,
-															"fixed_period",
-															checked: @overpayment_mode == "fixed_period",
-															class: "form-check-input",
-															data: {
-																comparison_form_target: "modeRadio",
-																action: "change->comparison-form#modeChanged"
-															} %>
-					<span class="simulation-option-title"><%= t("home.overpayment.mode.fixed_period_title") %></span>
-					<span class="simulation-option-desc"><%= t("home.overpayment.mode.fixed_period_desc") %></span>
-					<div class="simulation-option-fields mt-2" data-comparison-form-target="fixedPeriodWrap">
-						<span class="simulation-option-field-label"><%= t("home.overpayment.fields.target_years") %></span>
-						<%= form.number_field :target_years,
-																value: @target_years,
-																class: "form-control form-control-sm compact-number-input",
-																step: 1,
-																min: 1,
-																max: [@loan_years - 1, 1].max,
-																data: {
-																	comparison_form_target: "targetYearsInput",
-																	action: "input->comparison-form#syncTargetYearsFromInput change->comparison-form#syncTargetYearsFromInput"
-																} %>
+				<div class="col-sm-8 col-md-4 col-lg-3">
+					<div class="hero-field">
+						<%= form.label :years, t("home.form.years"), class: "form-label" %>
+						<%= form.number_field :years,
+													value: @loan_years,
+													class: "form-control compact-number-input",
+													min: 5,
+													max: 40,
+													step: 1,
+													required: true,
+													data: {
+														comparison_form_target: "yearsInput",
+														action: "input->comparison-form#syncYearsFromInput change->comparison-form#syncYearsFromInput"
+													} %>
 						<%= tag.input type: "range",
-													 min: 1,
-													 max: [@loan_years - 1, 1].max,
-													 step: 1,
-													 value: @target_years,
-													 class: "form-range mt-2",
-													 data: {
-														 comparison_form_target: "targetYearsRange",
-														 action: "input->comparison-form#syncTargetYearsFromRange"
-													 } %>
-						<div class="form-check simulation-penalty-check mt-2">
-							<%= hidden_field_tag :fixed_period_overpay_during_penalty, "0" %>
-							<%= check_box_tag :fixed_period_overpay_during_penalty,
-													"1",
-													@fixed_period_overpay_during_penalty,
-													class: "form-check-input",
-													id: "fixed_period_overpay_during_penalty_1" %>
-							<label for="fixed_period_overpay_during_penalty_1" class="form-check-label">
-                <%= t("home.overpayment.fields.overpay_during_penalty") %>
-              </label>
-						</div>
+												 min: 5,
+												 max: 40,
+												 step: 1,
+												 value: @loan_years,
+												 class: "form-range mt-2",
+												 data: {
+													 comparison_form_target: "yearsRange",
+													 action: "input->comparison-form#syncYearsFromRange"
+												 } %>
 					</div>
-				</label>
+				</div>
 			</div>
 
-			<div class="col-12 d-flex justify-content-center pt-1">
-				<%= form.submit t("home.form.calculate"), class: "btn btn-primary" %>
+			<div class="hero-section-heading text-center">
+				<h2 class="h6 mb-1"><%= t("home.overpayment.title") %></h2>
+				<p class="small text-secondary mb-0"><%= t("home.overpayment.subtitle") %></p>
+			</div>
+
+			<div class="hero-form-row row g-3 justify-content-center">
+				<div class="col-md-4 col-lg-3">
+					<label class="simulation-option">
+						<%= form.radio_button :overpayment_mode,
+																"none",
+																checked: @overpayment_mode == "none",
+																class: "form-check-input",
+																data: {
+																	comparison_form_target: "modeRadio",
+																	action: "change->comparison-form#modeChanged"
+																} %>
+						<span class="simulation-option-title"><%= t("home.overpayment.mode.none_title") %></span>
+						<span class="simulation-option-desc"><%= t("home.overpayment.mode.none_desc") %></span>
+					</label>
+				</div>
+
+				<div class="col-md-4 col-lg-3">
+					<label class="simulation-option">
+						<%= form.radio_button :overpayment_mode,
+																"fixed_monthly",
+																checked: @overpayment_mode == "fixed_monthly",
+																class: "form-check-input",
+																data: {
+																	comparison_form_target: "modeRadio",
+																	action: "change->comparison-form#modeChanged"
+																} %>
+						<span class="simulation-option-title"><%= t("home.overpayment.mode.fixed_monthly_title") %></span>
+						<span class="simulation-option-desc"><%= t("home.overpayment.mode.fixed_monthly_desc") %></span>
+						<div class="simulation-option-fields mt-2" data-comparison-form-target="fixedMonthlyWrap">
+							<span class="simulation-option-field-label"><%= t("home.overpayment.fields.fixed_monthly_payment") %></span>
+							<%= form.number_field :fixed_monthly_payment,
+																	value: @fixed_monthly_payment,
+																	class: "form-control form-control-sm compact-number-input",
+																	step: 100,
+																	min: 0,
+																	data: {
+																		comparison_form_target: "fixedMonthlyInput",
+																		action: "input->comparison-form#syncFixedMonthlyFromInput change->comparison-form#syncFixedMonthlyFromInput"
+																	} %>
+							<%= tag.input type: "range",
+														 min: 1_000,
+														 max: fixed_monthly_slider_max,
+														 step: 100,
+														 value: fixed_monthly_slider_value,
+														 class: "form-range mt-2",
+														 data: {
+															 comparison_form_target: "fixedMonthlyRange",
+															 action: "input->comparison-form#syncFixedMonthlyFromRange"
+														 } %>
+							<div class="form-check simulation-penalty-check mt-2">
+								<%= hidden_field_tag :fixed_monthly_overpay_during_penalty, "0" %>
+								<%= check_box_tag :fixed_monthly_overpay_during_penalty,
+														"1",
+														@fixed_monthly_overpay_during_penalty,
+														class: "form-check-input",
+														id: "fixed_monthly_overpay_during_penalty_1" %>
+								<label for="fixed_monthly_overpay_during_penalty_1" class="form-check-label">
+									<%= t("home.overpayment.fields.overpay_during_penalty") %>
+								</label>
+							</div>
+						</div>
+					</label>
+				</div>
+
+				<div class="col-md-4 col-lg-3">
+					<label class="simulation-option">
+						<%= form.radio_button :overpayment_mode,
+																"fixed_period",
+																checked: @overpayment_mode == "fixed_period",
+																class: "form-check-input",
+																data: {
+																	comparison_form_target: "modeRadio",
+																	action: "change->comparison-form#modeChanged"
+																} %>
+						<span class="simulation-option-title"><%= t("home.overpayment.mode.fixed_period_title") %></span>
+						<span class="simulation-option-desc"><%= t("home.overpayment.mode.fixed_period_desc") %></span>
+						<div class="simulation-option-fields mt-2" data-comparison-form-target="fixedPeriodWrap">
+							<span class="simulation-option-field-label"><%= t("home.overpayment.fields.target_years") %></span>
+							<%= form.number_field :target_years,
+																	value: @target_years,
+																	class: "form-control form-control-sm compact-number-input",
+																	step: 1,
+																	min: 1,
+																	max: [@loan_years - 1, 1].max,
+																	data: {
+																		comparison_form_target: "targetYearsInput",
+																		action: "input->comparison-form#syncTargetYearsFromInput change->comparison-form#syncTargetYearsFromInput"
+																	} %>
+							<%= tag.input type: "range",
+														 min: 1,
+														 max: [@loan_years - 1, 1].max,
+														 step: 1,
+														 value: @target_years,
+														 class: "form-range mt-2",
+														 data: {
+															 comparison_form_target: "targetYearsRange",
+															 action: "input->comparison-form#syncTargetYearsFromRange"
+														 } %>
+							<div class="form-check simulation-penalty-check mt-2">
+								<%= hidden_field_tag :fixed_period_overpay_during_penalty, "0" %>
+								<%= check_box_tag :fixed_period_overpay_during_penalty,
+														"1",
+														@fixed_period_overpay_during_penalty,
+														class: "form-check-input",
+														id: "fixed_period_overpay_during_penalty_1" %>
+								<label for="fixed_period_overpay_during_penalty_1" class="form-check-label">
+									<%= t("home.overpayment.fields.overpay_during_penalty") %>
+								</label>
+							</div>
+						</div>
+					</label>
+				</div>
+			</div>
+
+			<div class="hero-form-actions">
+				<%= form.submit t("home.form.calculate"), class: "btn btn-primary btn-lg px-4" %>
 			</div>
 		<% end %>
-
 	</div>
 </section>
 
@@ -211,22 +224,62 @@
 					<p class="form-hint mb-0"><%= t("home.wibor.missing") %></p>
 				<% end %>
 			</div>
-			<div class="d-flex flex-wrap align-items-end gap-2">
-				<div>
-					<label class="form-label mb-1"><%= t("home.results.sort_by") %></label>
-					<select class="form-select form-select-sm" data-table-sort-target="sortKey" data-action="change->table-sort#sort">
-						<option value="bank-margin"><%= t("home.sort.bank_margin_percent") %></option>
-						<option value="monthly-payment"><%= t("home.sort.monthly_payment") %></option>
-						<option value="loan-period"><%= t("home.results.loan_period") %></option>
-						<option value="total-paid" selected><%= t("home.sort.total_paid") %></option>
-					</select>
+			<div class="results-sort-filters">
+				<div class="results-sort-group" role="radiogroup" aria-label="<%= t("home.results.sort_by") %>">
+					<span class="results-sort-label"><%= t("home.results.sort_by") %></span>
+					<label class="results-sort-option">
+						<input type="radio"
+									 name="results_sort_key"
+									 value="bank-margin"
+									 data-table-sort-target="sortKey"
+									 data-action="change->table-sort#sort">
+						<span><%= t("home.sort.bank_margin_percent") %></span>
+					</label>
+					<label class="results-sort-option">
+						<input type="radio"
+									 name="results_sort_key"
+									 value="monthly-payment"
+									 data-table-sort-target="sortKey"
+									 data-action="change->table-sort#sort">
+						<span><%= t("home.sort.monthly_payment") %></span>
+					</label>
+					<label class="results-sort-option">
+						<input type="radio"
+									 name="results_sort_key"
+									 value="loan-period"
+									 data-table-sort-target="sortKey"
+									 data-action="change->table-sort#sort">
+						<span><%= t("home.sort.loan_period") %></span>
+					</label>
+					<label class="results-sort-option">
+						<input type="radio"
+									 name="results_sort_key"
+									 value="total-paid"
+									 checked
+									 data-table-sort-target="sortKey"
+									 data-action="change->table-sort#sort">
+						<span><%= t("home.sort.total_paid") %></span>
+					</label>
 				</div>
-				<div>
-					<label class="form-label mb-1"><%= t("home.results.sort_direction") %></label>
-					<select class="form-select form-select-sm" data-table-sort-target="direction" data-action="change->table-sort#sort">
-						<option value="asc" selected><%= t("home.results.sort_asc") %></option>
-						<option value="desc"><%= t("home.results.sort_desc") %></option>
-					</select>
+				<div class="results-sort-group" role="radiogroup" aria-label="<%= t("home.results.sort_direction") %>">
+					<span class="results-sort-label"><%= t("home.results.sort_direction") %></span>
+					<label class="results-sort-option">
+						<input type="radio"
+									 name="results_sort_direction"
+									 value="asc"
+									 checked
+									 data-table-sort-target="direction"
+									 data-action="change->table-sort#sort">
+						<span><%= t("home.results.sort_asc") %></span>
+					</label>
+					<label class="results-sort-option">
+						<input type="radio"
+									 name="results_sort_direction"
+									 value="desc"
+									 data-table-sort-target="direction"
+									 data-action="change->table-sort#sort">
+						<span><%= t("home.results.sort_desc") %></span>
+					</label>
 				</div>
 			</div>
 		</div>
@@ -236,13 +289,13 @@
 				<span class="form-hint"><%= t("home.rate_type.subtitle") %></span>
 			</div>
 			<div class="loan-type-tabs loan-type-tabs-featured" role="tablist" aria-label="<%= t("home.rate_type.title") %>">
-				<%= link_to root_path(locale: I18n.locale, **rate_switch_params, rate_type: "variable", anchor: "results-table"),
+				<%= link_to loan_comparison_url_for(locale: I18n.locale, rate_type: "variable", **rate_switch_params, anchor: "results-table"),
 								class: "loan-type-tab #{"active" if @rate_type == "variable"}" do %>
 					<span class="loan-type-tab-title"><%= t("home.rate_type.tabs.variable") %></span>
 					<span class="loan-type-tab-desc"><%= t("home.rate_type.descriptions.variable") %></span>
 				<% end %>
 
-				<%= link_to root_path(locale: I18n.locale, **rate_switch_params, rate_type: "fixed_period", anchor: "results-table"),
+				<%= link_to loan_comparison_url_for(locale: I18n.locale, rate_type: "fixed_period", **rate_switch_params, anchor: "results-table"),
 								class: "loan-type-tab #{"active" if @rate_type == "fixed_period"}" do %>
 					<span class="loan-type-tab-title"><%= t("home.rate_type.tabs.fixed_period") %></span>
 					<span class="loan-type-tab-desc"><%= t("home.rate_type.descriptions.fixed_period") %></span>
@@ -376,6 +429,7 @@
 	</div>
 </section>
 
+<% if false # temporary: hide custom bank offer block %>
 <section class="card section-card">
 	<div class="card-body p-4">
 		<h2 class="h4 mb-2"><%= t("home.custom.title") %></h2>
@@ -512,3 +566,4 @@
 		<% end %>
 	</div>
 </section>
+<% end %>

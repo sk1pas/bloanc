@@ -29,7 +29,7 @@
 
 en:
   seo:
-    site_name: "bloanc"
+    site_name: "wCredit.pl"
     description: "Compare Polish mortgage offers, variable and fixed-period rates, monthly totals, and full repayment costs."
     keywords: "mortgage comparison, Poland mortgage, WIBOR, fixed rate mortgage, variable rate mortgage, loan calculator"
 
@@ -56,6 +56,13 @@ en:
 
   home:
     page_title: "Mortgage comparison"
+    seo:
+      variable:
+        title: "Variable-rate mortgage comparison"
+        description: "Compare Polish variable-rate mortgage offers (margin + WIBOR): monthly payments, insurance, and total repayment cost."
+      fixed_period:
+        title: "Fixed-period mortgage comparison"
+        description: "Compare fixed-period mortgage offers that switch to variable rate later. Check payments, insurance, and total cost."
     hero:
       title: "Compare Polish mortgage offers"
       subtitle: "Estimate monthly and total cost including commissions, insurance, and overpayment rules."
@@ -79,9 +86,10 @@ en:
         fixed_period: "Fixed-period rate"
       active_filter: "Showing offers: %{type}"
     sort:
-      bank_margin_percent: "Bank margin"
-      monthly_payment: "Monthly payment"
-      total_paid: "Total paid"
+      bank_margin_percent: "Margin"
+      monthly_payment: "Payment"
+      loan_period: "Period"
+      total_paid: "Total"
       total_cost: "Total cost"
       life_insurance_total: "Life insurance total"
       property_insurance_total: "Property insurance total"
@@ -109,10 +117,10 @@ en:
       margin: "Margin"
       first_month: "First month"
       show_notes: "Show notes"
-      sort_by: "Sort table by"
-      sort_direction: "Direction"
-      sort_asc: "Lowest first"
-      sort_desc: "Highest first"
+      sort_by: "Sort"
+      sort_direction: "Order"
+      sort_asc: "Asc"
+      sort_desc: "Desc"
       period_hint: "%{months} months"
       period_years_only: "%{years} years"
       period_years_months: "%{years} years %{months} months"

@@ -13,6 +13,7 @@ Mortgage offer comparison app for Polish PLN home loans.
 
 ### Public Homepage
 - Locale-aware UI: PL (default), EN, UA.
+- Separate public URLs per locale + rate type (localized slugs).
 - Inputs:
     - Loan amount: number input + slider
     - Loan period in years: number input + slider
@@ -22,7 +23,7 @@ Mortgage offer comparison app for Polish PLN home loans.
 - Form behavior:
     - Manual submit only (Calculate button)
     - Sliders only synchronize values with paired numeric inputs
-    - Switching loan type tab triggers recalculation for selected type
+    - Switching loan type tab navigates to the matching locale/rate-type URL
 - Overpayment simulation modes:
     - No overpayment
     - Fixed monthly payment
@@ -30,6 +31,7 @@ Mortgage offer comparison app for Polish PLN home loans.
 - For both fixed modes, user can toggle:
     - Overpay during penalty period
     - If disabled, overpayment starts after offer penalty period ends
+- Cookie consent banner (EU-style accept all / necessary only)
 
 ### Results Table
 - Shows offers only for selected loan type tab.
@@ -107,6 +109,7 @@ Mortgage offer comparison app for Polish PLN home loans.
 - Importmap + Turbo + Stimulus
 - Active Storage
 - Bootstrap
+- Kamal deploy
 
 ## Setup
 
@@ -118,7 +121,16 @@ bin/dev
 ```
 
 App URLs:
-- Public: http://localhost:3000/pl
+- Public (examples):
+    - http://localhost:3000/pl/oprocentowanie-zmienne
+    - http://localhost:3000/en/variable-rate
+    - http://localhost:3000/ua/zminna-stavka
+    - http://localhost:3000/pl/oprocentowanie-stale
+    - http://localhost:3000/en/fixed-period
+    - http://localhost:3000/ua/fiksovana-stavka
+- Locale root (`/pl`, `/en`, `/ua`) redirects to the variable-rate slug for that locale
+- Sitemap: http://localhost:3000/sitemap.xml
+- Robots: http://localhost:3000/robots.txt
 - Admin: http://localhost:3000/admin
 
 ## Configuration
@@ -132,14 +144,31 @@ Development/test fallback:
 - password: admin123
 
 ## Core Routes
-- GET /(:locale)
+- GET /(:locale)/:rate_type_slug
+- GET /(:locale) → 301 to variable-rate slug
 - POST /(:locale)/custom_compare
+- GET /sitemap.xml
 - GET /admin
 - resources :banks
 - resources :loan_offers
 - resources :loan_offer_changes (nested under loan_offers)
 - GET /admin/wibor_snapshots
 - POST /admin/wibor_snapshots/refresh
+
+### Localized rate-type slugs
+| Locale | Variable | Fixed period |
+|--------|----------|--------------|
+| pl | `oprocentowanie-zmienne` | `oprocentowanie-stale` |
+| en | `variable-rate` | `fixed-period` |
+| ua | `zminna-stavka` | `fiksovana-stavka` |
+
+Slug map source of truth: `app/models/rate_type_slug.rb`
+
+## SEO
+- Canonical + hreflang per locale for the current rate type
+- Per-rate-type page titles and meta descriptions
+- Sitemap lists all locale × rate-type URLs
+- Admin UI is `noindex`
 
 ## Quality Checks
 - Tests: bin/rails test
@@ -159,6 +188,11 @@ Development/test fallback:
     - row data attributes
     - Stimulus sort controller
     - locale labels
+- If adding rate-type or locale URLs, update:
+    - `RateTypeSlug`
+    - routes constraint
+    - sitemap
+    - locale SEO copy
 
 ## Cloudflare tunnel settings
 
@@ -179,6 +213,8 @@ sudo cloudflared tunnel route dns wcredit wcredit.pl
 
 ## Deploy
 
+```bash
+bin/deploy
 ```
-kamal app exec 'bin/rails db:migrate'
-```
+
+`bin/deploy` runs `kamal app stop`, `kamal deploy`, then prunes exited bloanc containers.

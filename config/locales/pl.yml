@@ -1,6 +1,6 @@
 pl:
   seo:
-    site_name: "bloanc"
+    site_name: "wCredit.pl"
     description: "Porownuj polskie oferty kredytow hipotecznych: oprocentowanie zmienne i stale, raty miesieczne oraz laczny koszt splaty."
     keywords: "porownanie kredytu hipotecznego, WIBOR, oprocentowanie stale, oprocentowanie zmienne, kalkulator kredytu"
 
@@ -27,6 +27,13 @@ pl:
 
   home:
     page_title: "Porownanie kredytow hipotecznych"
+    seo:
+      variable:
+        title: "Kredyt hipoteczny ze zmienna stopa - porownanie ofert"
+        description: "Porownaj oferty kredytow hipotecznych ze zmienna stopa (marza + WIBOR): raty miesieczne, ubezpieczenia i calkowity koszt splaty."
+      fixed_period:
+        title: "Kredyt hipoteczny ze stala stopa - porownanie ofert"
+        description: "Porownaj oferty ze stala stopa przez pierwsze lata, potem zmienna. Sprawdz raty, ubezpieczenia i calkowity koszt."
     hero:
       title: "Porownaj oferty kredytow hipotecznych"
       subtitle: "Oblicz rate miesieczna i calkowity koszt z prowizja, ubezpieczeniami i zasadami nadplat."
@@ -50,9 +57,10 @@ pl:
         fixed_period: "Stopa stala (okresowa)"
       active_filter: "Pokazane oferty: %{type}"
     sort:
-      bank_margin_percent: "Marza banku"
-      monthly_payment: "Rata miesieczna"
-      total_paid: "Suma splaty"
+      bank_margin_percent: "Marza"
+      monthly_payment: "Rata"
+      loan_period: "Okres"
+      total_paid: "Suma"
       total_cost: "Laczny koszt"
       life_insurance_total: "Ubezpieczenie zycia"
       property_insurance_total: "Ubezpieczenie nieruchomosci"
@@ -80,8 +88,8 @@ pl:
       margin: "Marza"
       first_month: "Pierwszy miesiac"
       show_notes: "Pokaz notatki"
-      sort_by: "Sortuj tabele po"
-      sort_direction: "Kierunek"
+      sort_by: "Sortuj"
+      sort_direction: "Porzadek"
       sort_asc: "Rosnaco"
       sort_desc: "Malejaco"
       period_hint: "%{months} miesiecy"

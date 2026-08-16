@@ -5,6 +5,8 @@ class LoanComparisonsController < ApplicationController
   OVERPAYMENT_MODES = %w[none fixed_monthly fixed_period].freeze
 
   def index
+    return redirect_to_canonical_rate_type_path if params[:rate_type_slug].blank?
+
     prepare_request
     load_offer_results
   end
@@ -17,15 +19,24 @@ class LoanComparisonsController < ApplicationController
 
     render :index
   rescue ActionController::ParameterMissing
-    redirect_to root_path(locale: I18n.locale), alert: t('home.flash.custom_offer_invalid')
+    redirect_to loan_comparison_url_for(locale: I18n.locale, rate_type: "variable"),
+                alert: t("home.flash.custom_offer_invalid")
   end
 
   private
 
+  def redirect_to_canonical_rate_type_path
+    rate_type = normalize_rate_type(params[:rate_type])
+    query = request.query_parameters.except("rate_type", "locale", "rate_type_slug")
+
+    redirect_to loan_comparison_url_for(locale: I18n.locale, rate_type: rate_type, **query),
+                status: :moved_permanently
+  end
+
   def prepare_request
     @loan_amount = normalize_integer(params[:loan_amount], DEFAULT_LOAN_AMOUNT)
     @loan_years, @months = extract_period
-    @rate_type = normalize_rate_type(params[:rate_type])
+    @rate_type = resolve_rate_type
     @overpayment_mode = normalize_overpayment_mode(params[:overpayment_mode])
     @fixed_monthly_payment = normalize_decimal(params[:fixed_monthly_payment], 3_000)
     @target_years = normalize_target_years(params[:target_years])
@@ -34,6 +45,17 @@ class LoanComparisonsController < ApplicationController
     @wibor_snapshot = WiborSnapshot.latest
     @custom_offer = {}
     @custom_result = nil
+  end
+
+  def resolve_rate_type
+    if params[:rate_type_slug].present?
+      resolved = RateTypeSlug.rate_type_for(locale: I18n.locale, slug: params[:rate_type_slug])
+      return resolved if resolved.present?
+
+      raise ActionController::RoutingError, "Unknown rate type slug"
+    end
+
+    normalize_rate_type(params[:rate_type])
   end
 
   def load_offer_results

@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
 
   before_action :set_locale
 
-  helper_method :available_locales
+  helper_method :available_locales, :loan_comparison_url_for
 
   def default_url_options
     return {} if request.path.start_with?("/admin")
@@ -24,5 +24,13 @@ class ApplicationController < ActionController::Base
   def set_locale
     requested_locale = params[:locale].presence
     I18n.locale = available_locales.include?(requested_locale) ? requested_locale : I18n.default_locale
+  end
+
+  def loan_comparison_url_for(locale: I18n.locale, rate_type: "variable", **options)
+    loan_comparison_path(
+      locale: locale,
+      rate_type_slug: RateTypeSlug.slug_for(locale: locale, rate_type: rate_type),
+      **options
+    )
   end
 end

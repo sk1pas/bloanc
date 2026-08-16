@@ -8,8 +8,8 @@ export default class extends Controller {
   }
 
   sort() {
-    const key = this.sortKeyTarget.value
-    const direction = this.directionTarget.value === "desc" ? -1 : 1
+    const key = this.selectedValue(this.sortKeyTargets, "total-paid")
+    const direction = this.selectedValue(this.directionTargets, "asc") === "desc" ? -1 : 1
 
     const rows = [...this.rowTargets]
     rows.sort((rowA, rowB) => {
@@ -26,5 +26,9 @@ export default class extends Controller {
     })
 
     rows.forEach((row) => this.tbodyTarget.appendChild(row))
+  }
+
+  selectedValue(targets, fallback) {
+    return targets.find((input) => input.checked)?.value || fallback
   }
 }

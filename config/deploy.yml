@@ -1,6 +1,9 @@
 # Name of your application. Used to uniquely configure containers.
 service: bloanc
 
+# Keep only the latest stopped container when Kamal prunes during deploy.
+retain_containers: 1
+
 # Name of the container image (use your-user/app-name on external registries).
 image: bloanc
 

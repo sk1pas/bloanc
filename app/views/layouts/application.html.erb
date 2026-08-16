@@ -1,30 +1,35 @@
 <!DOCTYPE html>
 <html lang="<%= I18n.locale %>">
   <head>
-    <% page_title = content_for(:title) || t("seo.site_name", default: "Bloanc") %>
+    <% page_title = content_for(:title) || t("seo.site_name", default: "wCredit.pl") %>
     <% meta_description = content_for(:meta_description) || t("seo.description", default: "Compare Polish mortgage offers with transparent monthly and total costs.") %>
     <% meta_keywords = t("seo.keywords", default: "mortgage, mortgage comparison, Poland, WIBOR, loan calculator") %>
-    <% canonical_url = "#{request.base_url}#{request.path}" %>
+    <% current_rate_type = @rate_type.presence || "variable" %>
+    <% canonical_url = loan_comparison_url(
+         locale: I18n.locale,
+         rate_type_slug: RateTypeSlug.slug_for(locale: I18n.locale, rate_type: current_rate_type),
+         only_path: false
+       ) %>
 
     <title><%= page_title %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="description" content="<%= meta_description %>">
     <meta name="keywords" content="<%= meta_keywords %>">
-    <meta name="author" content="bloanc">
+    <meta name="author" content="wCredit.pl">
     <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
     <meta name="theme-color" content="#0f5e9c">
     <link rel="canonical" href="<%= canonical_url %>">
 
     <% available_locales.each do |locale| %>
-      <link rel="alternate" hreflang="<%= locale %>" href="<%= url_for(locale: locale, only_path: false) %>">
+      <link rel="alternate" hreflang="<%= locale %>" href="<%= loan_comparison_url(locale: locale, rate_type_slug: RateTypeSlug.slug_for(locale: locale, rate_type: current_rate_type), only_path: false) %>">
     <% end %>
-    <link rel="alternate" hreflang="x-default" href="<%= url_for(locale: I18n.default_locale, only_path: false) %>">
+    <link rel="alternate" hreflang="x-default" href="<%= loan_comparison_url(locale: I18n.default_locale, rate_type_slug: RateTypeSlug.slug_for(locale: I18n.default_locale, rate_type: current_rate_type), only_path: false) %>">
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="<%= page_title %>">
     <meta property="og:description" content="<%= meta_description %>">
     <meta property="og:url" content="<%= canonical_url %>">
-    <meta property="og:site_name" content="<%= t("seo.site_name", default: "bloanc") %>">
+    <meta property="og:site_name" content="<%= t("seo.site_name", default: "wCredit.pl") %>">
     <meta property="og:locale" content="<%= I18n.locale %>">
 
     <meta name="twitter:card" content="summary_large_image">
@@ -32,7 +37,7 @@
     <meta name="twitter:description" content="<%= meta_description %>">
 
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Bloanc">
+    <meta name="application-name" content="wCredit.pl">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -40,7 +45,7 @@
     <% website_schema = {
          "@context" => "https://schema.org",
          "@type" => "WebSite",
-         "name" => t("seo.site_name", default: "bloanc"),
+         "name" => t("seo.site_name", default: "wCredit.pl"),
          "url" => request.base_url,
          "description" => meta_description,
          "inLanguage" => I18n.locale.to_s
@@ -55,11 +60,11 @@
   <body class="public-theme">
     <nav class="navbar navbar-expand-lg public-navbar mb-4">
       <div class="container">
-        <%= link_to "bloanc", root_path(locale: I18n.locale), class: "navbar-brand public-brand" %>
+        <%= link_to t("seo.site_name"), loan_comparison_url_for(locale: I18n.locale, rate_type: "variable"), class: "navbar-brand public-brand" %>
         <div class="d-flex align-items-center gap-2">
           <% available_locales.each do |locale| %>
             <%= link_to locale_switch_label(locale),
-                        url_for(locale: locale),
+                        loan_comparison_url_for(locale: locale, rate_type: current_rate_type),
                         class: "btn btn-sm locale-switch-btn #{locale == I18n.locale.to_s ? "btn-light" : "btn-outline-light"}",
                         aria: { label: locale.upcase } %>
           <% end %>

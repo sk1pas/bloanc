@@ -9,7 +9,8 @@ bin/kamal app stop
 echo "==> Deploying"
 bin/kamal deploy
 
-echo "==> Pruning stopped containers"
-bin/kamal prune containers
+echo "==> Removing exited containers"
+bin/kamal server exec --raw -- \
+  'docker container prune -f --filter label=service=bloanc'
 
 echo "==> Deploy finished"
