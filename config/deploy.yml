@@ -1,8 +1,6 @@
 # Name of your application. Used to uniquely configure containers.
 service: bloanc
 
-proxy: false
-
 # Name of the container image (use your-user/app-name on external registries).
 image: bloanc
 
@@ -11,6 +9,7 @@ servers:
   web:
     hosts:
       - 192.168.0.32
+    proxy: false
     options:
       publish:
         - "127.0.0.1:3000:80"
