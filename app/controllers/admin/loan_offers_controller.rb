@@ -80,6 +80,7 @@ class Admin::LoanOffersController < Admin::BaseController
     params.require(:loan_offer).permit(
       :bank_id,
       :title,
+      :url,
       :description,
       :promoted_from,
       :promoted_until,

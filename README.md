@@ -79,10 +79,10 @@ Mortgage offer comparison app for Polish PLN home loans.
 - Banks management:
     - CRUD
     - Logo upload (Active Storage)
-    - Website URL and description
+    - Description
 - Loan offers management:
     - CRUD
-    - Bank, rate type, fixed-rate phase, margin, WIBOR, commission, insurance, penalty settings
+    - Bank, optional title, offer URL, rate type, fixed-rate phase, margin, WIBOR, commission, insurance, penalty settings
     - Active flag
     - Optional history entry on update
     - Edit form no longer exposes deprecated overpayment strategy fields:

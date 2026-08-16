@@ -11,7 +11,7 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-zmienne")
 
     assert_response :success
-    assert_includes response.body, "Porownaj oferty kredytow hipotecznych"
+    assert_includes response.body, "Porównaj oferty kredytów hipotecznych"
     assert_includes response.body, "Okres kredytu (lata)"
     refute_includes response.body, "Wyniki aktualizuja sie automatycznie po zmianie pola."
     refute_includes response.body, "Zalozenia ogolne"
@@ -19,9 +19,9 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     assert_match(/<th>\s*Oprocentowanie zmienne\s*<\/th>/, response.body)
     assert_includes response.body, "Oferta banku"
     assert_includes response.body, "Oprocentowanie zmienne"
-    assert_includes response.body, "Oprocentowanie stale"
-    assert_includes response.body, "Docelowa laczna rata miesieczna (PLN)"
-    assert_includes response.body, "Nadplacaj w okresie kary"
+    assert_includes response.body, "Oprocentowanie stałe"
+    assert_includes response.body, "Docelowa łączna rata miesięczna (PLN)"
+    assert_includes response.body, "Nadpłacaj w okresie kary"
     assert_includes response.body, "data-controller=\"cookie-consent\""
     assert_includes response.body, "Akceptuj wszystkie"
     refute_includes response.body, "Panel admina"
@@ -40,8 +40,8 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, "Offer Two"
     refute_includes response.body, "Offer One"
-    assert_match(/<th>\s*Oprocentowanie stale\s*<\/th>/, response.body)
-    assert_includes response.body, "Oprocentowanie stale"
+    assert_match(/<th>\s*Oprocentowanie stałe\s*<\/th>/, response.body)
+    assert_includes response.body, "Oprocentowanie stałe"
     assert_includes response.body, "/pl/oprocentowanie-stale"
   end
 
@@ -64,15 +64,20 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     }
 
     assert_response :success
-    refute_includes response.body, "Nadplata uzytkownika nie jest stosowana."
+    refute_includes response.body, "Nadpłata użytkownika nie jest stosowana."
   end
 
-  test "renders bank title as clickable label without printing url text" do
+  test "renders offer title as external link without printing url text" do
     get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-zmienne")
 
     assert_response :success
-    assert_includes response.body, 'href="https://bank-one.test"'
-    refute_includes response.body, ">https://bank-one.test<"
+    assert_includes response.body, 'href="https://offer-one.test"'
+    assert_includes response.body, 'rel="noopener noreferrer nofollow"'
+    assert_includes response.body, "Offer One"
+    assert_includes response.body, "Aktualizacja:"
+    assert_includes response.body, "Dane o kredytach na tej stronie pochodzą z publicznie dostępnych materiałów banków"
+    assert_includes response.body, "wCredit.pl nie ponosi odpowiedzialności"
+    refute_includes response.body, ">https://offer-one.test<"
   end
 
   test "shows validation note for fixed monthly mode when payment is too low" do
@@ -84,7 +89,7 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     }
 
     assert_response :success
-    assert_includes response.body, "Rata stala musi byc wyzsza od raty standardowej"
+    assert_includes response.body, "Rata stała musi być wyższa od raty standardowej"
   end
 
   test "applies fixed target period simulation" do
@@ -110,7 +115,7 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     }
 
     assert_response :success
-    refute_includes response.body, "Kara za nadplate:"
+    refute_includes response.body, "Kara za nadpłatę:"
   end
 
   test "renders loan period sort option" do
@@ -119,12 +124,12 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, 'value="loan-period"'
     assert_includes response.body, "type=\"radio\""
-    assert_includes response.body, "Laczna rata"
-    assert_includes response.body, "Rata w pierwszym miesiacu"
+    assert_includes response.body, "Łączna rata"
+    assert_includes response.body, "Rata w pierwszym miesiącu"
     assert_includes response.body, "Kwota kredytu"
     assert_includes response.body, "Odsetki banku"
-    assert_includes response.body, "Jednorazowy pakiet poza kolumna raty pierwszego miesiaca"
-    assert_includes response.body, "miesiecznie przez"
+    assert_includes response.body, "Jednorazowy pakiet poza kolumną raty pierwszego miesiąca"
+    assert_includes response.body, "miesięcznie przez"
     refute_includes response.body, "Niestandardowa oferta"
     assert_includes response.body, "wCredit.pl"
   end
@@ -136,7 +141,7 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     }
 
     assert_response :success
-    assert_includes response.body, "= marza"
+    assert_includes response.body, "= marża"
 
     get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-stale"), params: {
       loan_amount: 400_000,
@@ -144,8 +149,8 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     }
 
     assert_response :success
-    assert_includes response.body, "Stale"
-    assert_includes response.body, "potem obowiazuje stopa zmienna"
+    assert_includes response.body, "Stałe"
+    assert_includes response.body, "potem obowiązuje stopa zmienna"
   end
 
   test "uses localized english and ukrainian rate type slugs" do

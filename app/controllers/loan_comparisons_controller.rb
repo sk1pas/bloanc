@@ -92,9 +92,10 @@ class LoanComparisonsController < ApplicationController
       custom: false,
       bank_title: loan_offer.bank.title,
       bank_logo: loan_offer.bank.logo,
-      bank_website_url: loan_offer.bank.website_url,
+      offer_url: loan_offer.url,
       offer_title: loan_offer.title,
       offer_description: loan_offer.description,
+      offer_updated_at: loan_offer.updated_at,
       promoted_from: loan_offer.promoted_from,
       promoted_until: loan_offer.promoted_until,
       bank_margin_percent: loan_offer.bank_margin_percent.to_f,
@@ -117,8 +118,10 @@ class LoanComparisonsController < ApplicationController
       total_cost: calculation[:total_cost],
       bank_interest_total: calculation[:bank_interest_total],
       life_insurance_total: calculation[:life_insurance_total],
+      life_insurance_unknown: loan_offer.life_insurance_unknown?,
       life_insurance_details: life_insurance_detail_for_total_paid(loan_offer: loan_offer, calculation: calculation),
       property_insurance_total: calculation[:property_insurance_total],
+      property_insurance_unknown: loan_offer.property_insurance_unknown?,
       property_insurance_details: property_insurance_detail_for_total_paid(loan_offer: loan_offer, calculation: calculation),
       bank_commission_total: calculation[:bank_commission_total],
       overpayment_penalty_total: calculation[:overpayment_penalty_total],
@@ -178,7 +181,7 @@ class LoanComparisonsController < ApplicationController
       custom: true,
       bank_title: raw_offer['bank_title'].presence || t('home.custom.bank_fallback'),
       bank_logo: nil,
-      bank_website_url: nil,
+      offer_url: nil,
       offer_title: raw_offer['title'].presence || t('home.custom.offer_fallback'),
       offer_description: raw_offer['description'],
       promoted_from: nil,
@@ -419,7 +422,7 @@ class LoanComparisonsController < ApplicationController
       )
     end
 
-    if loan_offer.property_insurance_monthly.to_f.positive?
+    if loan_offer.property_insurance_monthly.present? && loan_offer.property_insurance_monthly.to_f.positive?
       first_month_note_parts << t(
         "home.notes.first_month.property_insurance",
         amount: format_number(loan_offer.property_insurance_monthly, 0),
@@ -475,6 +478,8 @@ class LoanComparisonsController < ApplicationController
   end
 
   def life_insurance_detail_for_total_paid(loan_offer:, calculation:)
+    return t("home.results.breakdown_details.life_insurance_unknown") if loan_offer.life_insurance_unknown?
+
     if loan_offer.life_insurance_total.present?
       return t(
         "home.results.breakdown_details.life_insurance_one_time",
@@ -498,6 +503,8 @@ class LoanComparisonsController < ApplicationController
   end
 
   def property_insurance_detail_for_total_paid(loan_offer:, calculation:)
+    return t("home.results.breakdown_details.property_insurance_unknown") if loan_offer.property_insurance_unknown?
+
     monthly_cost = loan_offer.property_insurance_monthly.to_f
     return t("home.results.breakdown_details.property_insurance_none") unless monthly_cost.positive?
 

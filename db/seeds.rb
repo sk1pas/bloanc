@@ -12,25 +12,21 @@ end
 banks_data = [
 	{
 		title: "mBank",
-		description: "Popular digital-first mortgage products.",
-		website_url: "https://www.mbank.pl"
+		description: "Popular digital-first mortgage products."
 	},
 	{
 		title: "Pekao",
-		description: "Large traditional bank with diversified mortgage offers.",
-		website_url: "https://www.pekao.com.pl"
+		description: "Large traditional bank with diversified mortgage offers."
 	},
 	{
 		title: "ING",
-		description: "Mortgage products with low commissions in selected campaigns.",
-		website_url: "https://www.ing.pl"
+		description: "Mortgage products with low commissions in selected campaigns."
 	}
 ]
 
 banks = banks_data.map do |attrs|
 	Bank.find_or_create_by!(title: attrs[:title]) do |bank|
 		bank.description = attrs[:description]
-		bank.website_url = attrs[:website_url]
 	end
 end
 
@@ -38,6 +34,7 @@ loan_offers_data = [
 	{
 		bank_title: "mBank",
 		title: "Standard Mortgage",
+		url: "https://www.mbank.pl/indywidualny/kredyty/kredyt-hipoteczny/",
 		description: "Balanced cost profile with life insurance in first years.",
 		rate_type: :variable,
 		bank_margin_percent: 1.85,
@@ -53,6 +50,7 @@ loan_offers_data = [
 	{
 		bank_title: "Pekao",
 		title: "Promo Mortgage 3Y",
+		url: "https://www.pekao.com.pl/klient-indywidualny/kredyty-i-pozyczki/kredyt-hipoteczny.html",
 		description: "Overpayment after grace period with x2 coefficient.",
 		rate_type: :variable,
 		promoted_from: Date.current,
@@ -73,6 +71,7 @@ loan_offers_data = [
 	{
 		bank_title: "ING",
 		title: "Low Start",
+		url: "https://www.ing.pl/indywidualni/kredyty-i-pozyczki/kredyt-hipoteczny",
 		description: "Low margin and one-time commission.",
 		rate_type: :variable,
 		bank_margin_percent: 1.7,
@@ -91,6 +90,7 @@ loan_offers_data = [
 	{
 		bank_title: "mBank",
 		title: "Fixed 5Y Start",
+		url: "https://www.mbank.pl/indywidualny/kredyty/kredyt-hipoteczny/",
 		description: "Fixed rate for first 5 years, then margin plus WIBOR.",
 		rate_type: :fixed_period,
 		fixed_rate_percent: 6.25,

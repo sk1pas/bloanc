@@ -326,29 +326,51 @@
 						data-sort-total-paid="<%= result[:total_paid] %>"
 					>
 						<td class="bank-offer-cell">
-							<div class="bank-offer-meta">
-								<div class="bank-offer-topline">
+							<div class="bank-offer-card">
+								<div class="bank-offer-top">
 									<% if result[:bank_logo].present? && result[:bank_logo].attached? %>
-										<%= image_tag result[:bank_logo], class: "bank-logo", alt: result[:bank_title] %>
+										<%= image_tag result[:bank_logo], class: "bank-offer-logo", alt: result[:bank_title] %>
 									<% end %>
-									<div class="bank-offer-bank-name">
-										<% if result[:bank_website_url].present? %>
-											<strong><%= link_to result[:bank_title], result[:bank_website_url], target: "_blank", rel: "noopener" %></strong>
-										<% else %>
-											<strong><%= result[:bank_title] %></strong>
-										<% end %>
-									</div>
-							</div>
-							<div class="bank-offer-title"><strong><%= result[:offer_title] %></strong></div>
-							<% if result[:offer_description].present? %>
-								<div class="small text-secondary"><%= result[:offer_description] %></div>
-							<% end %>
-							<% if result[:promoted_from].present? && result[:promoted_until].present? %>
-								<div class="small text-secondary">
-									<%= t("home.results.promo_period") %>:
-									<%= I18n.l(result[:promoted_from]) %> - <%= I18n.l(result[:promoted_until]) %>
+									<div class="bank-offer-bank-name"><%= result[:bank_title] %></div>
 								</div>
-							<% end %>
+
+								<div class="bank-offer-bottom">
+									<% if result[:offer_url].present? %>
+										<%= link_to result[:offer_url],
+																class: "bank-offer-external-link",
+																target: "_blank",
+																rel: "noopener noreferrer nofollow" do %>
+											<span class="bank-offer-external-link-text">
+												<%= result[:offer_title].presence || t("home.results.offer_link_fallback") %>
+											</span>
+											<span class="bank-offer-external-icon" aria-hidden="true">
+												<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+													<path d="M6.5 2a.5.5 0 0 0 0 1H12.3L5.15 10.15a.5.5 0 1 0 .7.7L13 3.71V9.5a.5.5 0 0 0 1 0v-7A.5.5 0 0 0 13.5 2h-7z"/>
+													<path d="M3.5 4A1.5 1.5 0 0 0 2 5.5v7A1.5 1.5 0 0 0 3.5 14h7a1.5 1.5 0 0 0 1.5-1.5V9a.5.5 0 0 0-1 0v3.5a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5H7a.5.5 0 0 0 0-1H3.5z"/>
+												</svg>
+											</span>
+										<% end %>
+									<% elsif result[:offer_title].present? %>
+										<div class="bank-offer-title"><%= result[:offer_title] %></div>
+									<% end %>
+
+									<% if result[:offer_description].present? %>
+										<div class="bank-offer-description"><%= result[:offer_description] %></div>
+									<% end %>
+
+									<% if result[:promoted_from].present? && result[:promoted_until].present? %>
+										<div class="bank-offer-promo">
+											<%= t("home.results.promo_period") %>:
+											<%= I18n.l(result[:promoted_from]) %> - <%= I18n.l(result[:promoted_until]) %>
+										</div>
+									<% end %>
+
+									<% if result[:offer_updated_at].present? %>
+										<div class="bank-offer-updated">
+											<%= t("home.results.updated_at", date: result[:offer_updated_at].strftime("%Y.%m.%d")) %>
+										</div>
+									<% end %>
+								</div>
 							</div>
 						</td>
 						<td>
@@ -383,16 +405,28 @@
 								</div>
 								<div class="total-paid-row">
 									<span><%= t("home.results.breakdown.life_insurance") %></span>
-									<strong><%= number_to_currency(result[:life_insurance_total], unit: "PLN", precision: 0, format: "%n %u") %></strong>
+									<strong>
+										<% if result[:life_insurance_unknown] %>
+											<%= t("home.results.unknown") %>
+										<% else %>
+											<%= number_to_currency(result[:life_insurance_total], unit: "PLN", precision: 0, format: "%n %u") %>
+										<% end %>
+									</strong>
 								</div>
-								<% if result[:life_insurance_details].present? %>
+								<% if !result[:life_insurance_unknown] && result[:life_insurance_details].present? %>
 									<div class="total-paid-row-note"><%= result[:life_insurance_details] %></div>
 								<% end %>
 								<div class="total-paid-row">
 									<span><%= t("home.results.breakdown.property_insurance") %></span>
-									<strong><%= number_to_currency(result[:property_insurance_total], unit: "PLN", precision: 0, format: "%n %u") %></strong>
+									<strong>
+										<% if result[:property_insurance_unknown] %>
+											<%= t("home.results.unknown") %>
+										<% else %>
+											<%= number_to_currency(result[:property_insurance_total], unit: "PLN", precision: 0, format: "%n %u") %>
+										<% end %>
+									</strong>
 								</div>
-								<% if result[:property_insurance_details].present? %>
+								<% if !result[:property_insurance_unknown] && result[:property_insurance_details].present? %>
 									<div class="total-paid-row-note"><%= result[:property_insurance_details] %></div>
 								<% end %>
 								<% if result[:bank_commission_total].to_f.positive? %>
@@ -427,6 +461,11 @@
 			</tbody>
 		</table>
 	</div>
+	<aside class="results-disclaimer" role="note">
+		<p class="results-disclaimer__lead"><%= t("home.results.disclaimer.lead") %></p>
+		<p class="results-disclaimer__body"><%= t("home.results.disclaimer.body") %></p>
+		<p class="results-disclaimer__liability"><%= t("home.results.disclaimer.liability") %></p>
+	</aside>
 </section>
 
 <% if false # temporary: hide custom bank offer block %>

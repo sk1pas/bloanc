@@ -403,24 +403,108 @@ body {
 
 .bank-offer-cell {
 	min-width: 180px;
+	vertical-align: top;
 }
 
-.bank-offer-topline {
-	display: flex;
-	align-items: center;
-	gap: 0.7rem;
+.bank-offer-card {
+	display: grid;
+	gap: 0.75rem;
 }
 
-.bank-offer-meta {
-	min-width: 0;
+.bank-offer-top {
+	display: grid;
+	justify-items: center;
+	gap: 0.45rem;
+	text-align: center;
+}
+
+.bank-offer-logo {
+	width: 52px;
+	height: 52px;
+	object-fit: contain;
+	border-radius: 10px;
+	background: #ffffff;
+	border: 1px solid #d7e2ec;
+	padding: 4px;
 }
 
 .bank-offer-bank-name {
-	min-width: 0;
+	font-weight: 700;
+	line-height: 1.25;
+	word-break: break-word;
+}
+
+.bank-offer-bottom {
+	display: grid;
+	gap: 0.35rem;
+	padding-top: 0.65rem;
+	border-top: 1px solid #e4edf5;
+}
+
+.bank-offer-external-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	font-weight: 600;
+	text-decoration: none;
+	word-break: break-word;
+}
+
+.bank-offer-external-link:hover {
+	text-decoration: underline;
+}
+
+.bank-offer-external-icon {
+	display: inline-flex;
+	flex-shrink: 0;
+	opacity: 0.75;
 }
 
 .bank-offer-title {
-	margin-top: 0.15rem;
+	font-weight: 600;
+	line-height: 1.3;
+}
+
+.bank-offer-description,
+.bank-offer-promo,
+.bank-offer-updated {
+	font-size: 0.82rem;
+	line-height: 1.35;
+	color: #66788a;
+}
+
+.results-disclaimer {
+	margin-top: 1rem;
+	padding: 0.95rem 1.05rem;
+	border: 1px solid #d7e2ec;
+	border-left: 4px solid #c48a2a;
+	border-radius: 10px;
+	background: #fbf7ef;
+	display: grid;
+	gap: 0.55rem;
+	font-size: 0.86rem;
+	line-height: 1.5;
+	color: #4f5f6e;
+}
+
+.results-disclaimer__lead,
+.results-disclaimer__body,
+.results-disclaimer__liability {
+	margin: 0;
+}
+
+.results-disclaimer__lead {
+	font-weight: 700;
+	color: #2f3b45;
+}
+
+.results-disclaimer__liability {
+	padding: 0.55rem 0.7rem;
+	border-radius: 8px;
+	background: rgba(196, 138, 42, 0.14);
+	border: 1px solid rgba(196, 138, 42, 0.28);
+	font-weight: 700;
+	color: #5c3f12;
 }
 
 .monthly-total-cell {
@@ -625,6 +709,20 @@ body {
 
 .admin-actions-group form {
 	margin: 0;
+}
+
+.admin-bank-logo-preview {
+	width: 96px;
+	height: 96px;
+	object-fit: contain;
+	border-radius: 12px;
+	background: #ffffff;
+	border: 1px solid rgba(118, 142, 160, 0.35);
+	padding: 8px;
+}
+
+.admin-current-logo .form-label {
+	margin-bottom: 0.45rem;
 }
 
 .cookie-banner {

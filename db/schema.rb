@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_09_090000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_16_114201) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -47,7 +47,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_09_090000) do
     t.text "description"
     t.string "title", null: false
     t.datetime "updated_at", null: false
-    t.string "website_url"
     t.index ["title"], name: "index_banks_on_title"
   end
 
@@ -83,10 +82,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_09_090000) do
     t.integer "overpayment_penalty_years", default: 0, null: false
     t.date "promoted_from"
     t.date "promoted_until"
-    t.decimal "property_insurance_monthly", precision: 12, scale: 2, default: "0.0", null: false
+    t.decimal "property_insurance_monthly", precision: 12, scale: 2
     t.integer "rate_type", default: 0, null: false
-    t.string "title", null: false
+    t.string "title"
     t.datetime "updated_at", null: false
+    t.string "url"
     t.integer "wibor_kind", default: 1, null: false
     t.index ["active"], name: "index_loan_offers_on_active"
     t.index ["bank_id"], name: "index_loan_offers_on_bank_id"

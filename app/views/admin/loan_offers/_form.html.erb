@@ -16,7 +16,11 @@
     </div>
     <div class="col-md-6 col-lg-4">
       <%= form.label :title, "Offer title", class: "form-label" %>
-      <%= form.text_field :title, class: "form-control", required: true %>
+      <%= form.text_field :title, class: "form-control" %>
+    </div>
+    <div class="col-md-6 col-lg-4">
+      <%= form.label :url, "Offer URL", class: "form-label" %>
+      <%= form.url_field :url, class: "form-control", placeholder: "https://" %>
     </div>
     <div class="col-md-6 col-lg-3 d-flex align-items-end">
       <div class="form-check">
@@ -93,6 +97,7 @@
     <div class="col-md-6 col-lg-3">
       <%= form.label :life_insurance_percent, "Life insurance (%)", class: "form-label" %>
       <%= form.number_field :life_insurance_percent, class: "form-control", step: "0.0001" %>
+      <div class="form-hint">Leave blank if unknown</div>
     </div>
     <div class="col-md-6 col-lg-3">
       <%= form.label :life_insurance_years, "Life insurance period (years)", class: "form-label" %>
@@ -105,6 +110,7 @@
     <div class="col-md-6 col-lg-3">
       <%= form.label :property_insurance_monthly, "Property insurance (PLN/month)", class: "form-label" %>
       <%= form.number_field :property_insurance_monthly, class: "form-control", step: "0.01" %>
+      <div class="form-hint">Leave blank if unknown</div>
     </div>
 
     <div class="col-12"><hr></div>

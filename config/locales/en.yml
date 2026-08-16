@@ -112,8 +112,15 @@ en:
       bank_interest: "Bank interest"
       life_insurance: "Life insurance"
       property_insurance: "Property insurance"
+      unknown: "Unknown"
       notes: "Calculation notes"
       promo_period: "Promo period"
+      offer_link_fallback: "Link"
+      updated_at: "Updated: %{date}"
+      disclaimer:
+        lead: "Loan figures on this page are based on publicly available bank materials and may not reflect a full or final offer."
+        body: "Some fees, insurance terms, eligibility rules, or other conditions can be missing, outdated, or different from what a bank actually offers in a personal application. Always confirm the current terms directly with the bank before making any decision."
+        liability: "wCredit.pl is not responsible for any decisions you make based on the information shown here, and this comparison does not replace bank advice or an official loan offer."
       margin: "Margin"
       first_month: "First month"
       show_notes: "Show notes"
@@ -137,8 +144,10 @@ en:
         life_insurance_one_time: "One-time package outside first month payment column: %{amount} PLN"
         life_insurance_percent: "%{percent}%% monthly on remaining principal for %{months} months (first month about %{first_month} PLN)"
         life_insurance_none: "No life insurance fee"
+        life_insurance_unknown: "Not publicly available"
         property_insurance_monthly: "%{monthly} PLN monthly for %{months} months"
         property_insurance_none: "No property insurance fee"
+        property_insurance_unknown: "Not publicly available"
         overpayment_penalty_rule: "Rule: first %{years} years, %{percent}%% of each overpayment, minimum %{min} PLN"
         overpayment_penalty_skipped: "In this simulation, overpayment starts after penalty period."
 
@@ -253,6 +262,7 @@ en:
       loan_offers: "Loan offers"
       confirm_delete: "Delete this bank and all its offers?"
       form:
+        current_logo: "Current logo"
         remove_logo: "Remove current logo"
       table:
         logo: "Logo"

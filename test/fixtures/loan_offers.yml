@@ -3,6 +3,7 @@
 one:
   bank: one
   title: Offer One
+  url: https://offer-one.test
   description: MyText
   promoted_from: 2026-08-08
   promoted_until: 2026-08-08
@@ -28,6 +29,7 @@ one:
 two:
   bank: two
   title: Offer Two
+  url: https://offer-two.test
   description: MyText
   promoted_from: 2026-08-08
   promoted_until: 2026-08-08

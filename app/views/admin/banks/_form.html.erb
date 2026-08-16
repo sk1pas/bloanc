@@ -15,11 +15,6 @@
       <%= form.text_field :title, class: "form-control", required: true %>
     </div>
 
-    <div class="col-md-6 col-lg-4">
-      <%= form.label :website_url, "Website URL", class: "form-label" %>
-      <%= form.url_field :website_url, class: "form-control", placeholder: "https://" %>
-    </div>
-
     <div class="col-12 col-lg-8">
       <%= form.label :description, "Bank description", class: "form-label" %>
       <%= form.text_area :description, class: "form-control", rows: 4 %>
@@ -31,10 +26,14 @@
     </div>
 
     <% if @bank.persisted? && @bank.logo.attached? %>
-      <div class="col-md-6 col-lg-4 d-flex align-items-end">
-        <div class="form-check">
-          <%= check_box_tag "bank[remove_logo]", "1", false, class: "form-check-input", id: "bank_remove_logo" %>
-          <%= label_tag "bank_remove_logo", t("admin.banks.form.remove_logo"), class: "form-check-label" %>
+      <div class="col-md-6 col-lg-4">
+        <div class="admin-current-logo">
+          <span class="form-label d-block"><%= t("admin.banks.form.current_logo") %></span>
+          <%= image_tag @bank.logo, class: "admin-bank-logo-preview", alt: @bank.title %>
+          <div class="form-check mt-2">
+            <%= check_box_tag "bank[remove_logo]", "1", false, class: "form-check-input", id: "bank_remove_logo" %>
+            <%= label_tag "bank_remove_logo", t("admin.banks.form.remove_logo"), class: "form-check-label" %>
+          </div>
         </div>
       </div>
     <% end %>

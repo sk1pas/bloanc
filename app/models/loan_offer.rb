@@ -7,7 +7,10 @@ class LoanOffer < ApplicationRecord
   enum :wibor_kind, { wibor_1m: 0, wibor_3m: 1 }, default: :wibor_3m, validate: true
   enum :overpayment_mode, { no_overpayment: 0, coef: 1, absolute: 2 }, default: :no_overpayment, validate: true
 
-  validates :title, presence: true
+  validates :title, length: { maximum: 255 }, allow_blank: true
+  validates :url,
+            format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]) },
+            allow_blank: true
   validates :bank_margin_percent, numericality: { greater_than_or_equal_to: 0 }
   validates :fixed_rate_percent, numericality: { greater_than: 0 }, allow_nil: true
   validates :fixed_rate_years, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
@@ -15,7 +18,7 @@ class LoanOffer < ApplicationRecord
   validates :life_insurance_percent, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validates :life_insurance_years, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_nil: true
   validates :life_insurance_total, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
-  validates :property_insurance_monthly, numericality: { greater_than_or_equal_to: 0 }
+  validates :property_insurance_monthly, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validates :overpayment_grace_years, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :overpayment_coef, numericality: { greater_than_or_equal_to: 1 }
   validates :overpayment_amount, numericality: { greater_than_or_equal_to: 0 }
@@ -28,9 +31,10 @@ class LoanOffer < ApplicationRecord
             allow_nil: true,
             if: -> { promoted_from.present? }
   validate :fixed_rate_configuration
+  before_validation :normalize_optional_fields
 
   scope :active, -> { where(active: true) }
-  scope :ordered, -> { joins(:bank).order("banks.title ASC, loan_offers.title ASC") }
+  scope :ordered, -> { joins(:bank).order("banks.title ASC, loan_offers.title ASC NULLS LAST") }
 
   def current_wibor_percent(snapshot = WiborSnapshot.latest)
     return 0 if snapshot.blank?
@@ -77,6 +81,7 @@ class LoanOffer < ApplicationRecord
   def snapshot_payload
     attributes.slice(
       "title",
+      "url",
       "description",
       "promoted_from",
       "promoted_until",
@@ -101,7 +106,29 @@ class LoanOffer < ApplicationRecord
     )
   end
 
+  def life_insurance_unknown?
+    life_insurance_total.nil? && life_insurance_percent.nil? && life_insurance_years.nil?
+  end
+
+  def property_insurance_unknown?
+    property_insurance_monthly.nil?
+  end
+
   private
+
+  def normalize_optional_fields
+    self.title = title.to_s.strip.presence
+    self.url = url.to_s.strip.presence
+
+    %i[
+      life_insurance_percent
+      life_insurance_years
+      life_insurance_total
+      property_insurance_monthly
+    ].each do |attribute|
+      self[attribute] = nil if self[attribute].blank?
+    end
+  end
 
   def fixed_rate_configuration
     return unless fixed_period?

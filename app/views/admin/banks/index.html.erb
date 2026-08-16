@@ -12,7 +12,6 @@
 				<tr>
 					<th><%= t("admin.banks.table.logo") %></th>
 					<th><%= t("admin.banks.table.title") %></th>
-					<th><%= t("admin.banks.table.website") %></th>
 					<th><%= t("admin.banks.table.loan_offers") %></th>
 					<th class="text-end"><%= t("admin.banks.table.actions") %></th>
 				</tr>
@@ -26,18 +25,17 @@
 							<% end %>
 						</td>
 						<td><strong><%= bank.title %></strong></td>
-						<td>
-							<% if bank.website_url.present? %>
-								<%= link_to bank.website_url, bank.website_url, target: "_blank", rel: "noopener" %>
-							<% else %>
-								-
-							<% end %>
-						</td>
 						<td><%= bank.loan_offers.count %></td>
 						<td class="text-end">
-							<%= link_to t("actions.show"), admin_bank_path(bank), class: "btn btn-sm btn-outline-light" %>
-							<%= link_to t("actions.edit"), edit_admin_bank_path(bank), class: "btn btn-sm btn-outline-info" %>
-							<%= button_to t("actions.delete"), admin_bank_path(bank), method: :delete, class: "btn btn-sm btn-outline-danger", form: { data: { turbo_confirm: t("admin.banks.confirm_delete") } } %>
+							<div class="admin-actions-group">
+								<%= link_to t("actions.show"), admin_bank_path(bank), class: "btn btn-sm btn-outline-light" %>
+								<%= link_to t("actions.edit"), edit_admin_bank_path(bank), class: "btn btn-sm btn-outline-info" %>
+								<%= button_to t("actions.delete"),
+															admin_bank_path(bank),
+															method: :delete,
+															class: "btn btn-sm btn-outline-danger",
+															form: { data: { turbo_confirm: t("admin.banks.confirm_delete") } } %>
+							</div>
 						</td>
 					</tr>
 				<% end %>

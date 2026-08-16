@@ -67,7 +67,7 @@
 					<tr>
 						<td><%= l(change.changed_at) %></td>
 						<td><%= change.loan_offer.bank.title %></td>
-						<td><%= link_to change.loan_offer.title, admin_loan_offer_path(change.loan_offer) %></td>
+						<td><%= link_to change.loan_offer.title.presence || "##{change.loan_offer_id}", admin_loan_offer_path(change.loan_offer) %></td>
 						<td><%= change.note.presence || "-" %></td>
 					</tr>
 				<% end %>

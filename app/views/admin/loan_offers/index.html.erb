@@ -40,7 +40,7 @@
 								<span><%= loan_offer.bank.title %></span>
 							</div>
 						</td>
-						<td><%= loan_offer.title %></td>
+						<td><%= loan_offer.title.presence || "-" %></td>
 						<td>
 							<div><%= t("admin.loan_offers.table.rate_type_#{loan_offer.rate_type}") %></div>
 							<% if loan_offer.fixed_period? %>
