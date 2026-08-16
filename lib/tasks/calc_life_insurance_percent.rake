@@ -4,30 +4,18 @@ namespace :calc do
   desc "Calculate life insurance monthly percent of loan rest.
   Usage: rake calc:life_insurance[loan_amount,months,total_life_insurance]
   Numbers may use '.' as thousands separator and ',' as decimal separator (Polish format).
-  Example: rake calc:life_insurance[841.023,263,31.171]"
+  Example: rake calc:life_insurance[841023,263,31171]"
   task :life_insurance, [:loan_amount, :months, :total_life_insurance] => :environment do |t, args|
     if args[:loan_amount].nil? || args[:months].nil? || args[:total_life_insurance].nil?
       puts "Usage: rake calc:life_insurance[loan_amount,months,total_life_insurance]"
       puts "Numbers may use '.' as thousands separator and ',' as decimal separator (Polish format)."
-      puts "Example: rake calc:life_insurance[841.023,263,31.171]"
+      puts "Example: rake calc:life_insurance[841023,263,31171]"
       exit 1
     end
 
-    parse_number = lambda do |s|
-      str = s.to_s.strip
-      str = str.gsub(/\s+/, '')
-      if str.include?(',')
-        str = str.gsub('.', '')
-        str = str.gsub(',', '.')
-      else
-        str = str.gsub('.', '')
-      end
-      Float(str)
-    end
-
-    loan_amount = parse_number.call(args[:loan_amount])
+    loan_amount = Integer(args[:loan_amount])
     months = Integer(args[:months])
-    total_life_insurance = parse_number.call(args[:total_life_insurance])
+    total_life_insurance = Integer(args[:total_life_insurance])
 
     # Approximation: average outstanding balance ≈ loan_amount / 2
     # Sum of monthly outstanding balances ≈ loan_amount * months / 2

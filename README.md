@@ -159,3 +159,22 @@ Development/test fallback:
     - row data attributes
     - Stimulus sort controller
     - locale labels
+
+## Cloudflare tunnel settings
+
+sudo journalctl -u cloudflared -n 50 --no-pager
+
+cloudflared tunnel run --token-file /etc/cloudflared/token
+
+sudo nano /etc/systemd/system/cloudflared.service
+
+sudo systemctl daemon-reload
+sudo systemctl restart cloudflared
+sudo systemctl status cloudflared
+
+cloudflared tunnel list
+
+### Create the DNS record
+sudo cloudflared tunnel route dns wcredit wcredit.pl
+
+
