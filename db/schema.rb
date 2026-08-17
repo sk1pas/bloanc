@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_16_114201) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_17_190000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -70,6 +70,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_16_114201) do
     t.text "description"
     t.decimal "fixed_rate_percent", precision: 6, scale: 3
     t.integer "fixed_rate_years"
+    t.boolean "life_insurance_full_term", default: false, null: false
     t.decimal "life_insurance_percent", precision: 8, scale: 4
     t.decimal "life_insurance_total", precision: 12, scale: 2
     t.integer "life_insurance_years"

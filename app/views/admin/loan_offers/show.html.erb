@@ -37,7 +37,13 @@
 				<h2 class="h5"><%= t("admin.loan_offers.details") %></h2>
 				<p class="mb-1"><strong>Promotion:</strong> <%= [@loan_offer.promoted_from, @loan_offer.promoted_until].compact.map { |v| I18n.l(v) }.join(" - ").presence || "-" %></p>
 				<p class="mb-1"><strong>Life insurance %:</strong> <%= @loan_offer.life_insurance_percent || "-" %></p>
-				<p class="mb-1"><strong>Life insurance years:</strong> <%= @loan_offer.life_insurance_years || "-" %></p>
+				<p class="mb-1"><strong>Life insurance years:</strong>
+					<% if @loan_offer.life_insurance_full_term? %>
+						whole loan period
+					<% else %>
+						<%= @loan_offer.life_insurance_years || "-" %>
+					<% end %>
+				</p>
 				<p class="mb-1"><strong>Life insurance total:</strong> <%= @loan_offer.life_insurance_total || "-" %></p>
 				<p class="mb-1"><strong>Property insurance monthly:</strong> <%= @loan_offer.property_insurance_monthly || "-" %></p>
 				<p class="mb-0"><strong>Description:</strong> <%= @loan_offer.description.presence || "-" %></p>

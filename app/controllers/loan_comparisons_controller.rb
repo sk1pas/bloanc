@@ -414,7 +414,7 @@ class LoanComparisonsController < ApplicationController
 
     recurring_life_insurance = recurring_life_insurance_for_offer(loan_offer)
     if recurring_life_insurance.positive?
-      life_insurance_months = [loan_offer.life_insurance_years.to_i * 12, calculation[:months_paid]].min
+      life_insurance_months = loan_offer.life_insurance_months_for(calculation[:months_paid])
       first_month_note_parts << t(
         "home.notes.first_month.life_insurance_recurring",
         amount: format_number(recurring_life_insurance, 0),
@@ -487,8 +487,8 @@ class LoanComparisonsController < ApplicationController
       )
     end
 
-    if loan_offer.life_insurance_percent.present? && loan_offer.life_insurance_years.present?
-      insurance_months = [loan_offer.life_insurance_years.to_i * 12, calculation[:months_paid]].min
+    if loan_offer.monthly_life_insurance?
+      insurance_months = loan_offer.life_insurance_months_for(calculation[:months_paid])
       first_month_insurance = recurring_life_insurance_for_offer(loan_offer)
 
       return t(
@@ -559,7 +559,7 @@ class LoanComparisonsController < ApplicationController
 
   def recurring_life_insurance_for_offer(loan_offer)
     return 0.0 if loan_offer.life_insurance_total.present?
-    return 0.0 unless loan_offer.life_insurance_percent.present? && loan_offer.life_insurance_years.to_i.positive?
+    return 0.0 unless loan_offer.monthly_life_insurance?
 
     @loan_amount.to_f * (loan_offer.life_insurance_percent.to_f / 100.0)
   end

@@ -1,0 +1,25 @@
+---
+description: Use single quotes in Ruby unless double quotes are required
+globs: "**/*.rb"
+alwaysApply: false
+---
+
+# Ruby string quotes
+
+Prefer single-quoted strings. Use double quotes only when the string needs interpolation, escape sequences (`\n`, `\t`, `\"`), or other double-quote-only syntax.
+
+```ruby
+# ❌ BAD
+name = "Yan"
+path = "app/models/loan_offer.rb"
+redirect_to "/admin/loan_offers"
+
+# ✅ GOOD
+name = 'Yan'
+path = 'app/models/loan_offer.rb'
+redirect_to '/admin/loan_offers'
+
+# ✅ GOOD — interpolation or escapes need double quotes
+greeting = "Hello, #{name}"
+message = "Line one\nLine two"
+```

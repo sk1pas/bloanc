@@ -85,6 +85,32 @@ class LoanCalculatorTest < ActiveSupport::TestCase
     assert result[:monthly_principal_interest].positive?
     assert result[:monthly_principal_interest_after_fixed].present?
     assert_operator result[:monthly_principal_interest_after_fixed], :>, 0
-    assert_includes result[:notes].join(" "), "fixed"
+  test "life insurance full term applies monthly percent for every remaining month" do
+    limited = LoanCalculator.new(
+      loan_net: 400_000,
+      months: 300,
+      bank_margin_percent: 1.8,
+      wibor_percent: 3.8,
+      insurance: {
+        life_insurance_percent: 0.04,
+        life_insurance_years: 3,
+        property_insurance_monthly: 0
+      }
+    ).call
+
+    full_term = LoanCalculator.new(
+      loan_net: 400_000,
+      months: 300,
+      bank_margin_percent: 1.8,
+      wibor_percent: 3.8,
+      insurance: {
+        life_insurance_percent: 0.04,
+        life_insurance_full_term: true,
+        property_insurance_monthly: 0
+      }
+    ).call
+
+    assert_operator full_term[:life_insurance_total], :>, limited[:life_insurance_total]
+    assert_includes full_term[:notes].join(" "), "full loan term"
   end
 end

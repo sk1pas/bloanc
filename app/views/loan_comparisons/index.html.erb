@@ -291,7 +291,7 @@
 				<% if @wibor_snapshot.present? %>
 					<p class="form-hint mb-0">
 						<%= t("home.wibor.latest") %>:
-						<strong><%= I18n.l(@wibor_snapshot.effective_date) %></strong>
+						<strong><%= I18n.l(@wibor_snapshot.updated_at.to_date) %></strong>
 						| WIBOR 1M: <strong><%= number_with_precision(@wibor_snapshot.wibor_1m, precision: 2, strip_insignificant_zeros: true) %>%</strong>
 						| WIBOR 3M: <strong><%= number_with_precision(@wibor_snapshot.wibor_3m, precision: 2, strip_insignificant_zeros: true) %>%</strong>
 					</p>

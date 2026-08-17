@@ -1,5 +1,48 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
+# == Schema Information
+#
+# Table name: loan_offers
+#
+#  id                             :bigint           not null, primary key
+#  active                         :boolean          default(TRUE), not null
+#  bank_commission_percent        :decimal(6, 3)    default(0.0), not null
+#  bank_margin_percent            :decimal(6, 3)    not null
+#  description                    :text
+#  fixed_rate_percent             :decimal(6, 3)
+#  fixed_rate_years               :integer
+#  life_insurance_full_term       :boolean          default(FALSE), not null
+#  life_insurance_percent         :decimal(8, 4)
+#  life_insurance_total           :decimal(12, 2)
+#  life_insurance_years           :integer
+#  overpayment_amount             :decimal(12, 2)   default(0.0), not null
+#  overpayment_coef               :decimal(8, 3)    default(1.0), not null
+#  overpayment_grace_years        :integer          default(0), not null
+#  overpayment_mode               :integer          default(0), not null
+#  overpayment_penalty_min_amount :decimal(12, 2)   default(0.0), not null
+#  overpayment_penalty_percent    :decimal(6, 3)    default(0.0), not null
+#  overpayment_penalty_years      :integer          default(0), not null
+#  promoted_from                  :date
+#  promoted_until                 :date
+#  property_insurance_monthly     :decimal(12, 2)
+#  rate_type                      :integer          default(0), not null
+#  title                          :string
+#  url                            :string
+#  wibor_kind                     :integer          default(1), not null
+#  created_at                     :datetime         not null
+#  updated_at                     :datetime         not null
+#  bank_id                        :bigint           not null
+#
+# Indexes
+#
+#  index_loan_offers_on_active     (active)
+#  index_loan_offers_on_bank_id    (bank_id)
+#  index_loan_offers_on_rate_type  (rate_type)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (bank_id => banks.id)
+#
 one:
   bank: one
   title: Offer One

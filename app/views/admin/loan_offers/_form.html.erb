@@ -113,12 +113,25 @@
                               data: { life_insurance_calc_target: "percentField" } %>
         <div class="form-hint">Leave blank if unknown. Monthly % of remaining principal.</div>
       </div>
-      <div class="col-md-6 col-lg-3">
+      <div class="col-md-6 col-lg-3" data-controller="life-insurance-period">
         <%= form.label :life_insurance_years, "Life insurance period (years)", class: "form-label" %>
         <%= form.number_field :life_insurance_years,
                               class: "form-control",
                               step: 1,
-                              data: { life_insurance_calc_target: "yearsField" } %>
+                              data: {
+                                life_insurance_calc_target: "yearsField",
+                                life_insurance_period_target: "yearsField"
+                              } %>
+        <div class="form-check mt-2">
+          <%= form.check_box :life_insurance_full_term,
+                             class: "form-check-input",
+                             data: {
+                               life_insurance_period_target: "fullTerm",
+                               action: "change->life-insurance-period#toggle"
+                             } %>
+          <%= form.label :life_insurance_full_term, "Whole loan period", class: "form-check-label" %>
+        </div>
+        <div class="form-hint">Charge monthly % until the loan is fully repaid.</div>
       </div>
       <div class="col-md-6 col-lg-3">
         <%= form.label :life_insurance_total, "Life insurance total (PLN, one-time)", class: "form-label" %>
