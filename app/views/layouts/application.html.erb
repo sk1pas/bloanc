@@ -20,6 +20,11 @@
     <meta name="theme-color" content="#0f5e9c">
     <link rel="canonical" href="<%= canonical_url %>">
 
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+
     <% available_locales.each do |locale| %>
       <link rel="alternate" hreflang="<%= locale %>" href="<%= loan_comparison_url(locale: locale, rate_type_slug: RateTypeSlug.slug_for(locale: locale, rate_type: current_rate_type), only_path: false) %>">
     <% end %>
@@ -60,7 +65,9 @@
   <body class="public-theme">
     <nav class="navbar navbar-expand-lg public-navbar mb-4">
       <div class="container">
-        <%= link_to t("seo.site_name"), loan_comparison_url_for(locale: I18n.locale, rate_type: "variable"), class: "navbar-brand public-brand" %>
+        <%= link_to loan_comparison_url_for(locale: I18n.locale, rate_type: "variable"), class: "navbar-brand public-brand" do %>
+          <%= image_tag "/logo.png", alt: t("seo.site_name"), class: "public-brand-logo" %>
+        <% end %>
         <div class="d-flex align-items-center gap-2">
           <% available_locales.each do |locale| %>
             <%= link_to locale_switch_label(locale),

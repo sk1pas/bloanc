@@ -24,12 +24,20 @@ body {
 .public-navbar {
 	background: linear-gradient(90deg, #0f5e9c 0%, #3a9a8d 100%);
 	box-shadow: 0 6px 22px rgba(9, 39, 61, 0.2);
+	padding: 0 !important
 }
 
 .public-brand {
-	color: #ffffff;
-	font-weight: 700;
-	letter-spacing: 0.02em;
+	display: inline-flex;
+	align-items: center;
+	padding-top: 0.15rem;
+	padding-bottom: 0.15rem;
+}
+
+.public-brand-logo {
+	display: block;
+	height: 40px;
+	width: auto;
 }
 
 .hero-card {
