@@ -177,6 +177,7 @@ class LoanCalculator
                     life_insurance_percent: nil,
                     life_insurance_years: nil,
                     life_insurance_full_term: false,
+                    life_insurance_one_time: false,
                     life_insurance_total: nil,
                     property_insurance_monthly: nil
                   },
@@ -200,6 +201,7 @@ class LoanCalculator
     @life_insurance_percent = insurance[:life_insurance_percent].presence&.to_f
     @life_insurance_years = insurance[:life_insurance_years].presence&.to_i
     @life_insurance_full_term = ActiveModel::Type::Boolean.new.cast(insurance[:life_insurance_full_term])
+    @life_insurance_one_time = ActiveModel::Type::Boolean.new.cast(insurance[:life_insurance_one_time])
     @fixed_life_insurance_total = insurance[:life_insurance_total].presence&.to_f
     @property_insurance_monthly = insurance[:property_insurance_monthly].to_f
 
@@ -234,7 +236,8 @@ class LoanCalculator
     total_interest = 0.0
     total_principal_interest_paid = 0.0
     total_overpayment_penalty = 0.0
-    life_insurance_total = @fixed_life_insurance_total || 0.0
+    one_time_life_insurance_total = one_time_life_insurance_from_percent
+    life_insurance_total = one_time_life_insurance_total || @fixed_life_insurance_total || 0.0
 
     insurance_months = life_insurance_months
 
@@ -287,7 +290,7 @@ class LoanCalculator
         actual_monthly_payment = interest_part + actual_principal_part
       end
 
-      if @fixed_life_insurance_total.nil? && @life_insurance_percent && insurance_months.to_i.positive? && month_index < insurance_months
+      if one_time_life_insurance_total.nil? && @fixed_life_insurance_total.nil? && @life_insurance_percent && insurance_months.to_i.positive? && month_index < insurance_months
         monthly_life_insurance = remaining_balance * (@life_insurance_percent / 100.0)
         life_insurance_total += monthly_life_insurance
       end
@@ -308,7 +311,7 @@ class LoanCalculator
       total_overpayment_penalty
 
     first_month_life_insurance =
-      if @fixed_life_insurance_total || !(@life_insurance_percent && insurance_months.to_i.positive?)
+      if one_time_life_insurance_total || @fixed_life_insurance_total || !(@life_insurance_percent && insurance_months.to_i.positive?)
         0.0
       else
         @loan_net * (@life_insurance_percent / 100.0)
@@ -325,7 +328,9 @@ class LoanCalculator
       notes << "Rate base: margin #{@bank_margin_percent.round(3)}% + WIBOR #{@wibor_percent.round(3)}%"
     end
     notes << "Bank commission: #{@bank_commission_percentage.round(3)}% of net loan" if @bank_commission_percentage.positive?
-    if @fixed_life_insurance_total
+    if one_time_life_insurance_total
+      notes << "Life insurance as one-time #{@life_insurance_percent.round(4)}% of loan amount"
+    elsif @fixed_life_insurance_total
       notes << "Life insurance as one-time total amount"
     elsif @life_insurance_percent && insurance_months.to_i.positive?
       notes << if @life_insurance_full_term
@@ -393,7 +398,15 @@ class LoanCalculator
     [@fixed_rate_years * 12, @months].min
   end
 
+  def one_time_life_insurance_from_percent
+    return nil unless @life_insurance_one_time
+    return nil unless @life_insurance_percent
+
+    @loan_net * (@life_insurance_percent / 100.0)
+  end
+
   def life_insurance_months
+    return nil if @life_insurance_one_time
     return nil unless @life_insurance_percent
     return @months if @life_insurance_full_term
     return nil unless @life_insurance_years.to_i.positive?

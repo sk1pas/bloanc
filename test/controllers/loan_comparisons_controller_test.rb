@@ -141,6 +141,8 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
       life_insurance_percent: nil,
       life_insurance_years: nil,
       life_insurance_total: nil,
+      life_insurance_full_term: false,
+      life_insurance_one_time: false,
       property_insurance_monthly: nil
     )
 
@@ -149,6 +151,26 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, 'class="value-unknown"'
     assert_includes response.body, "Nieznane"
+  end
+
+  test "shows one-time life insurance as percent of loan amount" do
+    offer = loan_offers(:one)
+    offer.update!(
+      life_insurance_percent: 1.5,
+      life_insurance_years: nil,
+      life_insurance_total: nil,
+      life_insurance_full_term: false,
+      life_insurance_one_time: true
+    )
+
+    get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-zmienne"), params: {
+      loan_amount: 400_000,
+      years: 25
+    }
+
+    assert_response :success
+    assert_includes response.body, "Jednorazowo 1.5% kwoty kredytu"
+    assert_includes response.body, "6000 PLN"
   end
 
   test "shows rate notes for variable and fixed offers" do

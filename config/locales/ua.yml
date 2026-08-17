@@ -114,6 +114,7 @@ ua:
         overpayment_penalty: "Штраф за дострокове погашення"
       breakdown_details:
         life_insurance_one_time: "Одноразовий пакет поза колонкою платежу першого місяця: %{amount} PLN"
+        life_insurance_one_time_percent: "Одноразово %{percent}%% суми кредиту: %{amount} PLN (поза колонкою платежу першого місяця)"
         life_insurance_percent: "%{percent}%% щомісяця від залишку боргу протягом %{months} місяців (перший місяць близько %{first_month} PLN)"
         life_insurance_none: "Без страхового платежу за життя"
         life_insurance_unknown: "Немає публічних даних"
@@ -169,6 +170,7 @@ ua:
         wibor_percent: "WIBOR % (необов'язково)"
         bank_commission_percent: "Комісія банку %"
         life_insurance_percent: "Страхування життя %"
+        life_insurance_one_time: "Одноразова оплата (% кредиту)"
         life_insurance_years: "Роки страхування життя"
         life_insurance_total: "Загальна сума страхування життя"
         property_insurance_monthly: "Щомісячне страхування майна"

@@ -143,6 +143,7 @@ en:
         overpayment_penalty: "Overpayment penalty"
       breakdown_details:
         life_insurance_one_time: "One-time package outside first month payment column: %{amount} PLN"
+        life_insurance_one_time_percent: "One-time %{percent}%% of loan amount: %{amount} PLN (outside first month payment column)"
         life_insurance_percent: "%{percent}%% monthly on remaining principal for %{months} months (first month about %{first_month} PLN)"
         life_insurance_none: "No life insurance fee"
         life_insurance_unknown: "Not publicly available"
@@ -198,6 +199,7 @@ en:
         wibor_percent: "WIBOR % (optional override)"
         bank_commission_percent: "Bank commission %"
         life_insurance_percent: "Life insurance %"
+        life_insurance_one_time: "One-time payment (% of loan)"
         life_insurance_years: "Life insurance years"
         life_insurance_total: "Life insurance total"
         property_insurance_monthly: "Property insurance monthly"

@@ -165,6 +165,7 @@ class LoanComparisonsController < ApplicationController
       insurance: {
         life_insurance_percent: normalize_optional_decimal(raw_offer['life_insurance_percent']),
         life_insurance_years: normalize_optional_integer(raw_offer['life_insurance_years']),
+        life_insurance_one_time: ActiveModel::Type::Boolean.new.cast(raw_offer['life_insurance_one_time']),
         life_insurance_total: normalize_optional_decimal(raw_offer['life_insurance_total']),
         property_insurance_monthly: normalize_decimal(raw_offer['property_insurance_monthly'])
       },
@@ -480,6 +481,15 @@ class LoanComparisonsController < ApplicationController
   def life_insurance_detail_for_total_paid(loan_offer:, calculation:)
     return t("home.results.breakdown_details.life_insurance_unknown") if loan_offer.life_insurance_unknown?
 
+    if loan_offer.one_time_life_insurance_percent?
+      amount = loan_offer.one_time_life_insurance_amount_for(@loan_amount)
+      return t(
+        "home.results.breakdown_details.life_insurance_one_time_percent",
+        percent: format_number(loan_offer.life_insurance_percent, 4),
+        amount: format_number(amount, 0)
+      )
+    end
+
     if loan_offer.life_insurance_total.present?
       return t(
         "home.results.breakdown_details.life_insurance_one_time",
@@ -558,6 +568,7 @@ class LoanComparisonsController < ApplicationController
   end
 
   def recurring_life_insurance_for_offer(loan_offer)
+    return 0.0 if loan_offer.life_insurance_one_time?
     return 0.0 if loan_offer.life_insurance_total.present?
     return 0.0 unless loan_offer.monthly_life_insurance?
 
@@ -755,6 +766,7 @@ class LoanComparisonsController < ApplicationController
       :bank_commission_percent,
       :life_insurance_percent,
       :life_insurance_years,
+      :life_insurance_one_time,
       :life_insurance_total,
       :property_insurance_monthly,
       :overpayment_grace_years,

@@ -12,6 +12,7 @@ require "test_helper"
 #  fixed_rate_percent             :decimal(6, 3)
 #  fixed_rate_years               :integer
 #  life_insurance_full_term       :boolean          default(FALSE), not null
+#  life_insurance_one_time        :boolean          default(FALSE), not null
 #  life_insurance_percent         :decimal(8, 4)
 #  life_insurance_total           :decimal(12, 2)
 #  life_insurance_years           :integer
@@ -56,5 +57,21 @@ class LoanOfferTest < ActiveSupport::TestCase
     assert offer.monthly_life_insurance?
     assert_equal 300, offer.life_insurance_months_for(300)
     refute offer.life_insurance_unknown?
+  end
+
+  test "one-time life insurance percent is not treated as monthly" do
+    offer = loan_offers(:one)
+    offer.update!(
+      life_insurance_percent: 1.5,
+      life_insurance_years: 5,
+      life_insurance_total: nil,
+      life_insurance_full_term: false,
+      life_insurance_one_time: true
+    )
+
+    assert offer.one_time_life_insurance_percent?
+    refute offer.monthly_life_insurance?
+    refute offer.life_insurance_unknown?
+    assert_equal 6_000, offer.one_time_life_insurance_amount_for(400_000)
   end
 end

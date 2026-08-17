@@ -93,6 +93,7 @@ class Admin::LoanOffersController < Admin::BaseController
       :life_insurance_percent,
       :life_insurance_years,
       :life_insurance_full_term,
+      :life_insurance_one_time,
       :life_insurance_total,
       :property_insurance_monthly,
       :overpayment_penalty_years,

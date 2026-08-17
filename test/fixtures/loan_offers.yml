@@ -12,6 +12,7 @@
 #  fixed_rate_percent             :decimal(6, 3)
 #  fixed_rate_years               :integer
 #  life_insurance_full_term       :boolean          default(FALSE), not null
+#  life_insurance_one_time        :boolean          default(FALSE), not null
 #  life_insurance_percent         :decimal(8, 4)
 #  life_insurance_total           :decimal(12, 2)
 #  life_insurance_years           :integer

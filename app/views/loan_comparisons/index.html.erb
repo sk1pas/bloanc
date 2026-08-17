@@ -616,6 +616,15 @@
 			<div class="col-md-3">
 				<%= form.label :life_insurance_percent, t("home.custom.form.life_insurance_percent"), class: "form-label" %>
 				<%= form.number_field :life_insurance_percent, name: "custom_offer[life_insurance_percent]", value: @custom_offer["life_insurance_percent"], class: "form-control", step: "0.0001" %>
+				<div class="form-check mt-2">
+					<%= hidden_field_tag "custom_offer[life_insurance_one_time]", "0", id: nil %>
+					<%= check_box_tag "custom_offer[life_insurance_one_time]",
+														"1",
+														ActiveModel::Type::Boolean.new.cast(@custom_offer["life_insurance_one_time"]),
+														class: "form-check-input",
+														id: "custom_life_insurance_one_time" %>
+					<%= label_tag "custom_life_insurance_one_time", t("home.custom.form.life_insurance_one_time"), class: "form-check-label" %>
+				</div>
 			</div>
 			<div class="col-md-3">
 				<%= form.label :life_insurance_years, t("home.custom.form.life_insurance_years"), class: "form-label" %>

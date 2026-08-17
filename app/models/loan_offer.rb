@@ -10,6 +10,7 @@
 #  fixed_rate_percent             :decimal(6, 3)
 #  fixed_rate_years               :integer
 #  life_insurance_full_term       :boolean          default(FALSE), not null
+#  life_insurance_one_time        :boolean          default(FALSE), not null
 #  life_insurance_percent         :decimal(8, 4)
 #  life_insurance_total           :decimal(12, 2)
 #  life_insurance_years           :integer
@@ -109,6 +110,7 @@ class LoanOffer < ApplicationRecord
         life_insurance_percent: life_insurance_percent,
         life_insurance_years: life_insurance_years,
         life_insurance_full_term: life_insurance_full_term?,
+        life_insurance_one_time: life_insurance_one_time?,
         life_insurance_total: life_insurance_total,
         property_insurance_monthly: property_insurance_monthly
       },
@@ -138,6 +140,7 @@ class LoanOffer < ApplicationRecord
       "life_insurance_percent",
       "life_insurance_years",
       "life_insurance_full_term",
+      "life_insurance_one_time",
       "life_insurance_total",
       "property_insurance_monthly",
       "overpayment_grace_years",
@@ -155,7 +158,19 @@ class LoanOffer < ApplicationRecord
     life_insurance_total.nil? && life_insurance_percent.nil? && life_insurance_years.nil? && !life_insurance_full_term?
   end
 
+  def one_time_life_insurance_percent?
+    life_insurance_one_time? && life_insurance_percent.present?
+  end
+
+  def one_time_life_insurance_amount_for(loan_amount)
+    return nil unless one_time_life_insurance_percent?
+
+    loan_amount.to_f * (life_insurance_percent.to_f / 100.0)
+  end
+
   def monthly_life_insurance?
+    return false if life_insurance_one_time?
+
     life_insurance_percent.present? && (life_insurance_full_term? || life_insurance_years.to_i.positive?)
   end
 

@@ -114,6 +114,7 @@ pl:
         overpayment_penalty: "Kara za nadpłatę"
       breakdown_details:
         life_insurance_one_time: "Jednorazowy pakiet poza kolumną raty pierwszego miesiąca: %{amount} PLN"
+        life_insurance_one_time_percent: "Jednorazowo %{percent}%% kwoty kredytu: %{amount} PLN (poza kolumną raty pierwszego miesiąca)"
         life_insurance_percent: "%{percent}%% miesięcznie od salda przez %{months} miesięcy (pierwszy miesiąc ok. %{first_month} PLN)"
         life_insurance_none: "Brak opłaty za ubezpieczenie życia"
         life_insurance_unknown: "Brak publicznych danych"
@@ -169,6 +170,7 @@ pl:
         wibor_percent: "WIBOR % (opcjonalnie)"
         bank_commission_percent: "Prowizja banku %"
         life_insurance_percent: "Ubezpieczenie życia %"
+        life_insurance_one_time: "Jednorazowa opłata (% kredytu)"
         life_insurance_years: "Lata ubezpieczenia życia"
         life_insurance_total: "Suma ubezpieczenia życia"
         property_insurance_monthly: "Miesięczne ubezpieczenie nieruchomości"

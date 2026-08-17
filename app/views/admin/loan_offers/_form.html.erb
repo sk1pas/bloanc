@@ -1,6 +1,6 @@
 <% latest_snapshot = WiborSnapshot.latest %>
 
-<div data-controller="life-insurance-calc"
+<div data-controller="life-insurance-calc life-insurance-period"
      data-life-insurance-calc-wibor1m-value="<%= latest_snapshot&.wibor_1m.to_f %>"
      data-life-insurance-calc-wibor3m-value="<%= latest_snapshot&.wibor_3m.to_f %>">
   <%= form_with model: [:admin, @loan_offer], class: "card admin-form-card" do |form| %>
@@ -111,9 +111,18 @@
                               class: "form-control mt-2",
                               step: "0.0001",
                               data: { life_insurance_calc_target: "percentField" } %>
-        <div class="form-hint">Leave blank if unknown. Monthly % of remaining principal.</div>
+        <div class="form-check mt-2">
+          <%= form.check_box :life_insurance_one_time,
+                             class: "form-check-input",
+                             data: {
+                               life_insurance_period_target: "oneTime",
+                               action: "change->life-insurance-period#toggle"
+                             } %>
+          <%= form.label :life_insurance_one_time, "One-time payment (% of loan)", class: "form-check-label" %>
+        </div>
+        <div class="form-hint">Leave blank if unknown. Monthly % of remaining principal, or one-time % of the loan amount.</div>
       </div>
-      <div class="col-md-6 col-lg-3" data-controller="life-insurance-period">
+      <div class="col-md-6 col-lg-3">
         <%= form.label :life_insurance_years, "Life insurance period (years)", class: "form-label" %>
         <%= form.number_field :life_insurance_years,
                               class: "form-control",
@@ -138,8 +147,11 @@
         <%= form.number_field :life_insurance_total,
                               class: "form-control",
                               step: "0.01",
-                              data: { life_insurance_calc_target: "totalField" } %>
-        <div class="form-hint">If set, overrides monthly % calculation.</div>
+                              data: {
+                                life_insurance_calc_target: "totalField",
+                                life_insurance_period_target: "totalField"
+                              } %>
+        <div class="form-hint">If set, overrides monthly % calculation. Ignored for one-time % of loan.</div>
       </div>
       <div class="col-md-6 col-lg-3">
         <%= form.label :property_insurance_monthly, "Property insurance (PLN/month)", class: "form-label" %>
