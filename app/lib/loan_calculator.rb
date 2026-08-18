@@ -346,7 +346,7 @@ class LoanCalculator
       notes << "Overpayment mode: x#{@overpayment_coef.round(3)}" if @overpayment_mode == "coef"
       notes << "Overpayment mode: +#{@overpayment_amount.round(2)} PLN monthly" if @overpayment_mode == "absolute"
       if @overpayment_penalty_years.positive?
-        notes << "Overpayment penalty during first #{@overpayment_penalty_years} years: #{@overpayment_penalty_percent.round(3)}% (min #{@overpayment_penalty_min_amount.round(2)} PLN)"
+        notes << "Overpayment fee during first #{@overpayment_penalty_years} years: #{@overpayment_penalty_percent.round(3)}% (min #{@overpayment_penalty_min_amount.round(2)} PLN)"
       end
     end
 

@@ -12,6 +12,7 @@ plugins:
 AllCops:
   NewCops: enable
   Exclude:
+    - 'app/views/**/*.erb'
     - 'vendor/**/*'
     - 'spec/fixtures/**/*'
   TargetRubyVersion: 3.4

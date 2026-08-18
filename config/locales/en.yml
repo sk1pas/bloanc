@@ -97,6 +97,20 @@ en:
     wibor:
       latest: "Latest WIBOR snapshot"
       missing: "No WIBOR values saved yet. Open Admin -> WIBOR and click Refresh."
+    payment_parts:
+      heading: "A monthly payment is usually the sum of these parts"
+      credit:
+        title: "Credit payment"
+        note: "Principal plus interest, set by the bank's rate and the loan amount."
+      life:
+        title: "Life insurance"
+        note: "A percent of remaining principal or a one-time fee, often for 3–5 years, sometimes for the full term."
+      property:
+        title: "Property insurance"
+        note: "Typically a monthly premium charged for the whole repayment period."
+      other:
+        title: "Other fees"
+        note: "Extra bank charges, such as an account fee, that may sit on top of the installment."
     results:
       title: "Bank offers"
       bank: "Bank"
@@ -114,6 +128,10 @@ en:
       life_insurance: "Life insurance"
       property_insurance: "Property insurance"
       unknown: "Unknown"
+      incomplete_insurance_note:
+        life: "Pay attention, that life insurance cost is unknown for this offer, so the total payment may be much higher than shown."
+        property: "Pay attention, that property insurance cost is unknown for this offer, so the total payment may be much higher than shown."
+        both: "Pay attention, that life and property insurance costs are unknown for this offer, so the total payment may be much higher than shown."
       notes: "Calculation notes"
       promo_period: "Promo period"
       offer_link_fallback: "Link"
@@ -141,7 +159,7 @@ en:
         life_insurance: "Life insurance"
         property_insurance: "Property insurance"
         loan_fee: "Bank commission"
-        overpayment_penalty: "Overpayment penalty"
+        overpayment_penalty: "Overpayment fee"
       breakdown_details:
         life_insurance_one_time: "One-time package outside first month payment column: %{amount} PLN"
         life_insurance_one_time_percent: "One-time %{percent}%% of loan amount: %{amount} PLN (outside first month payment column)"
@@ -152,7 +170,7 @@ en:
         property_insurance_none: "No property insurance fee"
         property_insurance_unknown: "Not publicly available"
         overpayment_penalty_rule: "Rule: first %{years} years, %{percent}%% of each overpayment, minimum %{min} PLN"
-        overpayment_penalty_skipped: "In this simulation, overpayment starts after penalty period."
+        overpayment_penalty_skipped: "In this simulation, overpayment starts after the fee period."
 
     overpayment:
       title: "Overpayment simulation"
@@ -168,7 +186,7 @@ en:
       fields:
         fixed_monthly_payment: "Target total monthly payment (PLN)"
         target_years: "Target loan term (years)"
-        overpay_during_penalty: "Overpay during penalty period"
+        overpay_during_penalty: "Overpay during the fee period"
       notes:
         none: "No user overpayment applied."
         fixed_monthly_invalid: "Fixed payment must be above standard installment (min %{min_payment} PLN)."
@@ -208,9 +226,9 @@ en:
         overpayment_mode: "Overpayment mode"
         overpayment_coef: "Overpayment coefficient"
         overpayment_amount: "Overpayment fixed amount"
-        overpayment_penalty_years: "Penalty years"
-        overpayment_penalty_percent: "Penalty %"
-        overpayment_penalty_min_amount: "Penalty minimum amount"
+        overpayment_penalty_years: "Fee years"
+        overpayment_penalty_percent: "Fee %"
+        overpayment_penalty_min_amount: "Fee minimum amount"
 
     notes:
       rate: "Rate %{rate}%% = margin %{margin}%% + %{wibor_kind} %{wibor}%%"
@@ -219,17 +237,17 @@ en:
       default_payment:
         bank_part: "Credit payment (principal + interest): %{amount} PLN"
         user_overpayment: "User overpayment: %{amount} PLN"
-        overpayment_penalty: "Overpayment penalty: %{amount} PLN monthly for %{months} months"
+        overpayment_penalty: "Overpayment fee: %{amount} PLN monthly for %{months} months"
       first_month:
         base_payment: "Credit payment: %{amount} PLN"
         life_insurance_recurring: "Life insurance: %{amount} PLN monthly for %{months} months"
         life_insurance_one_time: "One-time life insurance package: %{amount} PLN (first month)"
         property_insurance: "Property insurance: %{amount} PLN monthly for %{months} months"
-        overpayment_penalty: "Overpayment penalty: %{amount} PLN monthly for %{months} months"
+        overpayment_penalty: "Overpayment fee: %{amount} PLN monthly for %{months} months"
       total_paid_commission: "Includes bank commission: %{amount} PLN"
-      total_paid_penalty: "Includes overpayment penalties: %{amount} PLN"
+      total_paid_penalty: "Includes overpayment fees: %{amount} PLN"
       total_cost: "Total paid minus loan amount %{loan_amount} PLN"
-      bank_interest: "Interest only (without insurance, commission and penalties)"
+      bank_interest: "Interest only (without insurance, commission and fees)"
       life_insurance_fixed: "One-time life insurance package: %{amount} PLN"
       life_insurance_percent: "Life insurance %{percent}%% monthly on remaining principal for %{years} years"
       life_insurance_none: "No life insurance cost"
@@ -237,7 +255,7 @@ en:
       overpayment_none: "No overpayment strategy configured"
       overpayment_coef: "Overpayment starts after %{years} years with monthly multiplier x%{coef}"
       overpayment_absolute: "Overpayment starts after %{years} years with +%{amount} PLN per month"
-      overpayment_penalty: "Penalty for first %{years} years: %{percent}%% of overpayment, min %{min} PLN"
+      overpayment_penalty: "Fee for first %{years} years: %{percent}%% of overpayment, min %{min} PLN"
 
   admin:
     nav:

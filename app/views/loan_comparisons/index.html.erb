@@ -1,7 +1,7 @@
 <% content_for :title, t("home.seo.#{@rate_type}.title") %>
 <% content_for :meta_description, t("home.seo.#{@rate_type}.description") %>
 
-<section class="card hero-card mb-4">
+<section class="card hero-card mb-3">
 	<div class="card-body hero-card-body">
 		<div class="hero-intro text-center">
 			<h1 class="h2 mb-2"><%= t("home.hero.title") %></h1>
@@ -113,162 +113,173 @@
 			<div class="hero-section-heading text-center">
 				<h2 class="h6 mb-1"><%= t("home.overpayment.title") %></h2>
 				<p class="small text-secondary mb-0"><%= t("home.overpayment.subtitle") %></p>
+        <details class="overpayment-options" data-controller="mobile-details">
+          <summary class="overpayment-options-summary"><%= t("home.overpayment.options_toggle") %></summary>
+          <div class="overpayment-options-body hero-form-row row g-3 justify-content-center">
+            <div class="col-md-4">
+              <label class="simulation-option">
+                <span class="simulation-option-radio">
+                  <%= form.radio_button :overpayment_mode,
+                                      "none",
+                                      checked: @overpayment_mode == "none",
+                                      class: "form-check-input",
+                                      data: {
+                                        comparison_form_target: "modeRadio",
+                                        action: "change->comparison-form#modeChanged"
+                                      } %>
+                </span>
+                <span class="simulation-option-body">
+                  <span class="simulation-option-title"><%= t("home.overpayment.mode.none_title") %></span>
+                  <span class="simulation-option-desc"><%= t("home.overpayment.mode.none_desc") %></span>
+                </span>
+              </label>
+            </div>
+
+            <div class="col-md-4">
+              <label class="simulation-option">
+                <span class="simulation-option-radio">
+                  <%= form.radio_button :overpayment_mode,
+                                      "fixed_monthly",
+                                      checked: @overpayment_mode == "fixed_monthly",
+                                      class: "form-check-input",
+                                      data: {
+                                        comparison_form_target: "modeRadio",
+                                        action: "change->comparison-form#modeChanged"
+                                      } %>
+                </span>
+                <span class="simulation-option-body">
+                <span class="simulation-option-title"><%= t("home.overpayment.mode.fixed_monthly_title") %></span>
+                <span class="simulation-option-desc"><%= t("home.overpayment.mode.fixed_monthly_desc") %></span>
+                <div class="simulation-option-fields mt-2" data-comparison-form-target="fixedMonthlyWrap">
+                  <span class="simulation-option-field-label"><%= t("home.overpayment.fields.fixed_monthly_payment") %></span>
+                  <div class="slider-field">
+                    <div class="slider-field__input-row">
+                      <button type="button"
+                              class="slider-field__btn"
+                              aria-label="-"
+                              data-action="comparison-form#nudgeRange"
+                              data-range-target="fixedMonthlyRange"
+                              data-range-direction="-1">−</button>
+                      <%= form.number_field :fixed_monthly_payment,
+                                          value: @fixed_monthly_payment,
+                                          class: "form-control form-control-sm slider-field__input",
+                                          step: 100,
+                                          min: 0,
+                                          data: {
+                                            comparison_form_target: "fixedMonthlyInput",
+                                            action: "input->comparison-form#syncFixedMonthlyFromInput change->comparison-form#syncFixedMonthlyFromInput"
+                                          } %>
+                      <button type="button"
+                              class="slider-field__btn"
+                              aria-label="+"
+                              data-action="comparison-form#nudgeRange"
+                              data-range-target="fixedMonthlyRange"
+                              data-range-direction="1">+</button>
+                    </div>
+                    <div class="slider-field__range-row">
+                      <%= labeled_range_tag "fixed_monthly_payment_range",
+                                            t("home.overpayment.fields.fixed_monthly_payment"),
+                                            min: 1_000,
+                                            max: fixed_monthly_slider_max,
+                                            step: 100,
+                                            value: fixed_monthly_slider_value,
+                                            class: "form-range slider-field__range",
+                                            data: {
+                                              comparison_form_target: "fixedMonthlyRange",
+                                              action: "input->comparison-form#syncFixedMonthlyFromRange"
+                                            } %>
+                    </div>
+                  </div>
+                  <div class="form-check simulation-penalty-check mt-2">
+                    <%= hidden_field_tag :fixed_monthly_overpay_during_penalty, "0" %>
+                    <%= check_box_tag :fixed_monthly_overpay_during_penalty,
+                                "1",
+                                @fixed_monthly_overpay_during_penalty,
+                                class: "form-check-input",
+                                id: "fixed_monthly_overpay_during_penalty_1" %>
+                    <label for="fixed_monthly_overpay_during_penalty_1" class="form-check-label">
+                      <%= t("home.overpayment.fields.overpay_during_penalty") %>
+                    </label>
+                  </div>
+                </div>
+                </span>
+              </label>
+            </div>
+
+            <div class="col-md-4">
+              <label class="simulation-option">
+                <span class="simulation-option-radio">
+                  <%= form.radio_button :overpayment_mode,
+                                      "fixed_period",
+                                      checked: @overpayment_mode == "fixed_period",
+                                      class: "form-check-input",
+                                      data: {
+                                        comparison_form_target: "modeRadio",
+                                        action: "change->comparison-form#modeChanged"
+                                      } %>
+                </span>
+                <span class="simulation-option-body">
+                <span class="simulation-option-title"><%= t("home.overpayment.mode.fixed_period_title") %></span>
+                <span class="simulation-option-desc"><%= t("home.overpayment.mode.fixed_period_desc") %></span>
+                <div class="simulation-option-fields mt-2" data-comparison-form-target="fixedPeriodWrap">
+                  <span class="simulation-option-field-label"><%= t("home.overpayment.fields.target_years") %></span>
+                  <div class="slider-field">
+                    <div class="slider-field__input-row">
+                      <button type="button"
+                              class="slider-field__btn"
+                              aria-label="-"
+                              data-action="comparison-form#nudgeRange"
+                              data-range-target="targetYearsRange"
+                              data-range-direction="-1">−</button>
+                      <%= form.number_field :target_years,
+                                          value: @target_years,
+                                          class: "form-control form-control-sm slider-field__input",
+                                          step: 1,
+                                          min: 1,
+                                          max: [@loan_years - 1, 1].max,
+                                          data: {
+                                            comparison_form_target: "targetYearsInput",
+                                            action: "input->comparison-form#syncTargetYearsFromInput change->comparison-form#syncTargetYearsFromInput"
+                                          } %>
+                      <button type="button"
+                              class="slider-field__btn"
+                              aria-label="+"
+                              data-action="comparison-form#nudgeRange"
+                              data-range-target="targetYearsRange"
+                              data-range-direction="1">+</button>
+                    </div>
+                    <div class="slider-field__range-row">
+                      <%= labeled_range_tag "target_years_range",
+                                            t("home.overpayment.fields.target_years"),
+                                            min: 1,
+                                            max: [@loan_years - 1, 1].max,
+                                            step: 1,
+                                            value: @target_years,
+                                            class: "form-range slider-field__range",
+                                            data: {
+                                              comparison_form_target: "targetYearsRange",
+                                              action: "input->comparison-form#syncTargetYearsFromRange"
+                                            } %>
+                    </div>
+                  </div>
+                  <div class="form-check simulation-penalty-check mt-2">
+                    <%= hidden_field_tag :fixed_period_overpay_during_penalty, "0" %>
+                    <%= check_box_tag :fixed_period_overpay_during_penalty,
+                                "1",
+                                @fixed_period_overpay_during_penalty,
+                                class: "form-check-input",
+                                id: "fixed_period_overpay_during_penalty_1" %>
+                    <label for="fixed_period_overpay_during_penalty_1" class="form-check-label">
+                      <%= t("home.overpayment.fields.overpay_during_penalty") %>
+                    </label>
+                  </div>
+                </div>
+                </span>
+              </label>
+            </div>
+          </div>
+        </details>
 			</div>
-
-			<details class="overpayment-options" data-controller="mobile-details">
-				<summary class="overpayment-options-summary"><%= t("home.overpayment.options_toggle") %></summary>
-				<div class="overpayment-options-body hero-form-row row g-3 justify-content-center">
-				<div class="col-md-4 col-lg-3">
-					<label class="simulation-option">
-						<%= form.radio_button :overpayment_mode,
-																"none",
-																checked: @overpayment_mode == "none",
-																class: "form-check-input",
-																data: {
-																	comparison_form_target: "modeRadio",
-																	action: "change->comparison-form#modeChanged"
-																} %>
-						<span class="simulation-option-title"><%= t("home.overpayment.mode.none_title") %></span>
-						<span class="simulation-option-desc"><%= t("home.overpayment.mode.none_desc") %></span>
-					</label>
-				</div>
-
-				<div class="col-md-4 col-lg-3">
-					<label class="simulation-option">
-						<%= form.radio_button :overpayment_mode,
-																"fixed_monthly",
-																checked: @overpayment_mode == "fixed_monthly",
-																class: "form-check-input",
-																data: {
-																	comparison_form_target: "modeRadio",
-																	action: "change->comparison-form#modeChanged"
-																} %>
-						<span class="simulation-option-title"><%= t("home.overpayment.mode.fixed_monthly_title") %></span>
-						<span class="simulation-option-desc"><%= t("home.overpayment.mode.fixed_monthly_desc") %></span>
-						<div class="simulation-option-fields mt-2" data-comparison-form-target="fixedMonthlyWrap">
-							<span class="simulation-option-field-label"><%= t("home.overpayment.fields.fixed_monthly_payment") %></span>
-							<div class="slider-field">
-								<div class="slider-field__input-row">
-									<button type="button"
-													class="slider-field__btn"
-													aria-label="-"
-													data-action="comparison-form#nudgeRange"
-													data-range-target="fixedMonthlyRange"
-													data-range-direction="-1">−</button>
-									<%= form.number_field :fixed_monthly_payment,
-																			value: @fixed_monthly_payment,
-																			class: "form-control form-control-sm slider-field__input",
-																			step: 100,
-																			min: 0,
-																			data: {
-																				comparison_form_target: "fixedMonthlyInput",
-																				action: "input->comparison-form#syncFixedMonthlyFromInput change->comparison-form#syncFixedMonthlyFromInput"
-																			} %>
-									<button type="button"
-													class="slider-field__btn"
-													aria-label="+"
-													data-action="comparison-form#nudgeRange"
-													data-range-target="fixedMonthlyRange"
-													data-range-direction="1">+</button>
-								</div>
-								<div class="slider-field__range-row">
-									<%= labeled_range_tag "fixed_monthly_payment_range",
-																				t("home.overpayment.fields.fixed_monthly_payment"),
-																				min: 1_000,
-																				max: fixed_monthly_slider_max,
-																				step: 100,
-																				value: fixed_monthly_slider_value,
-																				class: "form-range slider-field__range",
-																				data: {
-																					comparison_form_target: "fixedMonthlyRange",
-																					action: "input->comparison-form#syncFixedMonthlyFromRange"
-																				} %>
-								</div>
-							</div>
-							<div class="form-check simulation-penalty-check mt-2">
-								<%= hidden_field_tag :fixed_monthly_overpay_during_penalty, "0" %>
-								<%= check_box_tag :fixed_monthly_overpay_during_penalty,
-														"1",
-														@fixed_monthly_overpay_during_penalty,
-														class: "form-check-input",
-														id: "fixed_monthly_overpay_during_penalty_1" %>
-								<label for="fixed_monthly_overpay_during_penalty_1" class="form-check-label">
-									<%= t("home.overpayment.fields.overpay_during_penalty") %>
-								</label>
-							</div>
-						</div>
-					</label>
-				</div>
-
-				<div class="col-md-4 col-lg-3">
-					<label class="simulation-option">
-						<%= form.radio_button :overpayment_mode,
-																"fixed_period",
-																checked: @overpayment_mode == "fixed_period",
-																class: "form-check-input",
-																data: {
-																	comparison_form_target: "modeRadio",
-																	action: "change->comparison-form#modeChanged"
-																} %>
-						<span class="simulation-option-title"><%= t("home.overpayment.mode.fixed_period_title") %></span>
-						<span class="simulation-option-desc"><%= t("home.overpayment.mode.fixed_period_desc") %></span>
-						<div class="simulation-option-fields mt-2" data-comparison-form-target="fixedPeriodWrap">
-							<span class="simulation-option-field-label"><%= t("home.overpayment.fields.target_years") %></span>
-							<div class="slider-field">
-								<div class="slider-field__input-row">
-									<button type="button"
-													class="slider-field__btn"
-													aria-label="-"
-													data-action="comparison-form#nudgeRange"
-													data-range-target="targetYearsRange"
-													data-range-direction="-1">−</button>
-									<%= form.number_field :target_years,
-																			value: @target_years,
-																			class: "form-control form-control-sm slider-field__input",
-																			step: 1,
-																			min: 1,
-																			max: [@loan_years - 1, 1].max,
-																			data: {
-																				comparison_form_target: "targetYearsInput",
-																				action: "input->comparison-form#syncTargetYearsFromInput change->comparison-form#syncTargetYearsFromInput"
-																			} %>
-									<button type="button"
-													class="slider-field__btn"
-													aria-label="+"
-													data-action="comparison-form#nudgeRange"
-													data-range-target="targetYearsRange"
-													data-range-direction="1">+</button>
-								</div>
-								<div class="slider-field__range-row">
-									<%= labeled_range_tag "target_years_range",
-																				t("home.overpayment.fields.target_years"),
-																				min: 1,
-																				max: [@loan_years - 1, 1].max,
-																				step: 1,
-																				value: @target_years,
-																				class: "form-range slider-field__range",
-																				data: {
-																					comparison_form_target: "targetYearsRange",
-																					action: "input->comparison-form#syncTargetYearsFromRange"
-																				} %>
-								</div>
-							</div>
-							<div class="form-check simulation-penalty-check mt-2">
-								<%= hidden_field_tag :fixed_period_overpay_during_penalty, "0" %>
-								<%= check_box_tag :fixed_period_overpay_during_penalty,
-														"1",
-														@fixed_period_overpay_during_penalty,
-														class: "form-check-input",
-														id: "fixed_period_overpay_during_penalty_1" %>
-								<label for="fixed_period_overpay_during_penalty_1" class="form-check-label">
-									<%= t("home.overpayment.fields.overpay_during_penalty") %>
-								</label>
-							</div>
-						</div>
-					</label>
-				</div>
-				</div>
-			</details>
 
 			<div class="hero-form-actions">
 				<%= form.submit t("home.form.calculate"), class: "btn btn-primary btn-lg px-4" %>
@@ -276,6 +287,41 @@
 		<% end %>
 	</div>
 </section>
+
+<details class="table-box payment-parts mb-3"
+					<%= "open" if payment_parts_expanded? %>
+					data-controller="details-cookie"
+					data-details-cookie-key-value="payment_parts_open"
+					data-action="toggle->details-cookie#persist">
+	<summary class="payment-parts__summary">
+		<h2 id="payment-parts-heading" class="payment-parts__heading"><%= t("home.payment_parts.heading") %></h2>
+	</summary>
+	<ol class="payment-parts__formula">
+		<li class="payment-parts__item">
+			<span class="payment-parts__emoji" aria-hidden="true">🏦</span>
+			<span class="payment-parts__title"><%= t("home.payment_parts.credit.title") %></span>
+			<span class="payment-parts__note"><%= t("home.payment_parts.credit.note") %></span>
+		</li>
+		<li class="payment-parts__plus" aria-hidden="true">+</li>
+		<li class="payment-parts__item">
+			<span class="payment-parts__emoji" aria-hidden="true">🛡️</span>
+			<span class="payment-parts__title"><%= t("home.payment_parts.life.title") %></span>
+			<span class="payment-parts__note"><%= t("home.payment_parts.life.note") %></span>
+		</li>
+		<li class="payment-parts__plus" aria-hidden="true">+</li>
+		<li class="payment-parts__item">
+			<span class="payment-parts__emoji" aria-hidden="true">🏠</span>
+			<span class="payment-parts__title"><%= t("home.payment_parts.property.title") %></span>
+			<span class="payment-parts__note"><%= t("home.payment_parts.property.note") %></span>
+		</li>
+		<li class="payment-parts__plus" aria-hidden="true">+</li>
+		<li class="payment-parts__item">
+			<span class="payment-parts__emoji" aria-hidden="true">💳</span>
+			<span class="payment-parts__title"><%= t("home.payment_parts.other.title") %></span>
+			<span class="payment-parts__note"><%= t("home.payment_parts.other.note") %></span>
+		</li>
+	</ol>
+</details>
 
 <% rate_switch_params = {
 		 loan_amount: @loan_amount,
@@ -287,7 +333,7 @@
 		 fixed_period_overpay_during_penalty: @fixed_period_overpay_during_penalty ? "1" : "0"
 	 } %>
 
-<section id="results-table" class="table-box mb-4" data-controller="table-sort sticky-table-header">
+<section id="results-table" class="table-box mb-3" data-controller="table-sort sticky-table-header">
 	<div class="p-3 border-bottom">
 		<div class="d-flex flex-wrap justify-content-between align-items-end gap-3">
 			<div>
@@ -416,7 +462,9 @@
 			<tbody data-table-sort-target="tbody">
 				<% if @results.any? %>
 					<% @results.each do |result| %>
+					<% insurance_incomplete = result[:life_insurance_unknown] || result[:property_insurance_unknown] %>
 					<tr
+						class="<%= "offer-incomplete" if insurance_incomplete %>"
 						data-table-sort-target="row"
 						data-sort-bank-margin="<%= result[:bank_margin_percent] %>"
 						data-sort-monthly-payment="<%= result[:monthly_payment] %>"
@@ -480,6 +528,9 @@
 						<td>
 							<div><strong><%= number_to_currency(result[:first_month_payment], unit: "PLN", precision: 0, format: "%n %u") %></strong></div>
 							<%= first_month_breakdown(result.dig(:notes, :first_month_lines)) %>
+              <% if insurance_incomplete %>
+                <p class="bank-offer-incomplete-note mt-2"><%= incomplete_insurance_note(result) %></p>
+              <% end %>
 						</td>
 						<td class="loan-period-cell">
 							<strong><%= result[:loan_period_label] %></strong>
@@ -529,12 +580,13 @@
 									</div>
 								<% end %>
 								<% if result[:overpayment_penalty_total].to_f.positive? || result[:overpayment_penalty_details].present? %>
-									<div class="total-paid-row">
+									<% fee_positive = result[:overpayment_penalty_total].to_f.positive? %>
+									<div class="total-paid-row<%= " total-paid-row--fee" if fee_positive %>">
 										<span><%= t("home.results.breakdown.overpayment_penalty") %></span>
 										<strong><%= number_to_currency(result[:overpayment_penalty_total], unit: "PLN", precision: 0, format: "%n %u") %></strong>
 									</div>
 									<% if result[:overpayment_penalty_details].present? %>
-										<div class="total-paid-row-note"><%= result[:overpayment_penalty_details] %></div>
+										<div class="total-paid-row-note<%= " total-paid-row-note--fee" if fee_positive %>"><%= result[:overpayment_penalty_details] %></div>
 									<% end %>
 								<% end %>
 							</div>

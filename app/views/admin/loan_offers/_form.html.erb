@@ -162,15 +162,15 @@
       <div class="col-12"><hr></div>
 
       <div class="col-md-6 col-lg-3">
-        <%= form.label :overpayment_penalty_years, "Overpayment penalty period (years)", class: "form-label" %>
+        <%= form.label :overpayment_penalty_years, "Overpayment fee period (years)", class: "form-label" %>
         <%= form.number_field :overpayment_penalty_years, class: "form-control", step: 1 %>
       </div>
       <div class="col-md-6 col-lg-3">
-        <%= form.label :overpayment_penalty_percent, "Overpayment penalty (%)", class: "form-label" %>
+        <%= form.label :overpayment_penalty_percent, "Overpayment fee (%)", class: "form-label" %>
         <%= form.number_field :overpayment_penalty_percent, class: "form-control", step: "0.01" %>
       </div>
       <div class="col-md-6 col-lg-3">
-        <%= form.label :overpayment_penalty_min_amount, "Overpayment penalty minimum (PLN)", class: "form-label" %>
+        <%= form.label :overpayment_penalty_min_amount, "Overpayment fee minimum (PLN)", class: "form-label" %>
         <%= form.number_field :overpayment_penalty_min_amount, class: "form-control", step: "0.01" %>
       </div>
 

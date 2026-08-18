@@ -21,7 +21,7 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Oprocentowanie zmienne"
     assert_includes response.body, "Oprocentowanie stałe"
     assert_includes response.body, "Docelowa łączna rata miesięczna (PLN)"
-    assert_includes response.body, "Nadpłacaj w okresie kary"
+    assert_includes response.body, "Nadpłacaj w okresie opłaty"
     assert_includes response.body, "data-controller=\"cookie-consent\""
     assert_includes response.body, "Akceptuj wszystkie"
     refute_includes response.body, "Panel admina"
@@ -40,6 +40,13 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, 'for="loan_amount_range"'
     assert_includes response.body, 'for="years_range"'
     assert_includes response.body, "cdn.jsdelivr.net/npm/bootstrap"
+    assert_includes response.body, "Rata miesięczna to zwykle suma tych części"
+    assert_includes response.body, "Ubezpieczenie życia"
+    assert_includes response.body, 'data-controller="details-cookie"'
+    refute_includes response.body, "total-paid-row--fee"
+    refute_includes response.body, "offer-incomplete"
+    assert_select "details.payment-parts[open]"
+    assert_select "details.payment-parts summary.payment-parts__summary"
   end
 
   test "filters offers by fixed-period rate type" do
@@ -126,7 +133,28 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     }
 
     assert_response :success
-    refute_includes response.body, "Kara za nadpłatę:"
+    refute_includes response.body, "Opłata za nadpłatę:"
+  end
+
+  test "collapses payment parts when cookie is closed" do
+    get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-zmienne"),
+        headers: { "HTTP_COOKIE" => "payment_parts_open=0" }
+
+    assert_response :success
+    assert_select "details.payment-parts:not([open])"
+  end
+
+  test "highlights overpayment fee in results breakdown" do
+    get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-zmienne"), params: {
+      loan_amount: 400_000,
+      years: 25,
+      overpayment_mode: "fixed_monthly",
+      fixed_monthly_payment: 9_000
+    }
+
+    assert_response :success
+    assert_includes response.body, "Opłata za nadpłatę"
+    assert_includes response.body, "total-paid-row--fee"
   end
 
   test "renders loan period sort option" do
@@ -162,6 +190,25 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, 'class="value-unknown"'
     assert_includes response.body, "Nieznane"
+    assert_includes response.body, "offer-incomplete"
+    assert_includes response.body, "Zwróć uwagę, że w tej ofercie brakuje kosztu ubezpieczenia życia i nieruchomości"
+  end
+
+  test "names only missing life insurance in incomplete offer note" do
+    offer = loan_offers(:one)
+    offer.update!(
+      life_insurance_percent: nil,
+      life_insurance_years: nil,
+      life_insurance_total: nil,
+      life_insurance_full_term: false,
+      life_insurance_one_time: false
+    )
+
+    get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-zmienne")
+
+    assert_response :success
+    assert_includes response.body, "Zwróć uwagę, że w tej ofercie brakuje kosztu ubezpieczenia życia, więc"
+    refute_includes response.body, "życia i nieruchomości"
   end
 
   test "shows one-time life insurance as percent of loan amount" do

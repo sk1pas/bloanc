@@ -68,6 +68,20 @@ pl:
     wibor:
       latest: "Ostatni zapis WIBOR"
       missing: "Brak zapisanych wartości WIBOR. Wejdź do Admin -> WIBOR i kliknij Odśwież."
+    payment_parts:
+      heading: "Rata miesięczna to zwykle suma tych części"
+      credit:
+        title: "Rata kredytowa"
+        note: "Kapitał i odsetki, zależne od oprocentowania banku i kwoty kredytu."
+      life:
+        title: "Ubezpieczenie życia"
+        note: "Procent od salda albo jednorazowa opłata, zwykle przez 3–5 lat, czasem przez cały okres."
+      property:
+        title: "Ubezpieczenie nieruchomości"
+        note: "Zazwyczaj składka miesięczna przez cały okres spłaty."
+      other:
+        title: "Inne opłaty"
+        note: "Dodatkowe koszty banku, np. opłata za prowadzenie konta, doliczane do raty."
     results:
       title: "Oferty banków"
       bank: "Bank"
@@ -85,6 +99,10 @@ pl:
       life_insurance: "Ubezpieczenie życia"
       property_insurance: "Ubezpieczenie nieruchomości"
       unknown: "Nieznane"
+      incomplete_insurance_note:
+        life: "Zwróć uwagę, że w tej ofercie brakuje kosztu ubezpieczenia życia, więc suma spłaty może być znacznie wyższa niż na liście."
+        property: "Zwróć uwagę, że w tej ofercie brakuje kosztu ubezpieczenia nieruchomości, więc suma spłaty może być znacznie wyższa niż na liście."
+        both: "Zwróć uwagę, że w tej ofercie brakuje kosztu ubezpieczenia życia i nieruchomości, więc suma spłaty może być znacznie wyższa niż na liście."
       notes: "Notatki obliczeń"
       promo_period: "Okres promocyjny"
       offer_link_fallback: "Link"
@@ -112,7 +130,7 @@ pl:
         life_insurance: "Ubezpieczenie życia"
         property_insurance: "Ubezpieczenie nieruchomości"
         loan_fee: "Prowizja banku"
-        overpayment_penalty: "Kara za nadpłatę"
+        overpayment_penalty: "Opłata za nadpłatę"
       breakdown_details:
         life_insurance_one_time: "Jednorazowy pakiet poza kolumną raty pierwszego miesiąca: %{amount} PLN"
         life_insurance_one_time_percent: "Jednorazowo %{percent}%% kwoty kredytu: %{amount} PLN (poza kolumną raty pierwszego miesiąca)"
@@ -123,7 +141,7 @@ pl:
         property_insurance_none: "Brak opłaty za ubezpieczenie nieruchomości"
         property_insurance_unknown: "Brak publicznych danych"
         overpayment_penalty_rule: "Zasada: przez pierwsze %{years} lat %{percent}%% od każdej nadpłaty, minimum %{min} PLN"
-        overpayment_penalty_skipped: "W tej symulacji nadpłata startuje po okresie kary."
+        overpayment_penalty_skipped: "W tej symulacji nadpłata startuje po okresie opłaty."
 
     overpayment:
       title: "Symulacja nadpłat"
@@ -139,7 +157,7 @@ pl:
       fields:
         fixed_monthly_payment: "Docelowa łączna rata miesięczna (PLN)"
         target_years: "Docelowy okres spłaty (lata)"
-        overpay_during_penalty: "Nadpłacaj w okresie kary"
+        overpay_during_penalty: "Nadpłacaj w okresie opłaty"
       notes:
         none: "Nadpłata użytkownika nie jest stosowana."
         fixed_monthly_invalid: "Rata stała musi być wyższa od raty standardowej (min %{min_payment} PLN)."
@@ -190,7 +208,7 @@ pl:
       default_payment:
         bank_part: "Rata kredytowa (kapitał + odsetki): %{amount} PLN"
         user_overpayment: "Nadpłata użytkownika: %{amount} PLN"
-        overpayment_penalty: "Kara za nadpłatę: %{amount} PLN miesięcznie przez %{months} miesięcy"
+        overpayment_penalty: "Opłata za nadpłatę: %{amount} PLN miesięcznie przez %{months} miesięcy"
       first_month:
         base_payment: "Podstawa miesięczna: %{amount} PLN"
         life_insurance_recurring: "Ubezpieczenie życia: %{amount} PLN miesięcznie przez %{months} miesięcy"
@@ -198,9 +216,9 @@ pl:
         property_insurance: "Ubezpieczenie nieruchomości: %{amount} PLN miesięcznie przez %{months} miesięcy"
         overpayment_penalty: "Opłata za nadpłatę: %{amount} PLN miesięcznie przez %{months} miesięcy"
       total_paid_commission: "Zawiera prowizję banku: %{amount} PLN"
-      total_paid_penalty: "Zawiera kary za nadpłatę: %{amount} PLN"
+      total_paid_penalty: "Zawiera opłaty za nadpłatę: %{amount} PLN"
       total_cost: "Suma spłaty minus kwota kredytu %{loan_amount} PLN"
-      bank_interest: "Same odsetki banku (bez ubezpieczeń, prowizji i kar)"
+      bank_interest: "Same odsetki banku (bez ubezpieczeń, prowizji i opłat)"
       life_insurance_fixed: "Jednorazowe ubezpieczenie życia: %{amount} PLN"
       life_insurance_percent: "Ubezpieczenie życia %{percent}%% miesięcznie od salda przez %{years} lat"
       life_insurance_none: "Brak kosztu ubezpieczenia życia"
@@ -208,7 +226,7 @@ pl:
       overpayment_none: "Brak strategii nadpłat"
       overpayment_coef: "Nadpłata po %{years} latach z mnożnikiem raty x%{coef}"
       overpayment_absolute: "Nadpłata po %{years} latach o +%{amount} PLN miesięcznie"
-      overpayment_penalty: "Kara przez pierwsze %{years} lat: %{percent}%% nadpłaty, min %{min} PLN"
+      overpayment_penalty: "Opłata przez pierwsze %{years} lat: %{percent}%% nadpłaty, min %{min} PLN"
 
   admin:
     nav:

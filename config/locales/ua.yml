@@ -68,6 +68,20 @@ ua:
     wibor:
       latest: "Останній запис WIBOR"
       missing: "Немає значень WIBOR. Відкрийте Admin -> WIBOR та натисніть Refresh."
+    payment_parts:
+      heading: "Щомісячний платіж зазвичай складається з цих частин"
+      credit:
+        title: "Кредитний платіж"
+        note: "Тіло кредиту та відсотки: залежать від ставки банку і суми кредиту."
+      life:
+        title: "Страхування життя"
+        note: "Відсоток від залишку або разова оплата, часто на 3–5 років, іноді на весь термін."
+      property:
+        title: "Страхування майна"
+        note: "Зазвичай щомісячна премія протягом усього періоду погашення."
+      other:
+        title: "Інші комісії"
+        note: "Додаткові банківські збори, наприклад плата за рахунок, поверх кредитного платежу."
     results:
       title: "Пропозиції банків"
       bank: "Банк"
@@ -85,6 +99,10 @@ ua:
       life_insurance: "Страхування життя"
       property_insurance: "Страхування майна"
       unknown: "Невідомо"
+      incomplete_insurance_note:
+        life: "Зверніть увагу, що в цій пропозиції невідома вартість страхування життя, тож загальна сума погашення може бути значно вищою, ніж показано."
+        property: "Зверніть увагу, що в цій пропозиції невідома вартість страхування майна, тож загальна сума погашення може бути значно вищою, ніж показано."
+        both: "Зверніть увагу, що в цій пропозиції невідома вартість страхування життя і майна, тож загальна сума погашення може бути значно вищою, ніж показано."
       notes: "Пояснення розрахунку"
       promo_period: "Період акції"
       offer_link_fallback: "Посилання"
@@ -112,7 +130,7 @@ ua:
         life_insurance: "Страхування життя"
         property_insurance: "Страхування майна"
         loan_fee: "Комісія банку"
-        overpayment_penalty: "Штраф за дострокове погашення"
+        overpayment_penalty: "Плата за дострокове погашення"
       breakdown_details:
         life_insurance_one_time: "Одноразовий пакет поза колонкою платежу першого місяця: %{amount} PLN"
         life_insurance_one_time_percent: "Одноразово %{percent}%% суми кредиту: %{amount} PLN (поза колонкою платежу першого місяця)"
@@ -123,7 +141,7 @@ ua:
         property_insurance_none: "Без страхового платежу за майно"
         property_insurance_unknown: "Немає публічних даних"
         overpayment_penalty_rule: "Правило: перші %{years} років %{percent}%% від кожного дострокового платежу, мінімум %{min} PLN"
-        overpayment_penalty_skipped: "У цій симуляції дострокове погашення починається після періоду штрафу."
+        overpayment_penalty_skipped: "У цій симуляції дострокове погашення починається після періоду плати."
 
     overpayment:
       title: "Симуляція дострокового погашення"
@@ -139,7 +157,7 @@ ua:
       fields:
         fixed_monthly_payment: "Цільовий загальний щомісячний платіж (PLN)"
         target_years: "Цільовий термін погашення (роки)"
-        overpay_during_penalty: "Робити дострокове погашення в період штрафу"
+        overpay_during_penalty: "Робити дострокове погашення в період плати"
       notes:
         none: "Дострокове погашення користувача не застосовується."
         fixed_monthly_invalid: "Фіксований платіж має бути вищим за стандартний (мін %{min_payment} PLN)."
@@ -179,9 +197,9 @@ ua:
         overpayment_mode: "Режим дострокового погашення"
         overpayment_coef: "Коефіцієнт"
         overpayment_amount: "Фіксована сума"
-        overpayment_penalty_years: "Роки штрафу"
-        overpayment_penalty_percent: "Штраф %"
-        overpayment_penalty_min_amount: "Мінімальний штраф"
+        overpayment_penalty_years: "Роки плати"
+        overpayment_penalty_percent: "Плата %"
+        overpayment_penalty_min_amount: "Мінімальна плата"
 
     notes:
       rate: "Ставка %{rate}%% = маржа %{margin}%% + %{wibor_kind} %{wibor}%%"
@@ -190,17 +208,17 @@ ua:
       default_payment:
         bank_part: "Кредитний платіж (тіло + відсотки): %{amount} PLN"
         user_overpayment: "Дострокове погашення користувача: %{amount} PLN"
-        overpayment_penalty: "Штраф за дострокове погашення: %{amount} PLN щомісяця протягом %{months} місяців"
+        overpayment_penalty: "Плата за дострокове погашення: %{amount} PLN щомісяця протягом %{months} місяців"
       first_month:
         base_payment: "Базовий щомісячний платіж: %{amount} PLN"
         life_insurance_recurring: "Страхування життя: %{amount} PLN щомісяця протягом %{months} місяців"
         life_insurance_one_time: "Одноразове страхування життя: %{amount} PLN (перший місяць)"
         property_insurance: "Страхування майна: %{amount} PLN щомісяця протягом %{months} місяців"
-        overpayment_penalty: "Штраф за дострокове погашення: %{amount} PLN щомісяця протягом %{months} місяців"
+        overpayment_penalty: "Плата за дострокове погашення: %{amount} PLN щомісяця протягом %{months} місяців"
       total_paid_commission: "Включає банківську комісію: %{amount} PLN"
-      total_paid_penalty: "Включає штрафи за дострокове погашення: %{amount} PLN"
+      total_paid_penalty: "Включає плату за дострокове погашення: %{amount} PLN"
       total_cost: "Загальна виплата мінус сума кредиту %{loan_amount} PLN"
-      bank_interest: "Лише банківські відсотки (без страхування, комісій і штрафів)"
+      bank_interest: "Лише банківські відсотки (без страхування, комісій і плат)"
       life_insurance_fixed: "Одноразове страхування життя: %{amount} PLN"
       life_insurance_percent: "Страхування життя %{percent}%% щомісяця від залишку боргу протягом %{years} років"
       life_insurance_none: "Без витрат на страхування життя"
@@ -208,7 +226,7 @@ ua:
       overpayment_none: "Стратегія дострокового погашення не задана"
       overpayment_coef: "Дострокове погашення після %{years} років з множником платежу x%{coef}"
       overpayment_absolute: "Дострокове погашення після %{years} років на +%{amount} PLN щомісяця"
-      overpayment_penalty: "Штраф перші %{years} років: %{percent}%% від дострокового платежу, мінімум %{min} PLN"
+      overpayment_penalty: "Плата перші %{years} років: %{percent}%% від дострокового платежу, мінімум %{min} PLN"
 
   admin:
     nav:

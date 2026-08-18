@@ -1,4 +1,24 @@
 module LoanComparisonsHelper
+	def payment_parts_expanded?
+		cookies[:payment_parts_open] != "0"
+	end
+
+	def incomplete_insurance_note(result)
+		life = result[:life_insurance_unknown]
+		property = result[:property_insurance_unknown]
+		return unless life || property
+
+		key = if life && property
+			"both"
+		elsif life
+			"life"
+		else
+			"property"
+		end
+
+		t("home.results.incomplete_insurance_note.#{key}")
+	end
+
 	def first_month_breakdown(lines)
 		parts = Array(lines).map { |line| line.to_s.strip }.reject(&:blank?)
 		return if parts.empty?
