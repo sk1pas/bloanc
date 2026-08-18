@@ -41,6 +41,25 @@ module LoanComparisonsHelper
 		end
 	end
 
+	def bank_offer_logo_tag(logo, alt:)
+		return unless logo&.attached?
+
+		image_tag logo.variant(resize_to_limit: [100, 50]),
+							class: "bank-offer-logo",
+							alt: alt,
+							width: 100,
+							height: 50
+	end
+
+	def labeled_range_tag(id, label, **attributes)
+		safe_join(
+			[
+				label_tag(id, label, class: "visually-hidden"),
+				tag.input(**attributes, type: "range", id: id)
+			]
+		)
+	end
+
 	private
 
 	def first_month_breakdown_row(line)

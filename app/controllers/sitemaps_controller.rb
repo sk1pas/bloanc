@@ -1,4 +1,5 @@
 class SitemapsController < ActionController::Base
+  helper ApplicationHelper
   helper_method :loan_comparison_absolute_url
 
   def show

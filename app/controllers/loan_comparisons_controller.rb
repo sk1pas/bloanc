@@ -59,7 +59,7 @@ class LoanComparisonsController < ApplicationController
   end
 
   def load_offer_results
-    @loan_offers = LoanOffer.active.where(rate_type: @rate_type).ordered.includes(:bank)
+    @loan_offers = LoanOffer.active.where(rate_type: @rate_type).ordered.includes(bank: { logo_attachment: :blob })
     @results = @loan_offers.map { |offer| calculate_offer(offer) }
   end
 

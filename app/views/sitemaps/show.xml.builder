@@ -8,7 +8,7 @@ xml.urlset xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9",
         xml.tag!(
           "xhtml:link",
           rel: "alternate",
-          hreflang: locale,
+          hreflang: hreflang_for(locale),
           href: loan_comparison_absolute_url(locale: locale, rate_type: page[:rate_type])
         )
       end

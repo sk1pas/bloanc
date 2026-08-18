@@ -15,10 +15,16 @@ body {
 }
 
 .public-theme {
+	min-width: 350px;
+	overflow-x: auto;
 	color: var(--public-text);
 	background:
 		radial-gradient(circle at top right, #ffe7ab 0%, rgba(255, 231, 171, 0) 35%),
 		linear-gradient(165deg, #f4f7ec 0%, #ebf3f9 55%, #ffffff 100%);
+}
+
+.public-theme > main.container {
+	padding-top: 1.5rem;
 }
 
 .public-navbar {
@@ -36,8 +42,6 @@ body {
 
 .public-brand-logo {
 	display: block;
-	height: 40px;
-	width: auto;
 }
 
 .hero-card {
@@ -228,10 +232,27 @@ body {
 	color: #0f5e9c;
 }
 
-.locale-switch-btn {
-	min-width: 72px;
+.locale-switch {
+	margin: 0;
+}
+
+.locale-switch-select {
+	min-width: 6.75rem;
+	width: auto;
 	font-weight: 600;
 	letter-spacing: 0.01em;
+	background-color: rgba(255, 255, 255, 0.12);
+	border-color: rgba(255, 255, 255, 0.4);
+	color: #ffffff;
+}
+
+.locale-switch-select:focus {
+	border-color: #ffd166;
+	box-shadow: 0 0 0 0.2rem rgba(255, 209, 102, 0.25);
+}
+
+.locale-switch-select option {
+	color: #16324f;
 }
 
 .loan-type-tabs {
@@ -322,6 +343,10 @@ body {
 	.public-theme > main.container {
 		padding-left: 0.55rem;
 		padding-right: 0.55rem;
+	}
+
+	.public-theme > main.container {
+		padding-top: 0.55rem;
 	}
 
 	.hero-card-body {
@@ -424,6 +449,10 @@ body {
 		max-width: 100%;
 		padding-left: 0.75rem;
 		padding-right: 0.75rem;
+	}
+
+	.public-theme > main.container {
+		padding-top: 0.75rem;
 	}
 }
 
@@ -736,7 +765,7 @@ body {
 }
 
 .loan-period-cell {
-	min-width: 100px;
+	min-width: 110px;
 }
 
 .first-month-breakdown {
@@ -777,7 +806,7 @@ body {
 }
 
 .total-paid-cell {
-	min-width: 200px;
+	min-width: 220px;
 }
 
 .total-paid-breakdown {

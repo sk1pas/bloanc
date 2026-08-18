@@ -24,6 +24,7 @@ pl:
   common:
     "yes": "Tak"
     "no": "Nie"
+    language: "Język"
 
   home:
     page_title: "Porównanie kredytów hipotecznych"

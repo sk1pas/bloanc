@@ -24,6 +24,7 @@ ua:
   common:
     "yes": "Так"
     "no": "Ні"
+    language: "Мова"
 
   home:
     page_title: "Порівняння іпотечних кредитів"

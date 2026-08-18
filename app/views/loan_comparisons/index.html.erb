@@ -47,16 +47,17 @@
 												data-range-direction="1">+</button>
 							</div>
 							<div class="slider-field__range-row">
-								<%= tag.input type: "range",
-														 min: 50_000,
-														 max: 2_500_000,
-														 step: 5_000,
-														 value: @loan_amount,
-														 class: "form-range slider-field__range",
-														 data: {
-															 comparison_form_target: "loanAmountRange",
-															 action: "input->comparison-form#syncLoanAmountFromRange"
-														 } %>
+								<%= labeled_range_tag "loan_amount_range",
+																		t("home.form.loan_amount"),
+																		min: 50_000,
+																		max: 2_500_000,
+																		step: 5_000,
+																		value: @loan_amount,
+																		class: "form-range slider-field__range",
+																		data: {
+																			comparison_form_target: "loanAmountRange",
+																			action: "input->comparison-form#syncLoanAmountFromRange"
+																		} %>
 							</div>
 						</div>
 					</div>
@@ -92,16 +93,17 @@
 												data-range-direction="1">+</button>
 							</div>
 							<div class="slider-field__range-row">
-								<%= tag.input type: "range",
-														 min: 1,
-														 max: 30,
-														 step: 1,
-														 value: @loan_years,
-														 class: "form-range slider-field__range",
-														 data: {
-															 comparison_form_target: "yearsRange",
-															 action: "input->comparison-form#syncYearsFromRange"
-														 } %>
+								<%= labeled_range_tag "years_range",
+																		t("home.form.years"),
+																		min: 1,
+																		max: 30,
+																		step: 1,
+																		value: @loan_years,
+																		class: "form-range slider-field__range",
+																		data: {
+																			comparison_form_target: "yearsRange",
+																			action: "input->comparison-form#syncYearsFromRange"
+																		} %>
 							</div>
 						</div>
 					</div>
@@ -170,16 +172,17 @@
 													data-range-direction="1">+</button>
 								</div>
 								<div class="slider-field__range-row">
-									<%= tag.input type: "range",
-																 min: 1_000,
-																 max: fixed_monthly_slider_max,
-																 step: 100,
-																 value: fixed_monthly_slider_value,
-																 class: "form-range slider-field__range",
-																 data: {
-																	 comparison_form_target: "fixedMonthlyRange",
-																	 action: "input->comparison-form#syncFixedMonthlyFromRange"
-																 } %>
+									<%= labeled_range_tag "fixed_monthly_payment_range",
+																				t("home.overpayment.fields.fixed_monthly_payment"),
+																				min: 1_000,
+																				max: fixed_monthly_slider_max,
+																				step: 100,
+																				value: fixed_monthly_slider_value,
+																				class: "form-range slider-field__range",
+																				data: {
+																					comparison_form_target: "fixedMonthlyRange",
+																					action: "input->comparison-form#syncFixedMonthlyFromRange"
+																				} %>
 								</div>
 							</div>
 							<div class="form-check simulation-penalty-check mt-2">
@@ -237,16 +240,17 @@
 													data-range-direction="1">+</button>
 								</div>
 								<div class="slider-field__range-row">
-									<%= tag.input type: "range",
-																 min: 1,
-																 max: [@loan_years - 1, 1].max,
-																 step: 1,
-																 value: @target_years,
-																 class: "form-range slider-field__range",
-																 data: {
-																	 comparison_form_target: "targetYearsRange",
-																	 action: "input->comparison-form#syncTargetYearsFromRange"
-																 } %>
+									<%= labeled_range_tag "target_years_range",
+																				t("home.overpayment.fields.target_years"),
+																				min: 1,
+																				max: [@loan_years - 1, 1].max,
+																				step: 1,
+																				value: @target_years,
+																				class: "form-range slider-field__range",
+																				data: {
+																					comparison_form_target: "targetYearsRange",
+																					action: "input->comparison-form#syncTargetYearsFromRange"
+																				} %>
 								</div>
 							</div>
 							<div class="form-check simulation-penalty-check mt-2">
@@ -365,13 +369,27 @@
 			</div>
 			<div class="loan-type-tabs loan-type-tabs-featured" role="tablist" aria-label="<%= t("home.rate_type.title") %>">
 				<%= link_to loan_comparison_url_for(locale: I18n.locale, rate_type: "variable", **rate_switch_params, anchor: "results-table"),
-								class: "loan-type-tab #{"active" if @rate_type == "variable"}" do %>
+								class: "loan-type-tab #{"active" if @rate_type == "variable"}",
+								role: "tab",
+								id: "loan-type-tab-variable",
+								tabindex: (@rate_type == "variable" ? 0 : -1),
+								aria: {
+									selected: @rate_type == "variable",
+									controls: "results-table-panel"
+								} do %>
 					<span class="loan-type-tab-title"><%= t("home.rate_type.tabs.variable") %></span>
 					<span class="loan-type-tab-desc"><%= t("home.rate_type.descriptions.variable") %></span>
 				<% end %>
 
 				<%= link_to loan_comparison_url_for(locale: I18n.locale, rate_type: "fixed_period", **rate_switch_params, anchor: "results-table"),
-								class: "loan-type-tab #{"active" if @rate_type == "fixed_period"}" do %>
+								class: "loan-type-tab #{"active" if @rate_type == "fixed_period"}",
+								role: "tab",
+								id: "loan-type-tab-fixed-period",
+								tabindex: (@rate_type == "fixed_period" ? 0 : -1),
+								aria: {
+									selected: @rate_type == "fixed_period",
+									controls: "results-table-panel"
+								} do %>
 					<span class="loan-type-tab-title"><%= t("home.rate_type.tabs.fixed_period") %></span>
 					<span class="loan-type-tab-desc"><%= t("home.rate_type.descriptions.fixed_period") %></span>
 				<% end %>
@@ -379,6 +397,9 @@
 		</div>
 	</div>
 	<div class="table-responsive"
+			 id="results-table-panel"
+			 role="tabpanel"
+			 aria-labelledby="<%= @rate_type == "fixed_period" ? "loan-type-tab-fixed-period" : "loan-type-tab-variable" %>"
 			 data-sticky-table-header-target="scroller"
 			 data-action="scroll->sticky-table-header#update">
 		<table class="table table-hover align-middle mb-0 results-table" data-sticky-table-header-target="table">
@@ -405,9 +426,7 @@
 						<td class="bank-offer-cell">
 							<div class="bank-offer-card">
 								<div class="bank-offer-top">
-									<% if result[:bank_logo].present? && result[:bank_logo].attached? %>
-										<%= image_tag result[:bank_logo], class: "bank-offer-logo", alt: result[:bank_title] %>
-									<% end %>
+									<%= bank_offer_logo_tag result[:bank_logo], alt: result[:bank_title] %>
 									<div class="bank-offer-bank-name"><%= result[:bank_title] %></div>
 								</div>
 

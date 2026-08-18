@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="<%= I18n.locale %>">
+<html lang="<%= hreflang_for(I18n.locale) %>">
   <head>
     <% page_title = content_for(:title) || t("seo.site_name", default: "wCredit.pl") %>
     <% meta_description = content_for(:meta_description) || t("seo.description", default: "Compare Polish mortgage offers with transparent monthly and total costs.") %>
@@ -26,7 +26,7 @@
     <link rel="manifest" href="/site.webmanifest">
 
     <% available_locales.each do |locale| %>
-      <link rel="alternate" hreflang="<%= locale %>" href="<%= loan_comparison_url(locale: locale, rate_type_slug: RateTypeSlug.slug_for(locale: locale, rate_type: current_rate_type), only_path: false) %>">
+      <link rel="alternate" hreflang="<%= hreflang_for(locale) %>" href="<%= loan_comparison_url(locale: locale, rate_type_slug: RateTypeSlug.slug_for(locale: locale, rate_type: current_rate_type), only_path: false) %>">
     <% end %>
     <link rel="alternate" hreflang="x-default" href="<%= loan_comparison_url(locale: I18n.default_locale, rate_type_slug: RateTypeSlug.slug_for(locale: I18n.default_locale, rate_type: current_rate_type), only_path: false) %>">
 
@@ -53,7 +53,7 @@
          "name" => t("seo.site_name", default: "wCredit.pl"),
          "url" => request.base_url,
          "description" => meta_description,
-         "inLanguage" => I18n.locale.to_s
+         "inLanguage" => hreflang_for(I18n.locale)
        } %>
     <script type="application/ld+json"><%= raw(website_schema.to_json) %></script>
 
@@ -63,19 +63,29 @@
   </head>
 
   <body class="public-theme">
-    <nav class="navbar navbar-expand-lg public-navbar mb-4">
+    <nav class="navbar navbar-expand-lg public-navbar">
       <div class="container">
         <%= link_to loan_comparison_url_for(locale: I18n.locale, rate_type: "variable"), class: "navbar-brand public-brand" do %>
-          <%= image_tag "/logo.png", alt: t("seo.site_name"), class: "public-brand-logo" %>
+          <%= image_tag "/logo.png",
+                        alt: t("seo.site_name"),
+                        class: "public-brand-logo",
+                        width: 75,
+                        height: 40 %>
         <% end %>
-        <div class="d-flex align-items-center gap-2">
-          <% available_locales.each do |locale| %>
-            <%= link_to locale_switch_label(locale),
-                        loan_comparison_url_for(locale: locale, rate_type: current_rate_type),
-                        class: "btn btn-sm locale-switch-btn #{locale == I18n.locale.to_s ? "btn-light" : "btn-outline-light"}",
-                        aria: { label: locale.upcase } %>
-          <% end %>
-        </div>
+        <label class="locale-switch">
+          <span class="visually-hidden"><%= t("common.language") %></span>
+          <select class="form-select form-select-sm locale-switch-select"
+                  data-controller="locale-switch"
+                  data-action="change->locale-switch#go"
+                  aria-label="<%= t("common.language") %>">
+            <% available_locales.each do |locale| %>
+              <option value="<%= loan_comparison_url_for(locale: locale, rate_type: current_rate_type) %>"
+                      <%= "selected" if locale == I18n.locale.to_s %>>
+                <%= locale_switch_label(locale) %>
+              </option>
+            <% end %>
+          </select>
+        </label>
       </div>
     </nav>
 

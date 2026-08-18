@@ -53,6 +53,7 @@ en:
   common:
     "yes": "Yes"
     "no": "No"
+    language: "Language"
 
   home:
     page_title: "Mortgage comparison"

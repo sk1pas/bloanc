@@ -15,7 +15,8 @@ class SitemapsControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, loan_comparison_url(locale: :ua, rate_type_slug: "fiksovana-stavka")
     assert_includes response.body, 'hreflang="pl"'
     assert_includes response.body, 'hreflang="en"'
-    assert_includes response.body, 'hreflang="ua"'
+    assert_includes response.body, 'hreflang="uk"'
+    refute_includes response.body, 'hreflang="ua"'
     assert_includes response.body, 'hreflang="x-default"'
     refute_includes response.body, "/admin"
   end

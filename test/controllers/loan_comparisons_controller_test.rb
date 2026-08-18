@@ -29,6 +29,17 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "/pl/oprocentowanie-zmienne"
     assert_includes response.body, "/en/variable-rate"
     assert_includes response.body, "/ua/zminna-stavka"
+    assert_includes response.body, 'hreflang="uk"'
+    refute_includes response.body, 'hreflang="ua"'
+    assert_includes response.body, "locale-switch-select"
+    assert_includes response.body, "🇵🇱"
+    assert_includes response.body, 'role="tab"'
+    assert_includes response.body, 'aria-selected="true"'
+    assert_includes response.body, 'width="75"'
+    assert_includes response.body, 'height="40"'
+    assert_includes response.body, 'for="loan_amount_range"'
+    assert_includes response.body, 'for="years_range"'
+    assert_includes response.body, "cdn.jsdelivr.net/npm/bootstrap"
   end
 
   test "filters offers by fixed-period rate type" do
