@@ -128,7 +128,12 @@ App URLs:
     - http://localhost:3000/pl/oprocentowanie-stale
     - http://localhost:3000/en/fixed-period
     - http://localhost:3000/ua/fiksovana-stavka
-- Locale root (`/pl`, `/en`, `/ua`) redirects to the variable-rate slug for that locale
+- Site root (`/`) serves PL variable-rate comparison directly (no redirect)
+- Locale root (`/pl`, `/en`, `/ua`) serves variable-rate comparison directly (no redirect)
+- Polish rate-type slugs also work without locale prefix, e.g. `/oprocentowanie-zmienne`
+- Full paths combine locale and slug, e.g. `/pl/oprocentowanie-stale`
+- Locale switch keeps the rate-type slug when the current URL has one
+- Rate-type switch always navigates to the slug path and keeps locale in the URL when present
 - Sitemap: http://localhost:3000/sitemap.xml
 - Robots: http://localhost:3000/robots.txt
 - Admin: http://localhost:3000/admin
@@ -145,7 +150,8 @@ Development/test fallback:
 
 ## Core Routes
 - GET /(:locale)/:rate_type_slug
-- GET /(:locale) → 301 to variable-rate slug
+- GET /(:locale)
+- GET /:rate_type_slug (Polish slugs, PL locale implied)
 - POST /(:locale)/custom_compare
 - GET /sitemap.xml
 - GET /admin

@@ -5,11 +5,7 @@
     <% meta_description = content_for(:meta_description) || t("seo.description", default: "Compare Polish mortgage offers with transparent monthly and total costs.") %>
     <% meta_keywords = t("seo.keywords", default: "mortgage, mortgage comparison, Poland, WIBOR, loan calculator") %>
     <% current_rate_type = @rate_type.presence || "variable" %>
-    <% canonical_url = loan_comparison_url(
-         locale: I18n.locale,
-         rate_type_slug: RateTypeSlug.slug_for(locale: I18n.locale, rate_type: current_rate_type),
-         only_path: false
-       ) %>
+    <% canonical_url = canonical_comparison_url %>
 
     <title><%= page_title %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -26,9 +22,9 @@
     <link rel="manifest" href="/site.webmanifest">
 
     <% available_locales.each do |locale| %>
-      <link rel="alternate" hreflang="<%= hreflang_for(locale) %>" href="<%= loan_comparison_url(locale: locale, rate_type_slug: RateTypeSlug.slug_for(locale: locale, rate_type: current_rate_type), only_path: false) %>">
+      <link rel="alternate" hreflang="<%= hreflang_for(locale) %>" href="<%= hreflang_comparison_url(locale) %>">
     <% end %>
-    <link rel="alternate" hreflang="x-default" href="<%= loan_comparison_url(locale: I18n.default_locale, rate_type_slug: RateTypeSlug.slug_for(locale: I18n.default_locale, rate_type: current_rate_type), only_path: false) %>">
+    <link rel="alternate" hreflang="x-default" href="<%= hreflang_comparison_url(I18n.default_locale) %>">
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="<%= page_title %>">
@@ -65,7 +61,7 @@
   <body class="public-theme">
     <nav class="navbar navbar-expand-lg public-navbar">
       <div class="container">
-        <%= link_to loan_comparison_url_for(locale: I18n.locale, rate_type: "variable"), class: "navbar-brand public-brand" do %>
+        <%= link_to locale_home_path, class: "navbar-brand public-brand" do %>
           <%= image_tag "/logo.png",
                         alt: t("seo.site_name"),
                         class: "public-brand-logo",
@@ -79,7 +75,7 @@
                   data-action="change->locale-switch#go"
                   aria-label="<%= t("common.language") %>">
             <% available_locales.each do |locale| %>
-              <option value="<%= loan_comparison_url_for(locale: locale, rate_type: current_rate_type) %>"
+              <option value="<%= locale_switch_url(locale) %>"
                       <%= "selected" if locale == I18n.locale.to_s %>>
                 <%= locale_switch_label(locale) %>
               </option>

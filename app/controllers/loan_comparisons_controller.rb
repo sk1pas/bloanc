@@ -5,7 +5,7 @@ class LoanComparisonsController < ApplicationController
   OVERPAYMENT_MODES = %w[none fixed_monthly fixed_period].freeze
 
   def index
-    return redirect_to_canonical_rate_type_path if params[:rate_type_slug].blank?
+    redirect_to_variable_rate_path_from_form if redirect_form_to_variable_rate_path?
 
     prepare_request
     load_offer_results
@@ -19,19 +19,11 @@ class LoanComparisonsController < ApplicationController
 
     render :index
   rescue ActionController::ParameterMissing
-    redirect_to loan_comparison_url_for(locale: I18n.locale, rate_type: "variable"),
+    redirect_to comparison_results_path(anchor: "results-table"),
                 alert: t("home.flash.custom_offer_invalid")
   end
 
   private
-
-  def redirect_to_canonical_rate_type_path
-    rate_type = normalize_rate_type(params[:rate_type])
-    query = request.query_parameters.except("rate_type", "locale", "rate_type_slug")
-
-    redirect_to loan_comparison_url_for(locale: I18n.locale, rate_type: rate_type, **query),
-                status: :moved_permanently
-  end
 
   def prepare_request
     @loan_amount = normalize_integer(params[:loan_amount], DEFAULT_LOAN_AMOUNT)
@@ -56,6 +48,22 @@ class LoanComparisonsController < ApplicationController
     end
 
     normalize_rate_type(params[:rate_type])
+  end
+
+  def redirect_form_to_variable_rate_path?
+    params[:rate_type_slug].blank? && comparison_form_submitted?
+  end
+
+  def redirect_to_variable_rate_path_from_form
+    redirect_to comparison_results_path(**comparison_form_params, anchor: "results-table")
+  end
+
+  def comparison_form_submitted?
+    comparison_query_param_keys.any? { |key| params.key?(key) }
+  end
+
+  def comparison_form_params
+    comparison_query_params
   end
 
   def load_offer_results
