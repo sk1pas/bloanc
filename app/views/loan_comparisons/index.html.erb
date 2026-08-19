@@ -528,9 +528,9 @@
 						<td>
 							<div><strong><%= number_to_currency(result[:first_month_payment], unit: "PLN", precision: 0, format: "%n %u") %></strong></div>
 							<%= first_month_breakdown(result.dig(:notes, :first_month_lines)) %>
-              <% if insurance_incomplete %>
-                <p class="bank-offer-incomplete-note mt-2"><%= incomplete_insurance_note(result) %></p>
-              <% end %>
+							<% if insurance_incomplete %>
+								<p class="bank-offer-incomplete-note mt-2"><%= incomplete_insurance_note(result) %></p>
+							<% end %>
 						</td>
 						<td class="loan-period-cell">
 							<strong><%= result[:loan_period_label] %></strong>

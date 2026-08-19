@@ -775,15 +775,16 @@ body {
 	gap: 0.75rem;
 }
 
-.results-table tbody tr.offer-incomplete > * {
-	--bs-table-bg: #fff8eb;
-	background-color: #fff8eb;
+.results-table tbody tr.offer-incomplete {
+  box-shadow: inset 0px 0px 15px 5px rgba(255, 0, 0, 0.12);
 }
 
-.results-table.table-hover tbody tr.offer-incomplete:hover > * {
-	--bs-table-hover-bg: #fff3dc;
-	--bs-table-accent-bg: #fff3dc;
-	background-color: #fff3dc;
+.results-table tbody tr.offer-incomplete:hover {
+  box-shadow: none;
+}
+
+.results-table tbody tr.offer-incomplete > td {
+	background-color: initial;
 }
 
 .bank-offer-incomplete-note {

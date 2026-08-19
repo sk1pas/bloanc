@@ -87,6 +87,7 @@ class LoanComparisonsController < ApplicationController
 
     monthly_bank_payment = calculation[:monthly_principal_interest].to_f
     monthly_user_overpayment = simulation[:monthly_overpayment].to_f
+
     # Credit payment = principal + interest (+ optional user overpayment). No insurance/fees.
     default_monthly_payment =
       if simulation[:default_monthly_payment].present?
@@ -94,6 +95,7 @@ class LoanComparisonsController < ApplicationController
       else
         monthly_bank_payment + monthly_user_overpayment
       end
+
     loan_period_months = calculation[:months_paid]
 
     {
@@ -233,13 +235,13 @@ class LoanComparisonsController < ApplicationController
     base_monthly_payment = base_calculation[:monthly_principal_interest].to_f
 
     case @overpayment_mode
-    when "fixed_monthly"
+    when 'fixed_monthly'
       apply_fixed_monthly_overpayment(
         loan_offer: loan_offer,
         base_calculation: base_calculation,
         base_monthly_payment: base_monthly_payment
       )
-    when "fixed_period"
+    when 'fixed_period'
       apply_fixed_period_overpayment(
         loan_offer: loan_offer,
         base_calculation: base_calculation,
@@ -291,7 +293,7 @@ class LoanComparisonsController < ApplicationController
       return {
         calculation: base_calculation,
         monthly_overpayment: 0.0,
-        note: t("home.overpayment.notes.fixed_monthly_invalid", min_payment: format_number(minimum_total_payment + 1, 0)),
+        note: t('home.overpayment.notes.fixed_monthly_invalid', min_payment: format_number(minimum_total_payment + 1, 0)),
         default_monthly_payment: nil,
         overpay_during_penalty: overpay_during_penalty
       }
@@ -299,7 +301,7 @@ class LoanComparisonsController < ApplicationController
 
     calculation = calculate_for_offer(
       loan_offer: loan_offer,
-      overpayment_mode: "absolute",
+      overpayment_mode: 'absolute',
       overpayment_amount: overpayment_amount,
       overpayment_grace_years: overpayment_grace_years
     )

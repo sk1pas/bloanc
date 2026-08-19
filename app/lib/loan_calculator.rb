@@ -1,165 +1,5 @@
 # frozen_string_literal: true
 
-# #################################################
-
-# # mBank
-# calculate_loan(
-#   loan_net: 400_000,
-#   months: 120,
-#   bank_margin_percent: 1.85,
-#   wibor_percent: 3.86,
-#   insurance: {
-#     life_insurance_percent: 0.05,
-#     life_insurance_years: 5,
-#     property_insurance_monthly: 25
-#   }
-# )
-# {monthly_principal_interest: 2483,
-#  first_month_payment: 2693,
-#  life_insurance_total: 11405,
-#  total_paid_without_insurance: 744809,
-#  total_paid: 759388,
-#  bank_earnings: 344809}
-
-# #################################################
-
-# # Pekao
-# LoanCalculator.new(
-#   loan_net: 400_000,
-#   months: 300,
-#   bank_margin_percent: 1.69,
-#   wibor_percent: 3.78,
-#   insurance: {
-#     life_insurance_percent: 0.036,
-#     life_insurance_years: 5,
-#     # life_insurance_total: 8640,
-#     property_insurance_monthly: 34
-#   },
-#   overpayment_grace_years: 3,
-#   overpayment_coef: 2.0
-# ).call
-# {monthly_principal_interest: 2449,
-#  first_month_payment: 2483,
-#  life_insurance_total: 8640,
-#  total_paid_without_insurance: 734757,
-#  total_paid: 753397,
-#  bank_earnings: 334757}
-
-# #################################################
-
-# # [ING] Mieszkaj po swojemu - Lekka rata
-# calculate_loan(
-#   loan_net: 400_000,
-#   months: 120,
-#   bank_margin_percent: 1.70,
-#   wibor_percent: 3.78,
-#   insurance: {
-#     life_insurance_percent: 0.035,
-#     life_insurance_years: 3,
-#     # life_insurance_total: 4886,
-#     property_insurance_monthly: 39
-#   },
-#   bank_comission_percentage: 1.5
-# )
-# {monthly_principal_interest: 2452,
-#  first_month_payment: 2630,
-#  life_insurance_total: 4895,
-#  total_paid_without_insurance: 735472,
-#  total_paid: 757887,
-#  bank_earnings: 335472}
-
-# #################################################
-
-# # [ING] Mieszkaj po swojemu - Latwy start
-# calculate_loan(
-#   loan_net: 400_000,
-#   months: 120,
-#   bank_margin_percent: 1.75,
-#   wibor_percent: 3.78,
-#   insurance: {
-#     life_insurance_percent: 0.035,
-#     life_insurance_years: 3,
-#     # life_insurance_total: 4886,
-#     property_insurance_monthly: 39
-#   },
-#   bank_comission_percentage: 0
-# )
-# {monthly_principal_interest: 2464,
-#  first_month_payment: 2642,
-#  life_insurance_total: 4896,
-#  total_paid_without_insurance: 739056,
-#  total_paid: 755472,
-#  bank_earnings: 339056}
-
-# #################################################
-
-# # BNP Paribas
-# calculate_loan(
-#   loan_net: 400_000,
-#   months: 120,
-#   bank_margin_percent: 1.65,
-#   wibor_percent: 3.84,
-#   insurance: {
-#     life_insurance_percent: 0.04,
-#     life_insurance_years: 3,
-#     # life_insurance_total: 6852,
-#     property_insurance_monthly: 41
-#   },
-#   bank_comission_percentage: 0
-# )
-# {monthly_principal_interest: 2454,
-#  first_month_payment: 2655,
-#  life_insurance_total: 5594,
-#  total_paid_without_insurance: 736189,
-#  total_paid: 754045,
-#  bank_earnings: 336189}
-
-# #################################################
-
-# # Alior Bank
-# calculate_loan(
-#   loan_net: 400_000,
-#   months: 120,
-#   bank_margin_percent: 1.69,
-#   wibor_percent: 3.83,
-#   insurance: {
-#     # life_insurance_percent: 0.04,
-#     # life_insurance_years: 3,
-#     life_insurance_total: 11_840,
-#     property_insurance_monthly: 39
-#   },
-#   bank_comission_percentage: 0
-# )
-# {monthly_principal_interest: 2461,
-#  first_month_payment: 2500,
-#  life_insurance_total: 11840,
-#  total_paid_without_insurance: 738339,
-#  total_paid: 761761,
-#  bank_earnings: 338339}
-
-# #################################################
-
-# # Credit Agricole
-# calculate_loan(
-#   loan_net: 400_000,
-#   months: 120,
-#   bank_margin_percent: 1.85,
-#   wibor_percent: 3.85,
-#   insurance: {
-#     life_insurance_percent: 0.0299,
-#     life_insurance_years: 10,
-#     # life_insurance_total: 6_825,
-#     property_insurance_monthly: 38
-#   },
-#   bank_comission_percentage: 0
-# )
-# {monthly_principal_interest: 2541,
-#  first_month_payment: 2567,
-#  life_insurance_total: 27544,
-#  total_paid_without_insurance: 762196,
-#  total_paid: 797740,
-#  bank_earnings: 362196}
-
 class LoanCalculator
   RATE_TYPES = %w[variable fixed_period].freeze
   OVERPAYMENT_MODES = %w[none coef absolute].freeze
@@ -223,11 +63,13 @@ class LoanCalculator
     fixed_monthly_rate = (@fixed_rate_percent.to_f / 100.0) / 12.0
 
     phase_monthly_rate = starts_with_fixed_rate ? fixed_monthly_rate : variable_monthly_rate
+
     scheduled_payment = annuity_payment(
       principal: @loan_net,
       monthly_rate: phase_monthly_rate,
       months_remaining: @months
     )
+
     first_month_scheduled_payment = scheduled_payment
     post_fixed_monthly_payment = nil
 
@@ -244,8 +86,12 @@ class LoanCalculator
     overpayment_start_month = @overpayment_grace_years.to_i * 12
     overpayment_penalty_months = @overpayment_penalty_years.to_i * 12
 
-    first_month_extra_payment = additional_overpayment(month_index: 0, scheduled_payment: first_month_scheduled_payment,
-                                                       overpayment_start_month: overpayment_start_month)
+    first_month_extra_payment = additional_overpayment(
+      month_index: 0,
+      scheduled_payment: first_month_scheduled_payment,
+      overpayment_start_month: overpayment_start_month
+    )
+
     first_month_overpayment_penalty =
       if first_month_extra_payment.positive? && overpayment_penalty_months.positive?
         overpayment_penalty_for(first_month_extra_payment)
@@ -260,11 +106,13 @@ class LoanCalculator
 
       if switches_to_variable_rate && month_index == fixed_months
         phase_monthly_rate = variable_monthly_rate
+
         scheduled_payment = annuity_payment(
           principal: remaining_balance,
           monthly_rate: phase_monthly_rate,
           months_remaining: @months - month_index
         )
+
         post_fixed_monthly_payment = scheduled_payment
       end
 
@@ -277,6 +125,7 @@ class LoanCalculator
           scheduled_payment: scheduled_payment,
           overpayment_start_month: overpayment_start_month
         )
+
       actual_monthly_payment += additional_payment
 
       if additional_payment.positive? && month_index < overpayment_penalty_months
@@ -302,7 +151,9 @@ class LoanCalculator
     end
 
     bank_commission_total = @loan_net * (@bank_commission_percentage / 100.0)
-    property_insurance_total = @property_insurance_monthly.to_f * (months_paid > 0 ? months_paid : @months)
+
+    property_insurance_total = @property_insurance_monthly.to_f * (months_paid.positive? ? months_paid : @months)
+
     total_paid_with_insurance =
       total_principal_interest_paid +
       life_insurance_total +
@@ -318,6 +169,7 @@ class LoanCalculator
       end
 
     notes = []
+
     if starts_with_fixed_rate
       if switches_to_variable_rate
         notes << "Rate base: fixed #{@fixed_rate_percent.round(3)}% for #{@fixed_rate_years} years, then margin #{@bank_margin_percent.round(3)}% + WIBOR #{@wibor_percent.round(3)}%"
@@ -327,24 +179,29 @@ class LoanCalculator
     else
       notes << "Rate base: margin #{@bank_margin_percent.round(3)}% + WIBOR #{@wibor_percent.round(3)}%"
     end
+
     notes << "Bank commission: #{@bank_commission_percentage.round(3)}% of net loan" if @bank_commission_percentage.positive?
+
     if one_time_life_insurance_total
       notes << "Life insurance as one-time #{@life_insurance_percent.round(4)}% of loan amount"
     elsif @fixed_life_insurance_total
-      notes << "Life insurance as one-time total amount"
+      notes << 'Life insurance as one-time total amount'
     elsif @life_insurance_percent && insurance_months.to_i.positive?
-      notes << if @life_insurance_full_term
-        "Life insurance is monthly on remaining principal for the full loan term"
-      else
-        "Life insurance is monthly on remaining principal for #{@life_insurance_years} years"
-      end
+      notes <<
+        if @life_insurance_full_term
+          'Life insurance is monthly on remaining principal for the full loan term'
+        else
+          "Life insurance is monthly on remaining principal for #{@life_insurance_years} years"
+        end
     end
-    notes << "Property insurance fixed monthly amount until full repayment"
 
-    if @overpayment_mode != "none"
+    notes << 'Property insurance fixed monthly amount until full repayment'
+
+    if @overpayment_mode != 'none'
       notes << "Overpayment starts after #{@overpayment_grace_years} years"
-      notes << "Overpayment mode: x#{@overpayment_coef.round(3)}" if @overpayment_mode == "coef"
-      notes << "Overpayment mode: +#{@overpayment_amount.round(2)} PLN monthly" if @overpayment_mode == "absolute"
+      notes << "Overpayment mode: x#{@overpayment_coef.round(3)}" if @overpayment_mode == 'coef'
+      notes << "Overpayment mode: +#{@overpayment_amount.round(2)} PLN monthly" if @overpayment_mode == 'absolute'
+
       if @overpayment_penalty_years.positive?
         notes << "Overpayment fee during first #{@overpayment_penalty_years} years: #{@overpayment_penalty_percent.round(3)}% (min #{@overpayment_penalty_min_amount.round(2)} PLN)"
       end
@@ -379,19 +236,19 @@ class LoanCalculator
     normalized = rate_type.to_s
     return normalized if RATE_TYPES.include?(normalized)
 
-    "variable"
+    'variable'
   end
 
   def normalize_overpayment_mode(mode)
     normalized = mode.to_s
-    return "none" if normalized == "no_overpayment"
+    return 'none' if normalized == 'no_overpayment'
     return normalized if OVERPAYMENT_MODES.include?(normalized)
 
-    "none"
+    'none'
   end
 
   def fixed_period_months
-    return 0 unless @rate_type == "fixed_period"
+    return 0 unless @rate_type == 'fixed_period'
     return 0 unless @fixed_rate_percent.to_f.positive?
     return 0 unless @fixed_rate_years.to_i.positive?
 
@@ -429,9 +286,9 @@ class LoanCalculator
     return 0.0 if month_index < overpayment_start_month
 
     case @overpayment_mode
-    when "coef"
+    when 'coef'
       [(scheduled_payment * (@overpayment_coef - 1.0)), 0.0].max
-    when "absolute"
+    when 'absolute'
       [@overpayment_amount, 0.0].max
     else
       0.0
