@@ -67,7 +67,10 @@ ua:
       property_insurance_total: "Страхування майна"
     wibor:
       latest: "Останній запис WIBOR"
+      date: "Дата WIBOR"
       missing: "Немає значень WIBOR. Відкрийте Admin -> WIBOR та натисніть Refresh."
+      change_up: "Зростання на %{diff} в.п. порівняно з попереднім записом"
+      change_down: "Зниження на %{diff} в.п. порівняно з попереднім записом"
     payment_parts:
       heading: "Щомісячний платіж зазвичай складається з цих частин"
       credit:

@@ -1,9 +1,6 @@
 ---
-description: Use single quotes in Ruby unless double quotes are required
-globs: "**/*.rb"
-alwaysApply: false
+alwaysApply: true
 ---
-
 # Ruby string quotes
 
 Prefer single-quoted strings. Use double quotes only when the string needs interpolation, escape sequences (`\n`, `\t`, `\"`), or other double-quote-only syntax.

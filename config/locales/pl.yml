@@ -67,7 +67,10 @@ pl:
       property_insurance_total: "Ubezpieczenie nieruchomości"
     wibor:
       latest: "Ostatni zapis WIBOR"
+      date: "Data WIBOR"
       missing: "Brak zapisanych wartości WIBOR. Wejdź do Admin -> WIBOR i kliknij Odśwież."
+      change_up: "Wzrost o %{diff} p.p. względem poprzedniego zapisu"
+      change_down: "Spadek o %{diff} p.p. względem poprzedniego zapisu"
     payment_parts:
       heading: "Rata miesięczna to zwykle suma tych części"
       credit:

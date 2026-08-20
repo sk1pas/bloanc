@@ -352,6 +352,37 @@ body {
 
 .results-rate-switcher {
 	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+.results-rate-switcher__copy {
+	display: flex;
+	flex-direction: column;
+	gap: 0.2rem;
+	min-width: 0;
+}
+
+.results-rate-switcher__copy .form-hint {
+	margin-bottom: 0;
+}
+
+@media (min-width: 992px) {
+	.results-rate-switcher {
+		flex-direction: row;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.results-rate-switcher__copy {
+		flex: 0 1 240px;
+	}
+
+	.results-rate-switcher .loan-type-tabs-featured {
+		flex: 1 1 auto;
+		min-width: 0;
+	}
 }
 
 @media (max-width: 767px) {
@@ -611,6 +642,56 @@ body {
 	.payment-parts__plus {
 		display: none;
 	}
+}
+
+.wibor-snapshot {
+	padding: 0.7rem 1rem;
+}
+
+.wibor-snapshot__line {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 0.35rem 1.1rem;
+	font-size: 0.9rem;
+	color: #35556d;
+	line-height: 1.35;
+}
+
+.wibor-snapshot__item {
+	display: inline-flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 0.35rem;
+}
+
+.wibor-snapshot__label {
+	color: #6a8499;
+}
+
+.wibor-change {
+	display: inline-flex;
+	align-items: baseline;
+	gap: 0.2rem;
+	font-size: 0.84rem;
+	font-weight: 600;
+}
+
+.wibor-change--up {
+	color: #c0392b;
+}
+
+.wibor-change--down {
+	color: #1f8a4c;
+}
+
+.wibor-change__arrow {
+	font-size: 0.95em;
+	line-height: 1;
+}
+
+.wibor-change__diff {
+	font-variant-numeric: tabular-nums;
 }
 
 #results-table.table-box {

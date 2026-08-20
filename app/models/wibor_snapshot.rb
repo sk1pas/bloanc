@@ -27,6 +27,10 @@ class WiborSnapshot < ApplicationRecord
 		recent.first
 	end
 
+	def previous
+		self.class.where("effective_date < ?", effective_date).order(effective_date: :desc).first
+	end
+
 	def rate_for(kind)
 		case kind.to_s
 		when "wibor_1m"

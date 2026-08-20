@@ -19,7 +19,12 @@ require "test_helper"
 #  index_wibor_snapshots_on_effective_date  (effective_date) UNIQUE
 #
 class WiborSnapshotTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  test "latest returns newest effective date" do
+    assert_equal wibor_snapshots(:one), WiborSnapshot.latest
+  end
+
+  test "previous returns earlier snapshot by effective date" do
+    assert_equal wibor_snapshots(:two), wibor_snapshots(:one).previous
+    assert_nil wibor_snapshots(:two).previous
+  end
 end

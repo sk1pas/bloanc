@@ -8,7 +8,7 @@ class SitemapsController < ActionController::Base
     @pages = RateTypeSlug.sitemap_entries
     @lastmod = Time.current.utc.iso8601
 
-    response.headers["Cache-Control"] = "public, max-age=3600"
+    response.headers['Cache-Control'] = 'public, max-age=3600'
     render formats: :xml, layout: false
   end
 

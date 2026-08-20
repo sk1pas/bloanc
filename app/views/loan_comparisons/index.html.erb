@@ -323,6 +323,29 @@
 	</ol>
 </details>
 
+<section class="table-box wibor-snapshot mb-3" aria-label="<%= t("home.wibor.latest") %>">
+	<% if @wibor_snapshot.present? %>
+		<div class="wibor-snapshot__line">
+			<span class="wibor-snapshot__item">
+				<span class="wibor-snapshot__label"><%= t("home.wibor.date") %></span>
+				<strong><%= I18n.l(@wibor_snapshot.updated_at.to_date) %></strong>
+			</span>
+			<span class="wibor-snapshot__item">
+				<span class="wibor-snapshot__label">WIBOR 1M</span>
+				<strong><%= number_with_precision(@wibor_snapshot.wibor_1m, precision: 2, strip_insignificant_zeros: true) %>%</strong>
+				<%= wibor_change_indicator(@wibor_snapshot.wibor_1m, @previous_wibor_snapshot&.wibor_1m) %>
+			</span>
+			<span class="wibor-snapshot__item">
+				<span class="wibor-snapshot__label">WIBOR 3M</span>
+				<strong><%= number_with_precision(@wibor_snapshot.wibor_3m, precision: 2, strip_insignificant_zeros: true) %>%</strong>
+				<%= wibor_change_indicator(@wibor_snapshot.wibor_3m, @previous_wibor_snapshot&.wibor_3m) %>
+			</span>
+		</div>
+	<% else %>
+		<p class="form-hint mb-0"><%= t("home.wibor.missing") %></p>
+	<% end %>
+</section>
+
 <% rate_switch_params = {
 		 loan_amount: @loan_amount,
 		 years: @loan_years,
@@ -338,16 +361,6 @@
 		<div class="d-flex flex-wrap justify-content-between align-items-end gap-3">
 			<div>
 				<h2 class="h5 mb-1"><%= t("home.results.title") %></h2>
-				<% if @wibor_snapshot.present? %>
-					<p class="form-hint mb-0">
-						<%= t("home.wibor.latest") %>:
-						<strong><%= I18n.l(@wibor_snapshot.updated_at.to_date) %></strong>
-						| WIBOR 1M: <strong><%= number_with_precision(@wibor_snapshot.wibor_1m, precision: 2, strip_insignificant_zeros: true) %>%</strong>
-						| WIBOR 3M: <strong><%= number_with_precision(@wibor_snapshot.wibor_3m, precision: 2, strip_insignificant_zeros: true) %>%</strong>
-					</p>
-				<% else %>
-					<p class="form-hint mb-0"><%= t("home.wibor.missing") %></p>
-				<% end %>
 			</div>
 			<div class="results-sort-filters">
 				<div class="results-sort-group" role="radiogroup" aria-label="<%= t("home.results.sort_by") %>">
@@ -409,7 +422,7 @@
 			</div>
 		</div>
 		<div class="results-rate-switcher mt-3">
-			<div class="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-2">
+			<div class="results-rate-switcher__copy">
 				<label class="form-label mb-0"><%= t("home.rate_type.title") %></label>
 				<span class="form-hint"><%= t("home.rate_type.subtitle") %></span>
 			</div>
@@ -579,20 +592,16 @@
 										<strong><%= number_to_currency(result[:bank_commission_total], unit: "PLN", precision: 0, format: "%n %u") %></strong>
 									</div>
 								<% end %>
-								<% if result[:overpayment_penalty_total].to_f.positive? || result[:overpayment_penalty_details].present? %>
-									<% fee_positive = result[:overpayment_penalty_total].to_f.positive? %>
-									<div class="total-paid-row<%= " total-paid-row--fee" if fee_positive %>">
+								<% if result[:overpayment_penalty_total].to_f.positive? %>
+									<div class="total-paid-row total-paid-row--fee">
 										<span><%= t("home.results.breakdown.overpayment_penalty") %></span>
 										<strong><%= number_to_currency(result[:overpayment_penalty_total], unit: "PLN", precision: 0, format: "%n %u") %></strong>
 									</div>
 									<% if result[:overpayment_penalty_details].present? %>
-										<div class="total-paid-row-note<%= " total-paid-row-note--fee" if fee_positive %>"><%= result[:overpayment_penalty_details] %></div>
+										<div class="total-paid-row-note total-paid-row-note--fee"><%= result[:overpayment_penalty_details] %></div>
 									<% end %>
 								<% end %>
 							</div>
-							<% if result.dig(:notes, :total_paid).present? %>
-								<%= expandable_note(result.dig(:notes, :total_paid)) %>
-							<% end %>
 						</td>
 					</tr>
 					<% end %>

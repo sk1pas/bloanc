@@ -1,6 +1,32 @@
 module LoanComparisonsHelper
 	def payment_parts_expanded?
-		cookies[:payment_parts_open] != "0"
+		cookies[:payment_parts_open] != '0'
+	end
+
+	def wibor_change_indicator(current_rate, previous_rate)
+		return if previous_rate.nil?
+
+		diff = current_rate.to_d - previous_rate.to_d
+		return if diff.zero?
+
+		direction = diff.positive? ? 'up' : 'down'
+		arrow = direction == 'up' ? '↑' : '↓'
+		sign = diff.positive? ? '+' : ''
+		formatted_diff = number_with_precision(diff, precision: 2, strip_insignificant_zeros: true)
+
+		content_tag(
+			:span,
+			class: "wibor-change wibor-change--#{direction}",
+			title: t("home.wibor.change_#{direction}", diff: "#{sign}#{formatted_diff}")
+		) do
+			safe_join(
+				[
+					content_tag(:span, arrow, class: 'wibor-change__arrow', 'aria-hidden': true),
+					content_tag(:span, "(#{sign}#{formatted_diff}%)", class: 'wibor-change__diff')
+				],
+				' '
+			)
+		end
 	end
 
 	def incomplete_insurance_note(result)

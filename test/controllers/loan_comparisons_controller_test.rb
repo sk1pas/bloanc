@@ -63,7 +63,7 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "🇵🇱"
     assert_includes response.body, 'role="tab"'
     assert_includes response.body, 'aria-selected="true"'
-    assert_includes response.body, 'width="75"'
+    assert_includes response.body, 'width="73"'
     assert_includes response.body, 'height="40"'
     assert_includes response.body, 'for="loan_amount_range"'
     assert_includes response.body, 'for="years_range"'
@@ -75,6 +75,47 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     refute_includes response.body, "offer-incomplete"
     assert_select "details.payment-parts[open]"
     assert_select "details.payment-parts summary.payment-parts__summary"
+    assert_select "section.wibor-snapshot"
+    assert_includes response.body, "Data WIBOR"
+    assert_includes response.body, "WIBOR 1M"
+    assert_includes response.body, "WIBOR 3M"
+    assert_includes response.body, "wibor-change--up"
+    assert_includes response.body, "(+0.02)"
+    assert_select ".results-rate-switcher__copy"
+    refute_includes response.body, "Opłata za nadpłatę"
+  end
+
+  test "hides overpayment fee row when fee total is zero" do
+    get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-zmienne"), params: {
+      loan_amount: 400_000,
+      years: 25,
+      overpayment_mode: "fixed_monthly",
+      fixed_monthly_payment: 9_000,
+      fixed_monthly_overpay_during_penalty: "0"
+    }
+
+    assert_response :success
+    refute_includes response.body, "total-paid-row--fee"
+    refute_includes response.body, "Opłata za nadpłatę"
+  end
+
+  test "shows wibor change arrows against previous snapshot" do
+    get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-zmienne")
+
+    assert_response :success
+    assert_select ".wibor-change--up", count: 2
+    assert_includes response.body, I18n.l(wibor_snapshots(:one).effective_date)
+    refute_includes response.body, "Latest WIBOR snapshot:"
+  end
+
+  test "omits wibor change marker when rate is unchanged" do
+    previous = wibor_snapshots(:two)
+    previous.update!(wibor_1m: 3.84, wibor_3m: 3.83)
+
+    get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-zmienne")
+
+    assert_response :success
+    refute_includes response.body, "wibor-change"
   end
 
   test "filters offers by fixed-period rate type" do

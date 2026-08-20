@@ -35,6 +35,7 @@ class LoanComparisonsController < ApplicationController
     @fixed_monthly_overpay_during_penalty = normalize_boolean(params[:fixed_monthly_overpay_during_penalty], true)
     @fixed_period_overpay_during_penalty = normalize_boolean(params[:fixed_period_overpay_during_penalty], true)
     @wibor_snapshot = WiborSnapshot.latest
+    @previous_wibor_snapshot = @wibor_snapshot&.previous
     @custom_offer = {}
     @custom_result = nil
   end

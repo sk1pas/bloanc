@@ -96,7 +96,10 @@ en:
       property_insurance_total: "Property insurance total"
     wibor:
       latest: "Latest WIBOR snapshot"
+      date: "WIBOR date"
       missing: "No WIBOR values saved yet. Open Admin -> WIBOR and click Refresh."
+      change_up: "Up %{diff} pp vs previous snapshot"
+      change_down: "Down %{diff} pp vs previous snapshot"
     payment_parts:
       heading: "A monthly payment is usually the sum of these parts"
       credit:
