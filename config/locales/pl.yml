@@ -1,8 +1,8 @@
 pl:
   seo:
     site_name: "wCredit.pl"
-    description: "Porównuj polskie oferty kredytów hipotecznych: oprocentowanie zmienne i stałe, raty miesięczne oraz łączny koszt spłaty."
-    keywords: "porównanie kredytu hipotecznego, WIBOR, oprocentowanie stałe, oprocentowanie zmienne, kalkulator kredytu"
+    description: "Porównywarka kredytów hipotecznych i kalkulator hipoteczny: porównanie ofert kredytowych banków, oprocentowanie zmienne i stałe, WIBOR 3M oraz ranking rat."
+    keywords: "WIBOR 3M, kalkulator hipoteczny, porównanie ofert kredytowych, porównywarka kredytów hipotecznych, ranking kredytów, oprocentowanie zmienne, oprocentowanie stałe, kredyt hipoteczny"
 
   date:
     formats:
@@ -30,14 +30,29 @@ pl:
     page_title: "Porównanie kredytów hipotecznych"
     seo:
       variable:
-        title: "Kredyt hipoteczny ze zmienną stopą - porównanie ofert"
-        description: "Porównaj oferty kredytów hipotecznych ze zmienną stopą (marża + WIBOR): raty miesięczne, ubezpieczenia i całkowity koszt spłaty."
+        title: "Porównywarka kredytów hipotecznych — oprocentowanie zmienne i WIBOR 3M"
+        description: "Kalkulator hipoteczny i porównanie ofert kredytowych ze zmienną stopą (marża + WIBOR 3M): raty, ubezpieczenia, nadpłaty i całkowity koszt spłaty."
       fixed_period:
-        title: "Kredyt hipoteczny ze stałą stopą - porównanie ofert"
-        description: "Porównaj oferty ze stałą stopą przez pierwsze lata, potem zmienna. Sprawdź raty, ubezpieczenia i całkowity koszt."
+        title: "Porównanie ofert kredytowych — oprocentowanie stałe | wCredit.pl"
+        description: "Porównywarka kredytów hipotecznych ze stałą stopą na pierwsze lata, potem zmienna. Ranking rat, ubezpieczeń i łącznego kosztu w bankach."
     hero:
-      title: "Porównaj oferty kredytów hipotecznych"
-      subtitle: "Oblicz ratę miesięczną i całkowity koszt z prowizją, ubezpieczeniami i zasadami nadpłat."
+      title: "Porównywarka kredytów hipotecznych"
+      subtitle: "Kalkulator hipoteczny do porównania ofert banków: rata, części płatności, oprocentowanie zmienne lub stałe oraz wpływ nadpłat."
+    comparison_guide:
+      title: "Jak porównać oferty kredytów hipotecznych"
+      intro: "wCredit.pl to <strong>porównywarka kredytów hipotecznych</strong> i <strong>kalkulator hipoteczny</strong> oparty na aktualnych ofertach banków w Polsce."
+      calculator:
+        title: "Kalkulator hipoteczny"
+        body: "Podaj <strong>kwotę kredytu</strong> i <strong>okres spłaty</strong>, a następnie sprawdź, jak zmienia się rata przy <strong>nadpłatach</strong>. To szybki sposób, by oszacować miesięczny koszt przed wyborem banku."
+      comparison:
+        title: "Porównanie ofert kredytowych"
+        body: "Wyniki to <strong>ranking kredytów</strong> według rzeczywistych warunków ofert: rata kredytowa, ubezpieczenia, prowizja i łączna suma spłaty. Przy każdej ofercie widać, z jakich części składa się płatność."
+      rates:
+        title: "Oprocentowanie zmienne, stałe i WIBOR 3M"
+        body: "Wybierz <strong>oprocentowanie zmienne</strong> (marża + <strong>WIBOR 3M</strong> lub 1M) albo <strong>oprocentowanie stałe</strong> na pierwsze lata. Porównanie pokazuje różnice w racie i koszcie w zależności od typu stopy."
+      best_bank:
+        title: "W jakim banku najlepiej wziąć kredyt hipoteczny?"
+        body: "Nie ma jednej odpowiedzi dla wszystkich. Najlepszy wybór zależy od <strong>łącznego kosztu</strong>, typu oprocentowania, opłat i Twojej zdolności. Porównaj oferty poniżej i sprawdź szczegóły raty zamiast polegać na ogólnym rankingu."
     form:
       loan_amount: "Kwota kredytu (PLN)"
       years: "Okres kredytu (lata)"

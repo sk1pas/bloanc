@@ -5,7 +5,7 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     get "/"
 
     assert_response :success
-    assert_includes response.body, "Porównaj oferty kredytów hipotecznych"
+    assert_includes response.body, "Porównywarka kredytów hipotecznych"
     assert_includes response.body, 'rel="canonical" href="http://www.example.com/"'
     assert_includes response.body, "/oprocentowanie-zmienne"
   end
@@ -14,7 +14,7 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     get root_path(locale: :pl)
 
     assert_response :success
-    assert_includes response.body, "Porównaj oferty kredytów hipotecznych"
+    assert_includes response.body, "Porównywarka kredytów hipotecznych"
     assert_includes response.body, 'rel="canonical" href="http://www.example.com/"'
     assert_includes response.body, "/pl/oprocentowanie-zmienne"
   end
@@ -38,7 +38,7 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-zmienne")
 
     assert_response :success
-    assert_includes response.body, "Porównaj oferty kredytów hipotecznych"
+    assert_includes response.body, "Porównywarka kredytów hipotecznych"
     assert_includes response.body, "Okres kredytu (lata)"
     refute_includes response.body, "Wyniki aktualizuja sie automatycznie po zmianie pola."
     refute_includes response.body, "Zalozenia ogolne"
@@ -80,9 +80,24 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "WIBOR 1M"
     assert_includes response.body, "WIBOR 3M"
     assert_includes response.body, "wibor-change--up"
-    assert_includes response.body, "(+0.02)"
+    assert_includes response.body, "(+0.02%)"
     assert_select ".results-rate-switcher__copy"
     refute_includes response.body, "Opłata za nadpłatę"
+    assert_select "section.comparison-guide"
+    assert_includes response.body, "Porównywarka kredytów hipotecznych — oprocentowanie zmienne i WIBOR 3M"
+    assert_includes response.body, "W jakim banku najlepiej wziąć kredyt hipoteczny?"
+    assert_includes response.body, "kalkulator hipoteczny"
+    refute_includes response.body, 'class="seo'
+    refute_includes response.body, 'id="seo'
+  end
+
+  test "uses fixed-period title and shared hero on fixed rate page" do
+    get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-stale")
+
+    assert_response :success
+    assert_includes response.body, "Porównanie ofert kredytowych — oprocentowanie stałe"
+    assert_select "h1", text: "Porównywarka kredytów hipotecznych"
+    assert_select "section.comparison-guide"
   end
 
   test "hides overpayment fee row when fee total is zero" do
@@ -104,7 +119,7 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select ".wibor-change--up", count: 2
-    assert_includes response.body, I18n.l(wibor_snapshots(:one).effective_date)
+    assert_includes response.body, I18n.l(wibor_snapshots(:one).updated_at.to_date)
     refute_includes response.body, "Latest WIBOR snapshot:"
   end
 

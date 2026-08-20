@@ -12,7 +12,13 @@ module LoanComparisonsHelper
 		direction = diff.positive? ? 'up' : 'down'
 		arrow = direction == 'up' ? '↑' : '↓'
 		sign = diff.positive? ? '+' : ''
-		formatted_diff = number_with_precision(diff, precision: 2, strip_insignificant_zeros: true)
+		formatted_diff = number_with_precision(
+			diff,
+			precision: 2,
+			strip_insignificant_zeros: true,
+			separator: '.',
+			delimiter: ''
+		)
 
 		content_tag(
 			:span,

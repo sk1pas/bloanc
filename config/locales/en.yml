@@ -30,8 +30,8 @@
 en:
   seo:
     site_name: "wCredit.pl"
-    description: "Compare Polish mortgage offers, variable and fixed-period rates, monthly totals, and full loan costs."
-    keywords: "mortgage comparison, Poland mortgage, WIBOR, fixed rate mortgage, variable rate mortgage, loan calculator"
+    description: "Polish mortgage comparison and mortgage calculator: bank offer rankings, variable and fixed rates, WIBOR 3M, and total loan cost."
+    keywords: "WIBOR 3M, mortgage calculator, mortgage offer comparison, mortgage comparison tool, mortgage ranking, variable rate, fixed rate, mortgage loan"
 
   date:
     formats:
@@ -59,14 +59,29 @@ en:
     page_title: "Mortgage comparison"
     seo:
       variable:
-        title: "Variable-rate mortgage comparison"
-        description: "Compare Polish variable-rate mortgage offers (margin + WIBOR): monthly payments, insurance, and total loan cost."
+        title: "Mortgage comparison — variable rate and WIBOR 3M"
+        description: "Mortgage calculator and bank offer comparison for variable-rate loans (margin + WIBOR 3M): payments, insurance, overpayments, and total cost."
       fixed_period:
-        title: "Fixed-period mortgage comparison"
-        description: "Compare fixed-period mortgage offers that switch to variable rate later. Check payments, insurance, and total cost."
+        title: "Mortgage offer comparison — fixed rate | wCredit.pl"
+        description: "Compare fixed-period mortgage offers that later switch to variable rate. Rank monthly payments, insurance, and total repayment across banks."
     hero:
-      title: "Compare Polish mortgage offers"
-      subtitle: "Estimate monthly and total cost including commissions, insurance, and overpayment rules."
+      title: "Polish mortgage comparison"
+      subtitle: "A mortgage calculator to compare bank offers: monthly payment parts, variable or fixed rates, and the effect of overpayments."
+    comparison_guide:
+      title: "How to compare mortgage offers"
+      intro: "wCredit.pl is a <strong>mortgage comparison</strong> tool and <strong>mortgage calculator</strong> based on current bank offers in Poland."
+      calculator:
+        title: "Mortgage calculator"
+        body: "Enter the <strong>loan amount</strong> and <strong>term</strong>, then see how the payment changes with <strong>overpayments</strong>. A fast way to estimate monthly cost before choosing a bank."
+      comparison:
+        title: "Mortgage offer comparison"
+        body: "Results are a <strong>mortgage ranking</strong> from real offer terms: credit payment, insurance, fees, and total repayment. Each offer shows what the payment is made of."
+      rates:
+        title: "Variable rate, fixed rate, and WIBOR 3M"
+        body: "Choose <strong>variable rate</strong> (margin + <strong>WIBOR 3M</strong> or 1M) or a <strong>fixed rate</strong> for the first years. The comparison shows how rate type changes the payment and total cost."
+      best_bank:
+        title: "Which bank is best for a mortgage?"
+        body: "There is no single answer for everyone. The best choice depends on <strong>total cost</strong>, rate type, fees, and your situation. Compare offers below and check payment details instead of trusting a generic ranking."
     form:
       loan_amount: "Loan amount (PLN)"
       years: "Loan period (years)"

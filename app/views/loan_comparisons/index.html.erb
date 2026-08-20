@@ -625,6 +625,29 @@
 	</aside>
 </section>
 
+<section class="comparison-guide mb-3" aria-labelledby="comparison-guide-heading">
+	<h2 id="comparison-guide-heading" class="comparison-guide__title"><%= t("home.comparison_guide.title") %></h2>
+	<p class="comparison-guide__intro"><%= sanitize(t("home.comparison_guide.intro"), tags: %w[strong]) %></p>
+	<div class="comparison-guide__blocks">
+		<article class="comparison-guide__block">
+			<h3 class="comparison-guide__heading"><%= t("home.comparison_guide.calculator.title") %></h3>
+			<p class="comparison-guide__body"><%= sanitize(t("home.comparison_guide.calculator.body"), tags: %w[strong]) %></p>
+		</article>
+		<article class="comparison-guide__block">
+			<h3 class="comparison-guide__heading"><%= t("home.comparison_guide.comparison.title") %></h3>
+			<p class="comparison-guide__body"><%= sanitize(t("home.comparison_guide.comparison.body"), tags: %w[strong]) %></p>
+		</article>
+		<article class="comparison-guide__block">
+			<h3 class="comparison-guide__heading"><%= t("home.comparison_guide.rates.title") %></h3>
+			<p class="comparison-guide__body"><%= sanitize(t("home.comparison_guide.rates.body"), tags: %w[strong]) %></p>
+		</article>
+		<article class="comparison-guide__block">
+			<h3 class="comparison-guide__heading"><%= t("home.comparison_guide.best_bank.title") %></h3>
+			<p class="comparison-guide__body"><%= sanitize(t("home.comparison_guide.best_bank.body"), tags: %w[strong]) %></p>
+		</article>
+	</div>
+</section>
+
 <% if false # temporary: hide custom bank offer block %>
 <section class="card section-card">
 	<div class="card-body p-4">
