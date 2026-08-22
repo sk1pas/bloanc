@@ -96,7 +96,7 @@ module LoanComparisonsHelper
 	def bank_offer_logo_tag(logo, alt:)
 		return unless logo&.attached?
 
-		image_tag logo.variant(resize_to_limit: [100, 50]),
+		image_tag logo.variant(resize_to_limit: [100, 50], format: :webp, saver: { quality: 80 }),
 							class: "bank-offer-logo",
 							alt: alt,
 							width: 100,
