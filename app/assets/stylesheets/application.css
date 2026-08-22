@@ -252,7 +252,7 @@ body {
 	margin: 0;
 }
 
-.locale-switch-select {
+#locale-switch-select {
 	min-width: 6.75rem;
 	width: auto;
 	font-weight: 600;
@@ -262,12 +262,12 @@ body {
 	color: #ffffff;
 }
 
-.locale-switch-select:focus {
+#locale-switch-select:focus {
 	border-color: #ffd166;
 	box-shadow: 0 0 0 0.2rem rgba(255, 209, 102, 0.25);
 }
 
-.locale-switch-select option {
+#locale-switch-select option {
 	color: #16324f;
 }
 

@@ -21,7 +21,11 @@ export default class extends Controller {
     this.updateRateTypeTabs()
     this.updateTargetYearsBounds()
     this.updateOverpaymentFields()
-    this.scrollToResultsIfRequested()
+    this.scrollToResultsIfSubmitted()
+  }
+
+  markScrollToResults() {
+    sessionStorage.setItem("comparisonFormScrollToResults", "1")
   }
 
   selectRateType(event) {
@@ -165,9 +169,10 @@ export default class extends Controller {
     return this.modeRadioTargets.find((radio) => radio.checked)?.value || "none"
   }
 
-  scrollToResultsIfRequested() {
-    const search = new URLSearchParams(window.location.search)
-    if (search.size === 0) return
+  scrollToResultsIfSubmitted() {
+    if (sessionStorage.getItem("comparisonFormScrollToResults") !== "1") return
+
+    sessionStorage.removeItem("comparisonFormScrollToResults")
 
     const resultsSection = document.getElementById("results-table")
     if (!resultsSection) return

@@ -19,7 +19,7 @@ class LoanComparisonsController < ApplicationController
 
     render :index
   rescue ActionController::ParameterMissing
-    redirect_to comparison_results_path(anchor: "results-table"),
+    redirect_to comparison_results_path,
                 alert: t("home.flash.custom_offer_invalid")
   end
 
@@ -56,7 +56,7 @@ class LoanComparisonsController < ApplicationController
   end
 
   def redirect_to_variable_rate_path_from_form
-    redirect_to comparison_results_path(**comparison_form_params, anchor: "results-table")
+    redirect_to comparison_results_path(**comparison_form_params)
   end
 
   def comparison_form_submitted?

@@ -8,10 +8,13 @@
 			<p class="text-secondary mb-0"><%= t("home.hero.subtitle") %></p>
 		</div>
 
-		<%= form_with url: "#{comparison_results_path(anchor: "results-table")}",
+		<%= form_with url: comparison_results_path,
 									method: :get,
 									class: "hero-form",
-									data: { controller: "comparison-form" } do |form| %>
+									data: {
+										controller: "comparison-form",
+										action: "submit->comparison-form#markScrollToResults"
+									} do |form| %>
 			<% fixed_monthly_slider_max = [[[@loan_amount.to_i / 8, 10_000].max, 20_000].min, 1_000].max %>
 			<% fixed_monthly_slider_value = [[@fixed_monthly_payment.to_i, fixed_monthly_slider_max].min, 1_000].max %>
 			<%= hidden_field_tag :rate_type, @rate_type %>
@@ -423,11 +426,11 @@
 		</div>
 		<div class="results-rate-switcher mt-3">
 			<div class="results-rate-switcher__copy">
-				<label class="form-label mb-0"><%= t("home.rate_type.title") %></label>
+				<span class="form-label mb-0"><%= t("home.rate_type.title") %>:</span>
 				<span class="form-hint"><%= t("home.rate_type.subtitle") %></span>
 			</div>
 			<div class="loan-type-tabs loan-type-tabs-featured" role="tablist" aria-label="<%= t("home.rate_type.title") %>">
-				<%= link_to rate_type_switch_path("variable", **rate_switch_params, anchor: "results-table"),
+				<%= link_to rate_type_switch_path("variable", **rate_switch_params),
 								class: "loan-type-tab #{"active" if @rate_type == "variable"}",
 								role: "tab",
 								id: "loan-type-tab-variable",
@@ -440,7 +443,7 @@
 					<span class="loan-type-tab-desc"><%= t("home.rate_type.descriptions.variable") %></span>
 				<% end %>
 
-				<%= link_to rate_type_switch_path("fixed_period", **rate_switch_params, anchor: "results-table"),
+				<%= link_to rate_type_switch_path("fixed_period", **rate_switch_params),
 								class: "loan-type-tab #{"active" if @rate_type == "fixed_period"}",
 								role: "tab",
 								id: "loan-type-tab-fixed-period",

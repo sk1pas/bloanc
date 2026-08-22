@@ -343,7 +343,6 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     assert_match %r{/oprocentowanie-zmienne}, response.location
     assert_match(/loan_amount=500000/, response.location)
     assert_match(/years=20/, response.location)
-    assert_match(/#results-table\z/, response.location)
   end
 
   test "form submit from locale root redirects to localized variable rate slug" do
