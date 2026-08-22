@@ -1,5 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
+const SCROLL_CANCEL_EVENT = "comparison-form:cancel-scroll"
+
 export default class extends Controller {
   static targets = [
     "loanAmountInput",
@@ -18,14 +20,34 @@ export default class extends Controller {
   ]
 
   connect() {
+    this.cancelPendingScroll = this.cancelPendingScroll.bind(this)
+    document.addEventListener(SCROLL_CANCEL_EVENT, this.cancelPendingScroll)
+
     this.updateRateTypeTabs()
     this.updateTargetYearsBounds()
     this.updateOverpaymentFields()
     this.scrollToResultsIfSubmitted()
   }
 
+  disconnect() {
+    document.removeEventListener(SCROLL_CANCEL_EVENT, this.cancelPendingScroll)
+    this.cancelPendingScrollFrame()
+  }
+
   markScrollToResults() {
     sessionStorage.setItem("comparisonFormScrollToResults", "1")
+  }
+
+  cancelPendingScroll() {
+    sessionStorage.removeItem("comparisonFormScrollToResults")
+    this.cancelPendingScrollFrame()
+  }
+
+  cancelPendingScrollFrame() {
+    if (!this.scrollFrameId) return
+
+    cancelAnimationFrame(this.scrollFrameId)
+    this.scrollFrameId = null
   }
 
   selectRateType(event) {
@@ -122,6 +144,7 @@ export default class extends Controller {
       [this.fixedMonthlyInputTarget, this.fixedMonthlyRangeTarget],
       useFixedMonthly
     )
+
     this.toggleFieldGroup(
       this.fixedPeriodWrapTarget,
       [this.targetYearsInputTarget, this.targetYearsRangeTarget],
@@ -159,7 +182,8 @@ export default class extends Controller {
   }
 
   toggleFieldGroup(wrapper, inputs, enabled) {
-    wrapper.classList.toggle("d-none", !enabled)
+    wrapper.classList.toggle("show", enabled)
+
     inputs.forEach((input) => {
       input.disabled = !enabled
     })
@@ -177,7 +201,8 @@ export default class extends Controller {
     const resultsSection = document.getElementById("results-table")
     if (!resultsSection) return
 
-    requestAnimationFrame(() => {
+    this.scrollFrameId = requestAnimationFrame(() => {
+      this.scrollFrameId = null
       resultsSection.scrollIntoView({ behavior: "smooth", block: "start" })
     })
   }

@@ -198,7 +198,7 @@ en:
         none_title: "No overpayment"
         none_desc: "Keep standard monthly installments based on full loan period."
         fixed_monthly_title: "Fixed monthly payment"
-        fixed_monthly_desc: "Set target monthly payment (loan payment + property insurance + overpayment)."
+        fixed_monthly_desc: "Set target monthly payment and calculate loan term."
         fixed_period_title: "Fixed loan term"
         fixed_period_desc: "Set target period and calculate the monthly payment needed to finish on time."
       fields:

@@ -1,0 +1,281 @@
+<%= turbo_frame_tag "comparison_results",
+										data: {
+											controller: "rate-type-switch",
+											rate_type_switch_page_title_value: t("home.seo.#{@rate_type}.title"),
+											rate_type_switch_meta_description_value: t("home.seo.#{@rate_type}.description"),
+											rate_type_switch_rate_type_value: @rate_type,
+											rate_type_switch_canonical_url_value: comparison_page_url(rate_type: @rate_type, rate_type_in_path: true)
+										} do %>
+<section id="results-table" class="table-box mb-3" data-controller="table-sort sticky-table-header">
+	<div class="p-3 border-bottom">
+		<div class="d-flex flex-wrap justify-content-between align-items-end gap-3">
+			<div>
+				<h2 class="h5 mb-1"><%= t("home.results.title") %></h2>
+			</div>
+			<div class="results-sort-filters">
+				<div class="results-sort-group" role="radiogroup" aria-label="<%= t("home.results.sort_by") %>">
+					<span class="results-sort-label"><%= t("home.results.sort_by") %></span>
+					<label class="results-sort-option">
+						<input type="radio"
+									 name="results_sort_key"
+									 value="bank-margin"
+									 <%= "checked" if @sort_key == "bank-margin" %>
+									 data-table-sort-target="sortKey"
+									 data-action="change->table-sort#sort">
+						<span><%= t("home.sort.bank_margin_percent") %></span>
+					</label>
+					<label class="results-sort-option">
+						<input type="radio"
+									 name="results_sort_key"
+									 value="monthly-payment"
+									 <%= "checked" if @sort_key == "monthly-payment" %>
+									 data-table-sort-target="sortKey"
+									 data-action="change->table-sort#sort">
+						<span><%= t("home.sort.monthly_payment") %></span>
+					</label>
+					<label class="results-sort-option">
+						<input type="radio"
+									 name="results_sort_key"
+									 value="loan-period"
+									 <%= "checked" if @sort_key == "loan-period" %>
+									 data-table-sort-target="sortKey"
+									 data-action="change->table-sort#sort">
+						<span><%= t("home.sort.loan_period") %></span>
+					</label>
+					<label class="results-sort-option">
+						<input type="radio"
+									 name="results_sort_key"
+									 value="total-paid"
+									 <%= "checked" if @sort_key == "total-paid" %>
+									 data-table-sort-target="sortKey"
+									 data-action="change->table-sort#sort">
+						<span><%= t("home.sort.total_paid") %></span>
+					</label>
+				</div>
+				<div class="results-sort-group" role="radiogroup" aria-label="<%= t("home.results.sort_direction") %>">
+					<span class="results-sort-label"><%= t("home.results.sort_direction") %></span>
+					<label class="results-sort-option">
+						<input type="radio"
+									 name="results_sort_direction"
+									 value="asc"
+									 <%= "checked" if @sort_direction == "asc" %>
+									 data-table-sort-target="direction"
+									 data-action="change->table-sort#sort">
+						<span><%= t("home.results.sort_asc") %></span>
+					</label>
+					<label class="results-sort-option">
+						<input type="radio"
+									 name="results_sort_direction"
+									 value="desc"
+									 <%= "checked" if @sort_direction == "desc" %>
+									 data-table-sort-target="direction"
+									 data-action="change->table-sort#sort">
+						<span><%= t("home.results.sort_desc") %></span>
+					</label>
+				</div>
+			</div>
+		</div>
+		<div class="results-rate-switcher mt-3">
+			<div class="results-rate-switcher__copy">
+				<span class="form-label mb-0"><%= t("home.rate_type.title") %>:</span>
+				<span class="form-hint"><%= t("home.rate_type.subtitle") %></span>
+			</div>
+			<div class="loan-type-tabs loan-type-tabs-featured" role="tablist" aria-label="<%= t("home.rate_type.title") %>">
+				<button type="button"
+								class="loan-type-tab #{"active" if @rate_type == "variable"}"
+								role="tab"
+								id="loan-type-tab-variable"
+								tabindex="<%= @rate_type == "variable" ? 0 : -1 %>"
+								aria-selected="<%= @rate_type == "variable" %>"
+								aria-controls="results-table-panel"
+								data-action="rate-type-switch#switch"
+								data-switch-url="<%= rate_type_switch_path("variable", **rate_switch_params) %>">
+					<span class="loan-type-tab-title"><%= t("home.rate_type.tabs.variable") %></span>
+					<span class="loan-type-tab-desc"><%= t("home.rate_type.descriptions.variable") %></span>
+				</button>
+
+				<button type="button"
+								class="loan-type-tab #{"active" if @rate_type == "fixed_period"}"
+								role="tab"
+								id="loan-type-tab-fixed-period"
+								tabindex="<%= @rate_type == "fixed_period" ? 0 : -1 %>"
+								aria-selected="<%= @rate_type == "fixed_period" %>"
+								aria-controls="results-table-panel"
+								data-action="rate-type-switch#switch"
+								data-switch-url="<%= rate_type_switch_path("fixed_period", **rate_switch_params) %>">
+					<span class="loan-type-tab-title"><%= t("home.rate_type.tabs.fixed_period") %></span>
+					<span class="loan-type-tab-desc"><%= t("home.rate_type.descriptions.fixed_period") %></span>
+				</button>
+			</div>
+		</div>
+	</div>
+	<div class="table-responsive"
+			 id="results-table-panel"
+			 role="tabpanel"
+			 aria-labelledby="<%= @rate_type == "fixed_period" ? "loan-type-tab-fixed-period" : "loan-type-tab-variable" %>"
+			 data-sticky-table-header-target="scroller"
+			 data-action="scroll->sticky-table-header#update">
+		<table class="table table-hover align-middle mb-0 results-table" data-sticky-table-header-target="table">
+			<thead class="table-light" data-sticky-table-header-target="head">
+				<tr>
+					<th><%= t("home.results.bank_loan_offer") %></th>
+					<th><%= t("home.results.rate_selected_type", type: t("home.rate_type.tabs.#{@rate_type}")) %></th>
+					<th class="monthly-total-cell"><%= t("home.results.default_monthly") %></th>
+					<th><%= t("home.results.first_month_total") %></th>
+					<th class="loan-period-cell"><%= t("home.results.loan_period") %></th>
+					<th><%= t("home.results.total_paid") %></th>
+				</tr>
+			</thead>
+			<tbody data-table-sort-target="tbody">
+				<% if @results.any? %>
+					<% @results.each do |result| %>
+					<% insurance_incomplete = result[:life_insurance_unknown] || result[:property_insurance_unknown] %>
+					<tr
+						class="<%= "offer-incomplete" if insurance_incomplete %>"
+						data-table-sort-target="row"
+						data-sort-bank-margin="<%= result[:bank_margin_percent] %>"
+						data-sort-monthly-payment="<%= result[:monthly_payment] %>"
+						data-sort-loan-period="<%= result[:loan_period_months] %>"
+						data-sort-total-paid="<%= result[:total_paid] %>"
+					>
+						<td class="bank-offer-cell">
+							<div class="bank-offer-card">
+								<div class="bank-offer-top">
+									<%= bank_offer_logo_tag result[:bank_logo], alt: result[:bank_title] %>
+									<div class="bank-offer-bank-name"><%= result[:bank_title] %></div>
+								</div>
+
+								<div class="bank-offer-bottom">
+									<% if result[:offer_url].present? %>
+										<%= link_to result[:offer_url],
+																class: "bank-offer-external-link",
+																target: "_blank",
+																rel: "noopener noreferrer nofollow" do %>
+											<span class="bank-offer-external-link-text">
+												<%= result[:offer_title].presence || t("home.results.offer_link_fallback") %>
+											</span>
+											<span class="bank-offer-external-icon" aria-hidden="true">
+												<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+													<path d="M6.5 2a.5.5 0 0 0 0 1H12.3L5.15 10.15a.5.5 0 1 0 .7.7L13 3.71V9.5a.5.5 0 0 0 1 0v-7A.5.5 0 0 0 13.5 2h-7z"/>
+													<path d="M3.5 4A1.5 1.5 0 0 0 2 5.5v7A1.5 1.5 0 0 0 3.5 14h7a1.5 1.5 0 0 0 1.5-1.5V9a.5.5 0 0 0-1 0v3.5a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5H7a.5.5 0 0 0 0-1H3.5z"/>
+												</svg>
+											</span>
+										<% end %>
+									<% elsif result[:offer_title].present? %>
+										<div class="bank-offer-title"><%= result[:offer_title] %></div>
+									<% end %>
+
+									<% if result[:offer_description].present? %>
+										<div class="bank-offer-description"><%= result[:offer_description] %></div>
+									<% end %>
+
+									<% if result[:promoted_from].present? && result[:promoted_until].present? %>
+										<div class="bank-offer-promo">
+											<%= t("home.results.promo_period") %>:
+											<%= I18n.l(result[:promoted_from]) %> - <%= I18n.l(result[:promoted_until]) %>
+										</div>
+									<% end %>
+
+									<% if result[:offer_updated_at].present? %>
+										<div class="bank-offer-updated">
+											<%= t("home.results.updated_at", date: result[:offer_updated_at].strftime("%Y.%m.%d")) %>
+										</div>
+									<% end %>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div><strong><%= number_with_precision(result[:rate_percent], precision: 2, strip_insignificant_zeros: true) %>%</strong></div>
+							<%= expandable_note(result.dig(:notes, :rate)) %>
+						</td>
+						<td class="monthly-total-cell">
+							<div class="amount-nowrap"><strong><%= number_to_currency(result[:default_monthly_payment], unit: "PLN", precision: 0, format: "%n %u") %></strong></div>
+							<%= expandable_note(result.dig(:notes, :default_monthly)) %>
+						</td>
+						<td>
+							<div><strong><%= number_to_currency(result[:first_month_payment], unit: "PLN", precision: 0, format: "%n %u") %></strong></div>
+							<%= first_month_breakdown(result.dig(:notes, :first_month_lines)) %>
+							<% if insurance_incomplete %>
+								<p class="bank-offer-incomplete-note mt-2"><%= incomplete_insurance_note(result) %></p>
+							<% end %>
+						</td>
+						<td class="loan-period-cell">
+							<strong><%= result[:loan_period_label] %></strong>
+							<div class="table-note"><%= t("home.results.period_hint", months: result[:loan_period_months]) %></div>
+						</td>
+						<td class="total-paid-cell">
+							<strong><%= number_to_currency(result[:total_paid], unit: "PLN", precision: 0, format: "%n %u") %></strong>
+							<div class="total-paid-breakdown mt-2">
+								<div class="total-paid-row">
+									<span><%= t("home.results.breakdown.loan_amount") %></span>
+									<strong><%= number_to_currency(result[:loan_amount], unit: "PLN", precision: 0, format: "%n %u") %></strong>
+								</div>
+								<div class="total-paid-row">
+									<span><%= t("home.results.breakdown.bank_interest") %></span>
+									<strong><%= number_to_currency(result[:bank_interest_total], unit: "PLN", precision: 0, format: "%n %u") %></strong>
+								</div>
+								<div class="total-paid-row">
+									<span><%= t("home.results.breakdown.life_insurance") %></span>
+									<strong>
+										<% if result[:life_insurance_unknown] %>
+											<span class="value-unknown"><%= t("home.results.unknown") %></span>
+										<% else %>
+											<%= number_to_currency(result[:life_insurance_total], unit: "PLN", precision: 0, format: "%n %u") %>
+										<% end %>
+									</strong>
+								</div>
+								<% if !result[:life_insurance_unknown] && result[:life_insurance_details].present? %>
+									<div class="total-paid-row-note"><%= result[:life_insurance_details] %></div>
+								<% end %>
+								<div class="total-paid-row">
+									<span><%= t("home.results.breakdown.property_insurance") %></span>
+									<strong>
+										<% if result[:property_insurance_unknown] %>
+											<span class="value-unknown"><%= t("home.results.unknown") %></span>
+										<% else %>
+											<%= number_to_currency(result[:property_insurance_total], unit: "PLN", precision: 0, format: "%n %u") %>
+										<% end %>
+									</strong>
+								</div>
+								<% if !result[:property_insurance_unknown] && result[:property_insurance_details].present? %>
+									<div class="total-paid-row-note"><%= result[:property_insurance_details] %></div>
+								<% end %>
+								<% if result[:bank_commission_total].to_f.positive? %>
+									<div class="total-paid-row">
+										<span><%= t("home.results.breakdown.loan_fee") %></span>
+										<strong><%= number_to_currency(result[:bank_commission_total], unit: "PLN", precision: 0, format: "%n %u") %></strong>
+									</div>
+								<% end %>
+								<% if result[:overpayment_penalty_total].to_f.positive? %>
+									<div class="total-paid-row total-paid-row--fee">
+										<span><%= t("home.results.breakdown.overpayment_penalty") %></span>
+										<strong><%= number_to_currency(result[:overpayment_penalty_total], unit: "PLN", precision: 0, format: "%n %u") %></strong>
+									</div>
+									<% if result[:overpayment_penalty_details].present? %>
+										<div class="total-paid-row-note total-paid-row-note--fee"><%= result[:overpayment_penalty_details] %></div>
+									<% end %>
+								<% end %>
+							</div>
+						</td>
+					</tr>
+					<% end %>
+				<% else %>
+					<tr class="results-empty-row">
+						<td colspan="6">
+							<div class="results-empty-message"><%= t("home.results.empty", type: t("home.rate_type.tabs.#{@rate_type}")) %></div>
+						</td>
+					</tr>
+				<% end %>
+			</tbody>
+		</table>
+	</div>
+	<aside class="results-assumption" role="note">
+		<p class="results-assumption__text"><%= t("home.results.ltv_assumption") %></p>
+	</aside>
+	<aside class="results-disclaimer" role="note">
+		<p class="results-disclaimer__lead"><%= t("home.results.disclaimer.lead") %></p>
+		<p class="results-disclaimer__body"><%= t("home.results.disclaimer.body") %></p>
+		<p class="results-disclaimer__liability"><%= t("home.results.disclaimer.liability") %></p>
+	</aside>
+</section>
+<% end %>

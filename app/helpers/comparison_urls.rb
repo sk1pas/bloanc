@@ -8,6 +8,7 @@ module ComparisonUrls
                   :locale_switch_url,
                   :locale_home_path,
                   :rate_type_switch_path,
+                  :comparison_sort_params,
                   :canonical_comparison_url,
                   :hreflang_comparison_url,
                   :on_rate_type_path?,
@@ -115,6 +116,10 @@ module ComparisonUrls
   end
 
   def comparison_query_param_keys
+    comparison_form_param_keys + %i[sort_key sort_direction]
+  end
+
+  def comparison_form_param_keys
     %i[
       loan_amount
       years
@@ -124,6 +129,16 @@ module ComparisonUrls
       fixed_monthly_overpay_during_penalty
       fixed_period_overpay_during_penalty
     ]
+  end
+
+  def comparison_sort_params
+    return {} if default_comparison_sort?
+
+    { sort_key: @sort_key, sort_direction: @sort_direction }
+  end
+
+  def default_comparison_sort?
+    @sort_key.blank? || (@sort_key == 'total-paid' && @sort_direction == 'asc')
   end
 
   private
@@ -139,7 +154,7 @@ module ComparisonUrls
   end
 
   def current_comparison_rate_type
-    @rate_type.presence || "variable"
+    @rate_type.presence || 'variable'
   end
 
   def assign_comparison_path_context!

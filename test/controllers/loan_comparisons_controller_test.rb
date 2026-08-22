@@ -48,7 +48,7 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Oprocentowanie zmienne"
     assert_includes response.body, "Oprocentowanie stałe"
     assert_includes response.body, "Docelowa łączna rata miesięczna (PLN)"
-    assert_includes response.body, "Nadpłacaj w okresie opłaty"
+    assert_includes response.body, "Nadpłacać w okresie obowiązywania opłaty za nadpłatę"
     assert_includes response.body, "data-controller=\"cookie-consent\""
     assert_includes response.body, "Akceptuj wszystkie"
     refute_includes response.body, "Panel admina"
@@ -228,6 +228,24 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     assert_select "details.payment-parts:not([open])"
   end
 
+  test "collapses overpayment options when cookie is closed" do
+    get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-zmienne"),
+        headers: { "HTTP_COOKIE" => "overpayment_options_open=0" }
+
+    assert_response :success
+    assert_select "details.overpayment-options:not([open])"
+    assert_includes response.body, "overpayment_options_open"
+  end
+
+  test "overpayment options are open by default" do
+    get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-zmienne")
+
+    assert_response :success
+    assert_select "details.overpayment-options[open]"
+    assert_includes response.body, "overpayment-options__hint"
+    refute_includes response.body, "mobile-details"
+  end
+
   test "highlights overpayment fee in results breakdown" do
     get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-zmienne"), params: {
       loan_amount: 400_000,
@@ -365,7 +383,9 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
       loan_amount: 500_000,
       years: 20,
       overpayment_mode: "fixed_monthly",
-      fixed_monthly_payment: 5_000
+      fixed_monthly_payment: 5_000,
+      sort_key: "monthly-payment",
+      sort_direction: "desc"
     }
 
     assert_response :success
@@ -373,7 +393,39 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "years=20"
     assert_includes response.body, "overpayment_mode=fixed_monthly"
     assert_includes response.body, "fixed_monthly_payment=5000"
+    assert_includes response.body, "sort_key=monthly-payment"
+    assert_includes response.body, "sort_direction=desc"
     assert_includes response.body, 'value="http://www.example.com/en/variable-rate?'
+  end
+
+  test "applies sort params from url on page load" do
+    get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-zmienne"), params: {
+      loan_amount: 400_000,
+      years: 25,
+      sort_key: "bank-margin",
+      sort_direction: "desc"
+    }
+
+    assert_response :success
+    assert_select 'input[name="results_sort_key"][value="bank-margin"][checked]'
+    assert_select 'input[name="results_sort_direction"][value="desc"][checked]'
+    assert_match(/data-switch-url="[^"]*oprocentowanie-stale\?[^"]*sort_key=bank-margin/, response.body)
+
+    margins = response.body.scan(/data-sort-bank-margin="([^"]+)"/).flatten.map(&:to_f)
+    assert_equal margins.sort.reverse, margins
+  end
+
+  test "form submit from site root keeps sort params in redirect" do
+    get "/", params: {
+      loan_amount: 500_000,
+      years: 20,
+      sort_key: "monthly-payment",
+      sort_direction: "desc"
+    }
+
+    assert_response :redirect
+    assert_match(/sort_key=monthly-payment/, response.location)
+    assert_match(/sort_direction=desc/, response.location)
   end
 
   test "locale switch from slug-only path keeps polish slug for pl and adds locale for others" do
@@ -403,6 +455,17 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     get loan_comparison_path(locale: :ua, rate_type_slug: "fiksovana-stavka")
     assert_response :success
     assert_includes response.body, "/ua/fiksovana-stavka"
+  end
+
+  test "turbo frame request returns comparison results partial" do
+    get loan_comparison_path(locale: :pl, rate_type_slug: "oprocentowanie-zmienne"),
+        params: { loan_amount: 400_000, years: 25 },
+        headers: { "Turbo-Frame" => "comparison_results" }
+
+    assert_response :success
+    assert_includes response.body, "<turbo-frame"
+    assert_includes response.body, 'id="comparison_results"'
+    assert_includes response.body, 'data-action="rate-type-switch#switch"'
   end
 
   test "calculates custom offer" do

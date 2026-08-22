@@ -3,6 +3,10 @@ module LoanComparisonsHelper
 		cookies[:payment_parts_open] != '0'
 	end
 
+	def overpayment_options_expanded?
+		cookies[:overpayment_options_open] != '0'
+	end
+
 	def wibor_change_indicator(current_rate, previous_rate)
 		return if previous_rate.nil?
 

@@ -169,13 +169,13 @@ pl:
         none_title: "Bez nadpłat"
         none_desc: "Standardowa rata liczona dla pełnego okresu kredytu."
         fixed_monthly_title: "Stała rata miesięczna"
-        fixed_monthly_desc: "Ustaw docelową ratę miesięczną (rata kredytu + ubezpieczenie nieruchomości + nadpłata)."
+        fixed_monthly_desc: "Ustaw docelową ratę miesięczną i oblicz okres spłaty kredytu."
         fixed_period_title: "Stały okres spłaty"
         fixed_period_desc: "Ustaw docelowy okres spłaty i oblicz ratę potrzebną do zamknięcia kredytu."
       fields:
         fixed_monthly_payment: "Docelowa łączna rata miesięczna (PLN)"
         target_years: "Docelowy okres spłaty (lata)"
-        overpay_during_penalty: "Nadpłacaj w okresie opłaty"
+        overpay_during_penalty: "Nadpłacać w okresie obowiązywania opłaty za nadpłatę"
       notes:
         none: "Nadpłata użytkownika nie jest stosowana."
         fixed_monthly_invalid: "Rata stała musi być wyższa od raty standardowej (min %{min_payment} PLN)."

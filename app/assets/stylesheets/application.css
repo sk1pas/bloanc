@@ -87,14 +87,9 @@ body {
 	margin-bottom: 0.4rem;
 }
 
-.hero-section-heading {
-	margin-top: 0.25rem;
-}
-
 .hero-form-actions {
 	display: flex;
 	justify-content: center;
-	padding-top: 0.25rem;
 }
 
 .section-card {
@@ -174,8 +169,13 @@ body {
 }
 
 .simulation-option-fields {
+	display: none; /* Hidden by default, shown when the option is selected */
 	padding-top: 0.35rem;
 	margin-top: auto;
+}
+
+.simulation-option-fields.show {
+	display: block;
 }
 
 .simulation-option-field-label {
@@ -260,6 +260,7 @@ body {
 	background-color: rgba(255, 255, 255, 0.12);
 	border-color: rgba(255, 255, 255, 0.4);
 	color: #ffffff;
+	cursor: pointer;
 }
 
 #locale-switch-select:focus {
@@ -299,18 +300,36 @@ body {
 	text-align: left;
 	color: #204660;
 	text-decoration: none;
+	font: inherit;
+	cursor: pointer;
+	width: 100%;
+	appearance: none;
+	-webkit-appearance: none;
 	transition: background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
-.loan-type-tab:hover {
+.loan-type-tab:disabled {
+	opacity: 0.65;
+	cursor: wait;
+}
+
+.loan-type-tab:hover:not(.active):not([aria-selected="true"]) {
 	border-color: #90b2cc;
 	background: #eef7ff;
 }
 
-.loan-type-tab.active {
+.loan-type-tab.active,
+.loan-type-tab[aria-selected="true"] {
 	border-color: #0f5e9c;
 	background: linear-gradient(145deg, rgba(15, 94, 156, 0.13), rgba(58, 154, 141, 0.1));
 	box-shadow: 0 6px 18px rgba(15, 94, 156, 0.15);
+}
+
+.results-rate-switcher .loan-type-tab.active,
+.results-rate-switcher .loan-type-tab[aria-selected="true"] {
+	border-color: #0f5e9c;
+	background: linear-gradient(145deg, rgba(15, 94, 156, 0.15), rgba(58, 154, 141, 0.12));
+	box-shadow: 0 8px 22px rgba(15, 94, 156, 0.18);
 }
 
 .results-rate-switcher .loan-type-tab {
@@ -735,60 +754,78 @@ body {
 }
 
 .overpayment-options {
-	border: 0;
 }
 
-.overpayment-options-summary {
+.overpayment-options[open] {
+}
+
+.overpayment-options__summary {
 	list-style: none;
 	cursor: pointer;
-	user-select: none;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	gap: 0.4rem;
-	margin: 0 auto;
-	margin-top: 0.25rem;
-	padding: 0.55rem 0.9rem;
-	max-width: 18rem;
-	border: 1px solid #cddce8;
-	border-radius: 999px;
-	background: #f7fbff;
-	font-size: 0.88rem;
-	font-weight: 600;
-	color: #0f5e9c;
+	margin: 0;
+	user-select: none;
 }
 
-.overpayment-options-summary::-webkit-details-marker {
+.overpayment-options[open] .overpayment-options__summary {
+	margin-bottom: 0.75rem;
+}
+
+.overpayment-options__summary::-webkit-details-marker {
 	display: none;
 }
 
-.overpayment-options-summary::after {
+.overpayment-options__summary::marker {
 	content: "";
+}
+
+.overpayment-options__summary::after {
+	content: "";
+	flex: 0 0 auto;
 	width: 0.45rem;
 	height: 0.45rem;
-	border-right: 2px solid currentColor;
-	border-bottom: 2px solid currentColor;
+	border-right: 2px solid #0f5e9c;
+	border-bottom: 2px solid #0f5e9c;
 	transform: rotate(45deg);
 	transition: transform 0.15s ease;
-	margin-top: -0.15rem;
+	margin-top: -0.12rem;
 }
 
-.overpayment-options[open] .overpayment-options-summary::after {
+.overpayment-options[open] .overpayment-options__summary::after {
 	transform: rotate(225deg);
-	margin-top: 0.15rem;
+	margin-top: 0.12rem;
 }
 
-.overpayment-options-body {
+.overpayment-options__heading {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.2rem;
+	text-align: center;
 }
 
-@media (min-width: 768px) {
-	.overpayment-options-summary {
-		display: none;
-	}
+.overpayment-options__title {
+	font-size: 0.95rem;
+	font-weight: 700;
+	line-height: 1.3;
+	color: #123043;
+}
 
-	.overpayment-options-body {
-		margin-top: 0;
-	}
+.overpayment-options__hint {
+	font-size: 0.85rem;
+	line-height: 1.35;
+	color: #5b7388;
+}
+
+.overpayment-option {
+	height: fit-content;
+}
+
+.overpayment-option .overpayment-option__settings {
+
 }
 
 .results-table > :not(caption) > * > * {
