@@ -10,13 +10,37 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "/oprocentowanie-zmienne"
   end
 
-  test "renders locale root without redirecting to rate type slug" do
+  test "redirects polish locale root to canonical site root" do
     get root_path(locale: :pl)
 
+    assert_response :moved_permanently
+    assert_redirected_to "http://www.example.com/"
+  end
+
+  test "renders english locale root without redirecting to rate type slug" do
+    get root_path(locale: :en)
+
     assert_response :success
-    assert_includes response.body, "Porównywarka kredytów hipotecznych"
-    assert_includes response.body, 'rel="canonical" href="http://www.example.com/"'
-    assert_includes response.body, "/pl/oprocentowanie-zmienne"
+    assert_includes response.body, 'rel="canonical" href="http://www.example.com/en"'
+  end
+
+  test "parameterized comparison urls are noindex and keep clean canonical" do
+    get loan_comparison_path(locale: nil, rate_type_slug: "oprocentowanie-zmienne"), params: {
+      loan_amount: 400_000,
+      years: 25
+    }
+
+    assert_response :success
+    assert_includes response.body, 'name="robots" content="noindex,follow"'
+    assert_includes response.body, 'rel="canonical" href="http://www.example.com/oprocentowanie-zmienne"'
+  end
+
+  test "clean comparison urls stay indexable" do
+    get loan_comparison_path(locale: nil, rate_type_slug: "oprocentowanie-zmienne")
+
+    assert_response :success
+    assert_includes response.body, 'name="robots" content="index,follow'
+    assert_includes response.body, 'rel="canonical" href="http://www.example.com/oprocentowanie-zmienne"'
   end
 
   test "renders polish rate type slug without locale prefix" do
@@ -437,8 +461,8 @@ class LoanComparisonsControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, 'value="http://www.example.com/ua/zminna-stavka"'
   end
 
-  test "hreflang on polish prefixed path points to canonical urls" do
-    get root_path(locale: :pl)
+  test "hreflang on polish root points to canonical urls" do
+    get "/"
 
     assert_response :success
     assert_includes response.body, 'hreflang="pl" href="http://www.example.com/"'

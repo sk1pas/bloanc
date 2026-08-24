@@ -12,7 +12,7 @@
     <meta name="description" content="<%= meta_description %>">
     <meta name="keywords" content="<%= meta_keywords %>">
     <meta name="author" content="wCredit.pl">
-    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+    <meta name="robots" content="<%= comparison_page_indexable? ? "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" : "noindex,follow" %>">
     <meta name="theme-color" content="#0f5e9c">
     <link rel="canonical" href="<%= canonical_url %>">
 

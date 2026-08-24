@@ -1,5 +1,7 @@
 # See https://www.robotstxt.org/robotstxt.html
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /admin/
 
 Sitemap: https://wcredit.pl/sitemap.xml

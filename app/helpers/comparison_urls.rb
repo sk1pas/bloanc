@@ -11,6 +11,7 @@ module ComparisonUrls
                   :comparison_sort_params,
                   :canonical_comparison_url,
                   :hreflang_comparison_url,
+                  :comparison_page_indexable?,
                   :on_rate_type_path?,
                   :locale_in_path?
   end
@@ -99,6 +100,12 @@ module ComparisonUrls
       rate_type: current_comparison_rate_type,
       rate_type_in_path: on_rate_type_path?
     )
+  end
+
+  def comparison_page_indexable?
+    return true unless params.is_a?(ActionController::Parameters)
+
+    comparison_query_param_keys.none? { |key| params.key?(key) }
   end
 
   def hreflang_comparison_url(target_locale)

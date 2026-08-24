@@ -18,6 +18,7 @@ class LoanComparisonsController < ApplicationController
   DEFAULT_SORT_DIRECTION = 'asc'
 
   def index
+    redirect_to_canonical_default_locale_root and return if redirect_to_canonical_default_locale_root?
     redirect_to_variable_rate_path_from_form if redirect_form_to_variable_rate_path?
 
     prepare_request
@@ -63,6 +64,16 @@ class LoanComparisonsController < ApplicationController
     end
 
     normalize_rate_type(params[:rate_type])
+  end
+
+  def redirect_to_canonical_default_locale_root?
+    params[:locale].to_s == I18n.default_locale.to_s &&
+      params[:rate_type_slug].blank? &&
+      !comparison_form_submitted?
+  end
+
+  def redirect_to_canonical_default_locale_root
+    redirect_to root_url(locale: nil), status: :moved_permanently, allow_other_host: true
   end
 
   def redirect_form_to_variable_rate_path?

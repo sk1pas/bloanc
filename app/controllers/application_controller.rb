@@ -7,18 +7,29 @@ class ApplicationController < ActionController::Base
   # Changes to the importmap will invalidate the etag for HTML responses
   stale_when_importmap_changes
 
+  before_action :redirect_http_to_https
   before_action :set_locale
   before_action :assign_comparison_path_context!
 
   helper_method :available_locales, :loan_comparison_url_for
 
   def default_url_options
-    return {} if request.path.start_with?("/admin")
+    return {} if request.path.start_with?('/admin')
 
     { locale: I18n.locale }
   end
 
   private
+
+  def redirect_http_to_https
+    return unless Rails.env.production?
+    return if request.path == '/up'
+    return unless request.headers['X-Forwarded-Proto'] == 'http'
+
+    https_url = URI(request.original_url)
+    https_url.scheme = 'https'
+    redirect_to https_url.to_s, status: :moved_permanently, allow_other_host: true
+  end
 
   def available_locales
     %w[pl en ua]

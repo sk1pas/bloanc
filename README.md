@@ -129,7 +129,8 @@ App URLs:
     - http://localhost:3000/en/fixed-period
     - http://localhost:3000/ua/fiksovana-stavka
 - Site root (`/`) serves PL variable-rate comparison directly (no redirect)
-- Locale root (`/pl`, `/en`, `/ua`) serves variable-rate comparison directly (no redirect)
+- Locale root `/pl` 301-redirects to `/` (canonical default-locale home)
+- Locale roots `/en` and `/ua` serve variable-rate comparison directly (no redirect)
 - Polish rate-type slugs also work without locale prefix, e.g. `/oprocentowanie-zmienne`
 - Full paths combine locale and slug, e.g. `/pl/oprocentowanie-stale`
 - Locale switch keeps the rate-type slug when the current URL has one
